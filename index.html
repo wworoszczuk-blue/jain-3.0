@@ -3131,8 +3131,7 @@
                     <div class="icon-circle">
                       <span class="material-symbols-outlined" style="font-size: 32px; color: var(--text-muted);">explore</span>
                     </div>
-                    <div class="quest-empty-title">Brak aktywnej ścieżki awansu</div>
-                    <div class="quest-empty-desc">Zaplanuj swoją karierę, wyznacz cele rozwojowe z przełożonym i śledź swoje postępy.</div>
+                    <div class="quest-empty-title" style="margin-bottom: 25px;">Brak aktywnego planu rozwojowego</div>
                     <button class="lp-cta primary" style="margin: 0;" onclick="goToProfile('plan','p0')">
                       <span class="material-symbols-outlined" style="font-size:18px;">add</span> Utwórz plan rozwoju
                     </button>
@@ -4228,16 +4227,17 @@
             </div>
           </div>
           <div class="split-layout-bar" style="margin-bottom: 0;">
-  <button class="split-layout-btn active dev-nav-tab" onclick="switchDevTab('dev-plan', this)">
-    <span class="material-symbols-outlined">rocket_launch</span> Plan Rozwoju i Asystent AI
-  </button>
-  
-  <div class="split-layout-divider"></div>
-  
-  <button class="split-layout-btn dev-nav-tab" onclick="switchDevTab('dev-activities', this)">
-    <span class="material-symbols-outlined" data-label-p1="Aktywności" data-label-p0="Twoje Aktywności">school</span> Twoje Aktywności
-  </button>
-</div>
+          <button class="split-layout-btn active dev-nav-tab" onclick="switchDevTab('dev-plan', this)">
+            <span class="material-symbols-outlined">rocket_launch</span> Plan Rozwoju i Asystent AI
+          </button>
+          
+          <div class="split-layout-divider"></div>
+          
+          <button class="split-layout-btn dev-nav-tab" onclick="switchDevTab('dev-activities', this)">
+            <span class="material-symbols-outlined">school</span>
+            <span class="btn-text" data-label-p1="Aktywności" data-label-p0="Twoje Aktywności">Twoje Aktywności</span>
+          </button>
+        </div>
         </div>
       </div>
 
