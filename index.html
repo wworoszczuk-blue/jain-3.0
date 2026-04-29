@@ -2858,6 +2858,133 @@
   height: 72px;
   margin-bottom: 60px;
 }
+
+/* ── PANEL FILTRÓW POWIADOMIEŃ ── */
+.notif-filters-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+}
+
+.notif-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.notif-filter-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.notif-date-input {
+  background: var(--bg-card-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'General Sans', sans-serif;
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+.notif-date-input:focus { border-color: var(--accent); }
+.notif-date-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+  cursor: pointer;
+}
+
+.notif-radio-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: no-wrap;
+}
+
+.notif-radio-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: 'General Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.notif-radio-btn:hover { border-color: var(--border-strong); color: var(--text); }
+.notif-radio-btn.active {
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+  color: var(--accent-text);
+}
+
+.notif-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notif-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 13px;
+  color: var(--text-secondary);
+  transition: color 0.15s;
+}
+.notif-checkbox-item:hover { color: var(--text); }
+
+.notif-checkbox-item input[type="checkbox"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 2px solid var(--border-strong);
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  position: relative;
+}
+.notif-checkbox-item input[type="checkbox"]:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.notif-checkbox-item input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 3px; top: 0px;
+  width: 5px; height: 9px;
+  border: 2px solid var(--btn-primary-text);
+  border-top: none; border-left: none;
+  transform: rotate(45deg);
+}
+
+.notif-filters-footer {
+  grid-column: span 2;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 4px;
+  margin-top: 4px;
+}
 </style>
 </head>
 <body data-theme="dark">
@@ -7837,13 +7964,60 @@
     <button class="btn-back" onclick="switchView('lp')">
       <span class="material-symbols-outlined">arrow_back</span> Wróć na Start
     </button>
-    <div class="view-header" style="margin-bottom:24px;">
+    <div class="view-header" style="margin-bottom:20px;">
       <div>
         <h1>Wszystkie Powiadomienia</h1>
       </div>
-      <button class="btn-ghost" style="font-size:12px; padding:6px 12px;"><span class="material-symbols-outlined" style="font-size:16px;">done_all</span> Oznacz wszystkie jako przeczytane</button>
+      <button class="btn-ghost" style="font-size:12px; padding:6px 12px;">
+        <span class="material-symbols-outlined" style="font-size:16px;">done_all</span> Oznacz wszystkie jako przeczytane
+      </button>
     </div>
-    
+
+    <!-- Panel filtrów -->
+    <div class="notif-filters-panel">
+
+      <div class="notif-filter-group">
+        <div class="notif-filter-label">Utworzone po</div>
+        <input type="date" class="notif-date-input" id="notifDateFrom">
+      </div>
+
+      <div class="notif-filter-group">
+        <div class="notif-filter-label">Utworzone przed</div>
+        <input type="date" class="notif-date-input" id="notifDateTo">
+      </div>
+
+      <div class="notif-filter-group">
+        <div class="notif-filter-label">Status</div>
+        <div class="notif-radio-group">
+          <div class="notif-radio-btn active" onclick="notifSetStatus('all', this)">Wszystkie</div>
+          <div class="notif-radio-btn" onclick="notifSetStatus('read', this)">Przeczytane</div>
+          <div class="notif-radio-btn" onclick="notifSetStatus('unread', this)">Nieprzeczytane</div>
+        </div>
+      </div>
+
+      <div class="notif-filter-group">
+        <div class="notif-filter-label">Widoczność</div>
+        <div class="notif-checkbox-group">
+          <label class="notif-checkbox-item">
+            <input type="checkbox" checked id="notifShowMine"> Pokaż moje powiadomienia
+          </label>
+          <label class="notif-checkbox-item">
+            <input type="checkbox" id="notifShowCreatedByMe"> Pokaż powiadomienia utworzone przeze mnie
+          </label>
+        </div>
+      </div>
+
+      <div class="notif-filters-footer">
+        <button class="btn-ghost" style="font-size:12px; padding:7px 16px;" onclick="notifResetFilters()">
+          Resetuj
+        </button>
+        <button class="btn-primary" style="font-size:12px; padding:7px 16px;" onclick="notifApplyFilters()">
+          <span class="material-symbols-outlined" style="font-size:15px;">search</span> Szukaj
+        </button>
+      </div>
+    </div>
+
+    <!-- Lista powiadomień -->
     <div class="block-neutral" style="border-radius:16px; overflow:hidden;">
       <div class="nav-popover-item" style="padding:16px 24px;" onclick="goToProfile('plan','p0')">
         <span class="material-symbols-outlined" style="color:var(--danger); font-size:24px;">error</span>
