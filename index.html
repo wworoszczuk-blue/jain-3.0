@@ -3401,7 +3401,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: var(--text-muted);
+    color: var(--text-secondary);
     text-align: center;
   }
   .p1-pulse-item.accent .p1-pulse-num { color: var(--accent); }
@@ -3607,89 +3607,71 @@
         <div class="p1-action-tag blue">Zatwierdź</div>
       </div>
  
-      <div class="p1-action-item overdue" onclick="goToProfile('plan','p1'); setTimeout(()=>{ tovSetFilter('overdue_step'); }, 100);">
-        <div class="p1-action-icon red">
-          <span class="material-symbols-outlined" style="font-size:16px">running_with_errors</span>
-        </div>
-        <div class="p1-action-body">
-          <div class="p1-action-name">Piotr Malinowski — krok przeterminowany</div>
-          <div class="p1-action-meta">Szkolenie z komunikacji · zaległe 7 dni</div>
-        </div>
-        <div class="p1-action-tag red">7 dni</div>
-      </div>
- 
-      <div class="p1-action-item" onclick="goToProfile('plan','p1'); setTimeout(()=>{ tovSetFilter('no_plan'); }, 100);">
-        <div class="p1-action-icon orange">
-          <span class="material-symbols-outlined" style="font-size:16px">person_off</span>
-        </div>
-        <div class="p1-action-body">
-          <div class="p1-action-name">Tomasz Poprzeczka — brak planu rozwoju</div>
-          <div class="p1-action-meta">Dyrektor Operacyjny · brak aktywności 3 mies.</div>
-        </div>
-        <div class="p1-action-tag orange">Zainicjuj</div>
-      </div>
- 
     </div>
  
     <!-- PRAWA: Stan zespołu (zastępuje "Sygnały z zespołu") -->
     <div class="p1-col">
+      <style>
+        /* Zabezpieczenie stylów dla obwódek awatarów */
+        .avatar-border {
+          background: #2a2d31 !important;
+          border: 2px solid;
+          color: #fff;
+          box-sizing: border-box;
+        }
+        .avatar-high { border-color: var(--danger, #f87171); box-shadow: 0 0 8px rgba(248,113,113,0.15); }
+        .avatar-medium { border-color: #eb8d3d; box-shadow: 0 0 8px rgba(235,141,61,0.15); }
+        .avatar-ready { border-color: var(--success, #4ade80); box-shadow: 0 0 8px rgba(74,222,128,0.15); }
+        .avatar-standard { border-color: #5a6068; }
+      </style>
+
       <div class="p1-col-title">
         <span class="material-symbols-outlined" style="font-size:14px;color:var(--text-muted)">group</span>
         Stan zespołu
       </div>
- 
+
       <!-- Zaległe kroki — najwyższy priorytet -->
       <div class="p1-signal" onclick="goToTeamTab('team-overview'); tovSetFilter('overdue_step');">
-        <div class="p1-signal-avatar" style="background:#C0392B">PM</div>
+        <div class="p1-signal-avatar avatar-border avatar-medium">PM</div>
         <div class="p1-signal-body">
           <div class="p1-signal-name">Piotr Malinowski</div>
           <div class="p1-signal-desc">Krok zaległy · szkolenie z komunikacji · 7 dni po terminie</div>
         </div>
         <div class="p1-signal-indicator" style="background:var(--danger)"></div>
       </div>
- 
+
       <div class="p1-signal" onclick="goToTeamTab('team-overview'); tovSetFilter('overdue_step');">
-        <div class="p1-signal-avatar" style="background:#B7950B">NK</div>
+        <div class="p1-signal-avatar avatar-border avatar-medium">NK</div>
         <div class="p1-signal-body">
           <div class="p1-signal-name">Natalia Kowalczyk</div>
           <div class="p1-signal-desc">Krok zaległy · e-learning RODO · 3 tygodnie po terminie</div>
         </div>
         <div class="p1-signal-indicator" style="background:var(--danger)"></div>
       </div>
- 
-      <!-- Plany czekające na zatwierdzenie -->
-      <div class="p1-signal" onclick="goToTeamTab('team-overview'); tovSetFilter('plan_approval');">
-        <div class="p1-signal-avatar" style="background:#2980B9">JW</div>
-        <div class="p1-signal-body">
-          <div class="p1-signal-name">Jan Wiśniewski</div>
-          <div class="p1-signal-desc">Plan do zatwierdzenia · czeka 5 dni</div>
-        </div>
-        <div class="p1-signal-indicator" style="background:var(--accent)"></div>
-      </div>
- 
+
       <!-- Brak planu -->
       <div class="p1-signal" onclick="goToTeamTab('team-overview'); tovSetFilter('no_plan');">
-        <div class="p1-signal-avatar" style="background:#7F8C8D">TP</div>
+        <div class="p1-signal-avatar avatar-border avatar-high">TP</div>
         <div class="p1-signal-body">
           <div class="p1-signal-name">Tomasz Poprzeczka</div>
           <div class="p1-signal-desc">Brak planu rozwoju · brak aktywności 3 miesiące</div>
         </div>
         <div class="p1-signal-indicator" style="background:var(--danger)"></div>
       </div>
- 
+
       <!-- Podsumowanie: reszta bez problemów -->
       <div style="margin-top:8px; padding:10px 12px; background:var(--success-bg); border:1px solid var(--success-border); border-radius:10px; font-size:12px; color:var(--success); display:flex; align-items:center; gap:8px;">
         <span class="material-symbols-outlined" style="font-size:16px; flex-shrink:0;">check_circle</span>
         <span>7 osób realizuje plan zgodnie z harmonogramem</span>
       </div>
- 
+
       <div style="margin-top:10px;">
         <button class="btn-ghost" style="width:100%; justify-content:center; font-size:12px; padding:8px;" onclick="goToTeamTab('team-list')">
           Pełny przegląd · 12 osób
           <span class="material-symbols-outlined" style="font-size:14px; margin-left:4px;">arrow_forward</span>
         </button>
       </div>
- 
+
     </div>
  
   </div>
@@ -3697,7 +3679,7 @@
 </div><!-- /#lp-block-p1 -->
 
 
-        <!-- BLOK HRBP -->
+  <!-- BLOK HRBP -->
         <div class="lp-role-block" id="lp-block-hrbp">
  
   <!-- NAGŁÓWEK -->
@@ -3717,14 +3699,14 @@
       <div class="p1-pulse-label">Pracownicy<br>w obszarze</div>
     </div>
  
-    <div class="p1-pulse-item accent" onclick="goToAreaTab('area-dash')">
-      <div class="p1-pulse-num">87%</div>
-      <div class="p1-pulse-label">PMC<br>wypełnione</div>
+    <div class="p1-pulse-item neutral" onclick="goToAreaTab('area-dash')">
+      <div class="p1-pulse-num">45</div>
+      <div class="p1-pulse-label">W programach<br>rozwoju</div>
     </div>
  
-    <div class="p1-pulse-item warn" onclick="goToAreaTab('area-dash')">
+    <div class="p1-pulse-item neutral" onclick="goToAreaTab('area-dash')">
       <div class="p1-pulse-num">12</div>
-      <div class="p1-pulse-label">Planów do<br>review</div>
+      <div class="p1-pulse-label">Sukcesji<br>w toku</div>
     </div>
  
     <div class="p1-pulse-item danger" onclick="goToAreaTab('area-risk')">
@@ -3741,7 +3723,7 @@
     <div class="p1-col">
       <div class="p1-col-title">
         <span class="material-symbols-outlined" style="font-size:14px;color:var(--accent)">bolt</span>
-        wymaga reakcji HRBP
+        wymaga reakcji
       </div>
  
       <!-- Pusty pipeline — krytyczne -->
@@ -3750,10 +3732,8 @@
           <span class="material-symbols-outlined" style="font-size:16px">person_off</span>
         </div>
         <div class="p1-action-body">
-          <div class="p1-action-name">Pusty pipeline — Kierownik Regionalny</div>
-          <div class="p1-action-meta">Brak kandydatów do sukcesji · ryzyko operacyjne · 2 mies.</div>
+          <div class="p1-action-name">Brak kandydatów - Kierownik Regionalny</div>
         </div>
-        <div class="p1-action-tag red">Krytyczne</div>
       </div>
  
       <!-- Ryzyko odejścia -->
@@ -3762,10 +3742,8 @@
           <span class="material-symbols-outlined" style="font-size:16px">trending_down</span>
         </div>
         <div class="p1-action-body">
-          <div class="p1-action-name">5 pracowników z wysokim ryzykiem odejścia</div>
-          <div class="p1-action-meta">Brak aktywności w planach · ponad 60 dni</div>
+          <div class="p1-action-name">Wysokie ryzyko odejścia: 5 osób</div>
         </div>
-        <div class="p1-action-tag red">5 osób</div>
       </div>
  
       <!-- Brak planów -->
@@ -3774,67 +3752,60 @@
           <span class="material-symbols-outlined" style="font-size:16px">assignment_late</span>
         </div>
         <div class="p1-action-body">
-          <div class="p1-action-name">18 pracowników bez aktywnego planu</div>
-          <div class="p1-action-meta">Powyżej progu 10% · wymaga interwencji przełożonych</div>
+          <div class="p1-action-name">Brak aktywnego planu: 18 osób</div>
         </div>
-        <div class="p1-action-tag orange">18 osób</div>
-      </div>
- 
-      <!-- SOP deadline -->
-      <div class="p1-action-item" onclick="goToAreaTab('area-dash')">
-        <div class="p1-action-icon orange">
-          <span class="material-symbols-outlined" style="font-size:16px">fact_check</span>
-        </div>
-        <div class="p1-action-body">
-          <div class="p1-action-name">SOP 2025 — 13% niezakończonych ocen</div>
-          <div class="p1-action-meta">Deadline: 28.02.2026 · pozostało 15 dni</div>
-        </div>
-        <div class="p1-action-tag grey">15 dni</div>
       </div>
  
     </div>
  
     <!-- PRAWA: Pipeline sukcesji — skrót z widoku Sukcesja -->
     <div class="p1-col">
+      <style>
+        /* Zabezpieczenie stylów dla obwódek (ikony statusu na dashboardzie) */
+        .dash-icon-border {
+          background: #2a2d31 !important;
+          border: 2px solid;
+          color: #fff;
+          box-sizing: border-box;
+        }
+        .icon-danger { border-color: var(--danger, #f87171); color: var(--danger, #f87171) !important; box-shadow: 0 0 8px rgba(248,113,113,0.15); }
+        .icon-success { border-color: var(--success, #4ade80); color: var(--success, #4ade80) !important; box-shadow: 0 0 8px rgba(74,222,128,0.15); }
+        .icon-accent { border-color:var(--accent); color: var(--accent) !important; box-shadow: 0 0 8px rgba(41,128,185,0.15); }
+      </style>
+
       <div class="p1-col-title">
         <span class="material-symbols-outlined" style="font-size:14px;color:var(--text-muted)">workspace_premium</span>
-        Pipeline sukcesji
+        Ścieżki sukcesji
       </div>
  
       <!-- Dyrektor Logistyki — gotowy -->
       <div class="p1-signal" onclick="switchView('succession')">
-        <div class="p1-signal-avatar" style="background:var(--success); font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center;">2</div>
+        <div class="p1-signal-avatar dash-icon-border icon-accent" style="font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center;">2</div>
         <div class="p1-signal-body">
           <div class="p1-signal-name">Dyrektor Logistyki</div>
-          <div class="p1-signal-desc">Pipeline gotowy · 2 kandydatów · KM gotowa teraz</div>
+          <div class="p1-signal-desc">2 kandydatów </div>
         </div>
         <div class="p1-signal-indicator" style="background:var(--success)"></div>
       </div>
  
       <!-- Kierownik Regionalny — krytyczny, pusty -->
       <div class="p1-signal" style="border-color:var(--danger-border); background:var(--danger-bg);" onclick="switchView('succession')">
-        <div class="p1-signal-avatar" style="background:var(--danger); font-size:16px; display:flex; align-items:center; justify-content:center;">!</div>
+        <div class="p1-signal-avatar dash-icon-border icon-danger" style="font-size:16px; font-weight:700; display:flex; align-items:center; justify-content:center;">!</div>
         <div class="p1-signal-body">
           <div class="p1-signal-name" style="color:var(--danger);">Kierownik Regionalny</div>
-          <div class="p1-signal-desc">Pipeline pusty · brak kandydatów od 2 miesięcy</div>
+          <div class="p1-signal-desc">brak kandydatów</div>
         </div>
         <div class="p1-signal-indicator" style="background:var(--danger)"></div>
       </div>
  
       <!-- Z-ca Dyrektora Operacyjnego — w przygotowaniu -->
       <div class="p1-signal" onclick="switchView('succession')">
-        <div class="p1-signal-avatar" style="background:#2980B9; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center;">1</div>
+        <div class="p1-signal-avatar dash-icon-border icon-accent" style="font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center;">1</div>
         <div class="p1-signal-body">
           <div class="p1-signal-name">Z-ca Dyrektora Operacyjnego</div>
-          <div class="p1-signal-desc">1 kandydat · Jan Wiśniewski · horyzont 2–3 lata</div>
+          <div class="p1-signal-desc">1 kandydat  horyzont 2–3 lata</div>
         </div>
         <div class="p1-signal-indicator" style="background:rgba(235,141,61,0.9)"></div>
-      </div>
- 
-      <!-- Info ogólne -->
-      <div style="margin-top:8px; padding:10px 12px; background:var(--accent-bg); border:1px solid var(--accent-border); border-radius:10px; font-size:12px; color:var(--accent); display:flex; align-items:center; gap:8px;">
-        <span class="material-symbols-outlined" style="font-size:16px; flex-shrink:0;">info</span>
-        <span>3 otwarte wakanty · 69 osób w pipeline sukcesji</span>
       </div>
  
     </div>
@@ -7556,12 +7527,20 @@ function confirmAssign() {
 
         .tlist-table td { padding: 12px 14px; font-size: 13px; color: var(--text); vertical-align: middle; }
 
+        /* ── NOWE STYLE AVATARÓW ── */
         .tlist-avatar {
           width: 30px; height: 30px; border-radius: 50%;
           display: inline-flex; align-items: center; justify-content: center;
           font-size: 10px; font-weight: 700; color: #fff;
           flex-shrink: 0;
+          background: #2a2d31 !important;
+          border: 2px solid;
+          box-sizing: border-box;
         }
+        .avatar-high { border-color: var(--danger, #f87171); box-shadow: 0 0 8px rgba(248,113,113,0.15); }
+        .avatar-medium { border-color: #eb8d3d; box-shadow: 0 0 8px rgba(235,141,61,0.15); }
+        .avatar-ready { border-color: var(--success, #4ade80); box-shadow: 0 0 8px rgba(74,222,128,0.15); }
+        .avatar-standard { border-color: #5a6068; }
 
         .tlist-name-cell { display: flex; align-items: center; gap: 10px; }
         .tlist-name { font-weight: 600; font-size: 13px; }
@@ -7641,7 +7620,6 @@ function confirmAssign() {
               <th onclick="tlistSort('pmc')"  id="th-pmc">PMC <span class="tlist-sort-icon" id="si-pmc">↓</span></th>
               <th onclick="tlistSort('sop')"  id="th-sop">SOP <span class="tlist-sort-icon" id="si-sop"></span></th>
               <th onclick="tlistSort('plan')" id="th-plan">Postęp planu <span class="tlist-sort-icon" id="si-plan"></span></th>
-              <th onclick="tlistSort('trend')" id="th-trend">Trend <span class="tlist-sort-icon" id="si-trend"></span></th>
               <th onclick="tlistSort('status')" id="th-status">Status planu <span class="tlist-sort-icon" id="si-status"></span></th>
               <th>Akcja</th>
             </tr>
@@ -7660,6 +7638,7 @@ function confirmAssign() {
           const mx = MATRIX_EMPLOYEES.find(m => m.id === e.id) || {};
           return { ...e, pmc: mx.pmc || e.pmc, sop: mx.sop || 3.0,
                    pmcPrev: mx.pmcPrev || e.pmc, sopPrev: mx.sopPrev || 3.0,
+                   risk: mx.risk || e.risk, succ: mx.succ || e.succ, // Dodano przepisanie properties ryzyka i sukcesji, jeśli istnieją w powiązanym obiekcie
                    color: mx.color || '#444' };
         });
       }
@@ -7720,11 +7699,21 @@ function confirmAssign() {
           const trendColor = overallDiff > 0.2 ? 'var(--success)' : overallDiff < -0.2 ? 'var(--danger)' : 'var(--text-muted)';
           const trendLabel = overallDiff > 0.2 ? `+${overallDiff.toFixed(1)}` : overallDiff < -0.2 ? overallDiff.toFixed(1) : '0.0';
 
+          // Logika klas awatara
+          let avatarClass = 'avatar-standard';
+          if (e.risk === 'high') {
+            avatarClass = 'avatar-high';
+          } else if (e.risk === 'medium') {
+            avatarClass = 'avatar-medium';
+          } else if (e.succ === 'ready') {
+            avatarClass = 'avatar-ready';
+          }
+
           return `
           <tr onclick="tovOpenSingle(${e.id});">
             <td>
               <div class="tlist-name-cell">
-                <div class="tlist-avatar" style="background:${e.color}">${e.initials}</div>
+                <div class="tlist-avatar ${avatarClass}">${e.initials}</div>
                 <div>
                   <div class="tlist-name">${e.name}</div>
                   <div class="tlist-role">${e.role}</div>
@@ -7744,7 +7733,6 @@ function confirmAssign() {
                 <span style="font-size:12px;color:var(--text-secondary)">${e.plan}%</span>
               </div>
             </td>
-            <td><div class="tlist-trend" style="color:${trendColor}">${trendArrow} <span style="font-size:11px">${trendLabel}</span></div></td>
             <td><span class="tlist-badge ${e.planStatus}">${tlistStatusLabel(e.planStatus)}</span></td>
             <td>
               <button class="tlist-action-btn" onclick="event.stopPropagation(); tovOpenSingle(${e.id});">
@@ -8690,6 +8678,29 @@ function confirmAssign() {
         .area-succ-chip.ready  { background:var(--ls-accent-bg); color:var(--ls-accent); border:1px solid var(--ls-accent-border); }
         .area-succ-chip.dev    { background:var(--bg-card-3); color:var(--text-secondary); border:1px solid var(--border); }
         .area-succ-chip.none   { background:transparent; color:var(--text-muted); border:1px dashed var(--border); }
+
+        /* ── NOWE STYLE: Dynamiczne obwódki avatarów ── */
+        .avatar-border {
+          background: #2a2d31 !important;
+          border: 2px solid;
+          color: #fff;
+          box-sizing: border-box; /* Zapewnia, że border nie powiększy wymiaru kółka */
+        }
+        .avatar-high {
+          border-color: var(--danger, #f87171);
+          box-shadow: 0 0 8px rgba(248,113,113,0.15);
+        }
+        .avatar-medium {
+          border-color: #eb8d3d;
+          box-shadow: 0 0 8px rgba(235,141,61,0.15);
+        }
+        .avatar-ready {
+          border-color: var(--success, #4ade80);
+          box-shadow: 0 0 8px rgba(74,222,128,0.15);
+        }
+        .avatar-standard {
+          border-color: #5a6068;
+        }
       </style>
 
       <div class="area-people-toolbar">
@@ -8728,23 +8739,22 @@ function confirmAssign() {
 
       <script>
       const AREA_PEOPLE = [
-        {id:1,  initials:'PM', name:'Piotr Malinowski',    role:'Spec. ds. Planowania',         dept:'Operacje / Warszawa',  pmc:1.5, sop:2.1, plan:20, risk:'high',   succ:'none',  planStatus:'overdue', color:'#C0392B'},
-        {id:2,  initials:'JW', name:'Jan Wiśniewski',      role:'Z-ca Kierownika Sklepu',        dept:'Sprzedaż / Kraków',    pmc:3.5, sop:3.8, plan:45, risk:'low',    succ:'ready', planStatus:'waiting', color:'#2980B9'},
-        {id:3,  initials:'KM', name:'Katarzyna Mazur',     role:'Koord. Obsługi Klienta',        dept:'Obsługa / Warszawa',   pmc:4.2, sop:4.1, plan:80, risk:'low',    succ:'ready', planStatus:'approved', color:'#27AE60'},
-        {id:4,  initials:'AW', name:'Anna Wróbel',         role:'St. Monodżer Sprzedaży',        dept:'Sprzedaż / Wrocław',   pmc:2.8, sop:3.6, plan:30, risk:'medium', succ:'dev',   planStatus:'waiting', color:'#8E44AD'},
-        {id:5,  initials:'MK', name:'Marcin Kowal',        role:'Manager Działu Nieruchomości',  dept:'Nieruchomości / Łódź', pmc:3.1, sop:2.9, plan:55, risk:'medium', succ:'dev',   planStatus:'approved', color:'#16A085'},
-        {id:6,  initials:'ZN', name:'Zofia Nowak',         role:'Spec. ds. Opakowań',            dept:'Logistyka / Gdańsk',   pmc:3.8, sop:2.5, plan:65, risk:'low',    succ:'none',  planStatus:'approved', color:'#D35400'},
-        {id:7,  initials:'TP', name:'Tomasz Poprzeczka',   role:'Dyrektor Operacyjny',           dept:'Zarząd / Warszawa',    pmc:2.2, sop:1.8, plan:15, risk:'high',   succ:'none',  planStatus:'none',    color:'#7F8C8D'},
-        {id:8,  initials:'EL', name:'Ewa Lisowska',        role:'Spec. ds. Magazynowych',        dept:'Logistyka / Poznań',   pmc:3.4, sop:3.2, plan:40, risk:'low',    succ:'dev',   planStatus:'waiting', color:'#2471A3'},
-        {id:9,  initials:'BK', name:'Bartosz Kubiak',      role:'St. Mon. ds. Aplikacji HR',     dept:'IT / Warszawa',        pmc:3.6, sop:3.0, plan:50, risk:'low',    succ:'dev',   planStatus:'approved', color:'#1A5276'},
-        {id:10, initials:'MR', name:'Maja Rutkowska',      role:'Koord. Sekcji Opakowań',        dept:'Logistyka / Kraków',   pmc:4.0, sop:4.3, plan:70, risk:'low',    succ:'ready', planStatus:'approved', color:'#117A65'},
-        {id:11, initials:'KW', name:'Kamil Wiśniak',       role:'Spec. ds. Rozw. Oprogr. IT',   dept:'IT / Wrocław',         pmc:2.5, sop:2.8, plan:25, risk:'high',   succ:'none',  planStatus:'none',    color:'#6C3483'},
-        {id:12, initials:'NK', name:'Natalia Kowalczyk',   role:'St. Monodżer Sprzedaży',        dept:'Sprzedaż / Gdańsk',    pmc:3.3, sop:3.1, plan:45, risk:'medium', succ:'dev',   planStatus:'overdue', color:'#B7950B'},
+        {id:1,  initials:'PM', name:'Piotr Malinowski',    role:'Spec. ds. Planowania',        dept:'Operacje / Warszawa',  pmc:1.5, sop:2.1, plan:20, risk:'high',   succ:'none',  planStatus:'overdue'},
+        {id:2,  initials:'JW', name:'Jan Wiśniewski',      role:'Z-ca Kierownika Sklepu',        dept:'Sprzedaż / Kraków',    pmc:3.5, sop:3.8, plan:45, risk:'low',    succ:'ready', planStatus:'waiting'},
+        {id:3,  initials:'KM', name:'Katarzyna Mazur',     role:'Koord. Obsługi Klienta',        dept:'Obsługa / Warszawa',   pmc:4.2, sop:4.1, plan:80, risk:'low',    succ:'ready', planStatus:'approved'},
+        {id:4,  initials:'AW', name:'Anna Wróbel',         role:'St. Menedżer Sprzedaży',        dept:'Sprzedaż / Wrocław',   pmc:2.8, sop:3.6, plan:30, risk:'medium', succ:'dev',   planStatus:'waiting'},
+        {id:5,  initials:'MK', name:'Marcin Kowal',        role:'Manager Działu Nieruchomości',  dept:'Nieruchomości / Łódź', pmc:3.1, sop:2.9, plan:55, risk:'medium', succ:'dev',   planStatus:'approved'},
+        {id:6,  initials:'ZN', name:'Zofia Nowak',         role:'Spec. ds. Opakowań',            dept:'Logistyka / Gdańsk',   pmc:3.8, sop:2.5, plan:65, risk:'low',    succ:'none',  planStatus:'approved'},
+        {id:7,  initials:'TP', name:'Tomasz Poprzeczka',   role:'Dyrektor Operacyjny',           dept:'Zarząd / Warszawa',    pmc:2.2, sop:1.8, plan:15, risk:'high',   succ:'none',  planStatus:'none'},
+        {id:8,  initials:'EL', name:'Ewa Lisowska',        role:'Spec. ds. Magazynowych',        dept:'Logistyka / Poznań',   pmc:3.4, sop:3.2, plan:40, risk:'low',    succ:'dev',   planStatus:'waiting'},
+        {id:9,  initials:'BK', name:'Bartosz Kubiak',      role:'St. Mon. ds. Aplikacji HR',     dept:'IT / Warszawa',        pmc:3.6, sop:3.0, plan:50, risk:'low',    succ:'dev',   planStatus:'approved'},
+        {id:10, initials:'MR', name:'Maja Rutkowska',      role:'Koord. Sekcji Opakowań',        dept:'Logistyka / Kraków',   pmc:4.0, sop:4.3, plan:70, risk:'low',    succ:'ready', planStatus:'approved'},
+        {id:11, initials:'KW', name:'Kamil Wiśniak',       role:'Spec. ds. Rozw. Oprogr. IT',    dept:'IT / Wrocław',         pmc:2.5, sop:2.8, plan:25, risk:'high',   succ:'none',  planStatus:'none'},
+        {id:12, initials:'NK', name:'Natalia Kowalczyk',   role:'St. Menedżer Sprzedaży',        dept:'Sprzedaż / Gdańsk',    pmc:3.3, sop:3.1, plan:45, risk:'medium', succ:'dev',   planStatus:'overdue'},
       ];
 
       const PLAN_LABELS = { approved:'Zatwierdzony', waiting:'Czeka', overdue:'Zaległy', none:'Brak planu', draft:'Roboczy' };
       const PLAN_CLS    = { approved:'approved', waiting:'waiting', overdue:'overdue', none:'none', draft:'draft' };
-      // reuse tlist badge styles (already in DOM)
 
       function areaPeopleRender() {
         const search   = (document.getElementById('areaPeopleSearch')?.value || '').toLowerCase();
@@ -8775,11 +8785,22 @@ function confirmAssign() {
         tbody.innerHTML = data.map(e => {
           const pmcColor = e.pmc >= 3.5 ? 'var(--success)' : e.pmc >= 2.5 ? 'var(--accent)' : 'var(--danger)';
           const sopColor = e.sop >= 3.5 ? 'var(--success)' : e.sop >= 2.5 ? 'var(--accent)' : 'var(--danger)';
+          
+          // Logika doboru obwódki na podstawie statusów
+          let avatarClass = 'avatar-standard';
+          if (e.risk === 'high') {
+            avatarClass = 'avatar-high';
+          } else if (e.risk === 'medium') {
+            avatarClass = 'avatar-medium';
+          } else if (e.succ === 'ready') {
+            avatarClass = 'avatar-ready';
+          }
+
           return `
           <tr onclick="switchView('profile')">
             <td>
               <div style="display:flex;align-items:center;gap:10px;">
-                <div style="width:30px;height:30px;border-radius:50%;background:${e.color};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;">${e.initials}</div>
+                <div class="avatar-border ${avatarClass}" style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">${e.initials}</div>
                 <div>
                   <div style="font-weight:600;font-size:13px;">${e.name}</div>
                   <div style="font-size:11px;color:var(--text-secondary);">${e.role}</div>
@@ -8832,6 +8853,9 @@ function confirmAssign() {
           border: 1px solid var(--ls-border);
           border-radius: 20px;
           overflow: hidden;
+          position: relative; /* Dodane dla lepszego układu elementów wewnętrznych */
+          display: flex;
+          flex-direction: column;
         }
         .area-panel-header {
           padding: 16px 24px;
@@ -8951,6 +8975,42 @@ function confirmAssign() {
           color: var(--danger);
           font-weight: 500;
         }
+
+        /* ── NOWE STYLE: Dynamiczne obwódki avatarów i legenda ── */
+        .avatar-border {
+          background: #2a2d31 !important; /* Ciemne tło, by kolory obwódki odpowiednio kontrastowały */
+          border: 2px solid;
+          color: #fff;
+        }
+        .avatar-high {
+          border-color: var(--danger, #f87171);
+          box-shadow: 0 0 8px rgba(248,113,113,0.15);
+        }
+        .avatar-medium {
+          border-color: #eb8d3d;
+          box-shadow: 0 0 8px rgba(235,141,61,0.15);
+        }
+        .avatar-ready {
+          border-color: var(--success, #4ade80);
+          box-shadow: 0 0 8px rgba(74,222,128,0.15);
+        }
+        .avatar-standard {
+          border-color: #5a6068;
+        }
+
+        .legend-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 11px;
+          color: var(--ls-text-secondary);
+        }
+        .legend-dot {
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          border: 2px solid;
+        }
       </style>
 
       <div class="area-risk-layout">
@@ -8963,50 +9023,53 @@ function confirmAssign() {
             <span style="margin-left:auto; font-size:11px; background:var(--danger-bg); color:var(--danger); padding:2px 8px; border-radius:6px; border:1px solid var(--danger-border);">5 osób</span>
           </div>
 
-          <div class="area-risk-person" onclick="switchView('profile')">
-            <div class="area-risk-person-avatar" style="background:#C0392B;">PM</div>
-            <div style="flex:1; min-width:0;">
-              <div style="font-size:14px; font-weight:600; color:var(--ls-text); margin-bottom:2px;">Piotr Malinowski</div>
-              <div style="font-size:11px; color:var(--ls-text-secondary); margin-bottom:6px;">Spec. ds. Planowania · Operacje / Warszawa</div>
+          <div style="flex: 1;">
+            <div class="area-risk-person" onclick="switchView('profile')">
+              <div class="area-risk-person-avatar avatar-border avatar-high">PM</div>
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:14px; font-weight:600; color:var(--ls-text); margin-bottom:2px;">Piotr Malinowski</div>
+                <div style="font-size:11px; color:var(--ls-text-secondary); margin-bottom:6px;">Spec. ds. Planowania · Operacje / Warszawa</div>
+              </div>
+              <span class="area-risk-chip-lg high">Wysokie</span>
             </div>
-            <span class="area-risk-chip-lg high">Wysokie</span>
+
+            <div class="area-risk-person" onclick="switchView('profile')">
+              <div class="area-risk-person-avatar avatar-border avatar-high">TP</div>
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:14px; font-weight:600; color:var(--ls-text); margin-bottom:2px;">Tomasz Poprzeczka</div>
+                <div style="font-size:11px; color:var(--ls-text-secondary); margin-bottom:6px;">Dyrektor Operacyjny · Zarząd / Warszawa</div>
+              </div>
+              <span class="area-risk-chip-lg high">Wysokie</span>
+            </div>
+
+            <div class="area-risk-person" onclick="switchView('profile')">
+              <div class="area-risk-person-avatar avatar-border avatar-high">KW</div>
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:14px; font-weight:600; color:var(--ls-text); margin-bottom:2px;">Kamil Wiśniak</div>
+                <div style="font-size:11px; color:var(--ls-text-secondary); margin-bottom:6px;">Spec. ds. Rozw. Oprogr. IT · IT / Wrocław</div>
+              </div>
+              <span class="area-risk-chip-lg high">Wysokie</span>
+            </div>
+
+            <div class="area-risk-person" onclick="switchView('profile')">
+              <div class="area-risk-person-avatar avatar-border avatar-medium">AW</div>
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:14px; font-weight:600; color:var(--ls-text); margin-bottom:2px;">Anna Wróbel</div>
+                <div style="font-size:11px; color:var(--ls-text-secondary); margin-bottom:6px;">St. Menedżer Sprzedaży · Sprzedaż / Wrocław</div>
+              </div>
+              <span class="area-risk-chip-lg medium">Średnie</span>
+            </div>
+
+            <div class="area-risk-person" onclick="switchView('profile')">
+              <div class="area-risk-person-avatar avatar-border avatar-medium">NK</div>
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:14px; font-weight:600; color:var(--ls-text); margin-bottom:2px;">Natalia Kowalczyk</div>
+                <div style="font-size:11px; color:var(--ls-text-secondary); margin-bottom:6px;">St. Menedżer Sprzedaży · Sprzedaż / Gdańsk</div>
+              </div>
+              <span class="area-risk-chip-lg medium">Średnie</span>
+            </div>
           </div>
 
-          <div class="area-risk-person" onclick="switchView('profile')">
-            <div class="area-risk-person-avatar" style="background:#7F8C8D;">TP</div>
-            <div style="flex:1; min-width:0;">
-              <div style="font-size:14px; font-weight:600; color:var(--ls-text); margin-bottom:2px;">Tomasz Poprzeczka</div>
-              <div style="font-size:11px; color:var(--ls-text-secondary); margin-bottom:6px;">Dyrektor Operacyjny · Zarząd / Warszawa</div>
-            </div>
-            <span class="area-risk-chip-lg high">Wysokie</span>
-          </div>
-
-          <div class="area-risk-person" onclick="switchView('profile')">
-            <div class="area-risk-person-avatar" style="background:#6C3483;">KW</div>
-            <div style="flex:1; min-width:0;">
-              <div style="font-size:14px; font-weight:600; color:var(--ls-text); margin-bottom:2px;">Kamil Wiśniak</div>
-              <div style="font-size:11px; color:var(--ls-text-secondary); margin-bottom:6px;">Spec. ds. Rozw. Oprogr. IT · IT / Wrocław</div>
-            </div>
-            <span class="area-risk-chip-lg high">Wysokie</span>
-          </div>
-
-          <div class="area-risk-person" onclick="switchView('profile')">
-            <div class="area-risk-person-avatar" style="background:#8E44AD;">AW</div>
-            <div style="flex:1; min-width:0;">
-              <div style="font-size:14px; font-weight:600; color:var(--ls-text); margin-bottom:2px;">Anna Wróbel</div>
-              <div style="font-size:11px; color:var(--ls-text-secondary); margin-bottom:6px;">St. Monodżer Sprzedaży · Sprzedaż / Wrocław</div>
-            </div>
-            <span class="area-risk-chip-lg medium">Średnie</span>
-          </div>
-
-          <div class="area-risk-person" onclick="switchView('profile')">
-            <div class="area-risk-person-avatar" style="background:#B7950B;">NK</div>
-            <div style="flex:1; min-width:0;">
-              <div style="font-size:14px; font-weight:600; color:var(--ls-text); margin-bottom:2px;">Natalia Kowalczyk</div>
-              <div style="font-size:11px; color:var(--ls-text-secondary); margin-bottom:6px;">St. Monodżer Sprzedaży · Sprzedaż / Gdańsk</div>
-            </div>
-            <span class="area-risk-chip-lg medium">Średnie</span>
-          </div>
         </div>
 
         <!-- PRAWA: Pipeline sukcesji (10C.1) -->
@@ -9027,12 +9090,12 @@ function confirmAssign() {
             </div>
             <div class="area-succ-candidates">
               <div class="area-succ-candidate" onclick="switchView('profile')">
-                <div class="area-succ-candidate-avatar" style="background:#27AE60;">KM</div>
+                <div class="area-succ-candidate-avatar avatar-border avatar-ready">KM</div>
                 <div class="area-succ-candidate-name">Katarzyna Mazur</div>
                 <span class="area-succ-readiness ready">Gotowa teraz</span>
               </div>
               <div class="area-succ-candidate" onclick="switchView('profile')">
-                <div class="area-succ-candidate-avatar" style="background:#117A65;">MR</div>
+                <div class="area-succ-candidate-avatar avatar-border avatar-standard">MR</div>
                 <div class="area-succ-candidate-name">Maja Rutkowska</div>
                 <span class="area-succ-readiness dev">1–2 lata</span>
               </div>
@@ -9063,7 +9126,7 @@ function confirmAssign() {
             </div>
             <div class="area-succ-candidates">
               <div class="area-succ-candidate" onclick="switchView('profile')">
-                <div class="area-succ-candidate-avatar" style="background:#2980B9;">JW</div>
+                <div class="area-succ-candidate-avatar avatar-border avatar-standard">JW</div>
                 <div class="area-succ-candidate-name">Jan Wiśniewski</div>
                 <span class="area-succ-readiness dev">2–3 lata</span>
               </div>
