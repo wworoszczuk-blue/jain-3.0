@@ -7602,53 +7602,58 @@ function confirmAssign() {
     </div>
 
     <!-- ═══════════════════════════════════════════════════
-         ZAKŁADKA 3: LISTA PRACOWNIKÓW
+        ZAKŁADKA 3: LISTA PRACOWNIKÓW
     ═══════════════════════════════════════════════════ -->
     <div class="module-view" id="team-list" style="display:none;">
       <style>
         .tlist-wrap { padding: 8px 0; color: var(--text); }
 
-        /* Pasek narzędziowy */
+        /* ── Pasek narzędziowy ── */
         .tlist-toolbar {
           display: flex; align-items: center; gap: 12px;
-          margin-bottom: 20px; flex-wrap: wrap;
+          margin-bottom: 24px; flex-wrap: wrap;
         }
+        
         .tlist-search {
-          flex: 1; min-width: 200px;
+          flex: 1; min-width: 220px;
           background: var(--bg-card-2); border: 1px solid var(--border);
-          border-radius: 10px; padding: 9px 14px 9px 36px;
+          border-radius: 12px; padding: 10px 14px 10px 36px;
           font-size: 13px; color: var(--text); font-family: 'General Sans', sans-serif;
-          outline: none; transition: border-color 0.2s;
+          outline: none; transition: border-color 0.2s, box-shadow 0.2s;
           background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238e9094' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
           background-repeat: no-repeat; background-position: 12px center; background-size: 16px;
         }
-        .tlist-search:focus { border-color: var(--accent); }
+        .tlist-search:focus { 
+          border-color: var(--accent); 
+          box-shadow: 0 0 0 2px var(--accent-bg); 
+        }
+        
         .tlist-filter-select {
           background: var(--bg-card-2); border: 1px solid var(--border);
-          color: var(--text); padding: 9px 28px 9px 12px;
-          border-radius: 10px; font-family: 'General Sans', sans-serif;
+          color: var(--text); padding: 10px 32px 10px 14px;
+          border-radius: 12px; font-family: 'General Sans', sans-serif;
           font-size: 12px; font-weight: 500; outline: none; cursor: pointer;
           appearance: none;
           background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-          background-repeat: no-repeat; background-position: right 8px center; background-size: 14px;
-          transition: border-color 0.2s;
+          background-repeat: no-repeat; background-position: right 10px center; background-size: 14px;
+          transition: all 0.2s;
         }
-        .tlist-filter-select:focus { border-color: var(--accent); }
+        .tlist-filter-select:hover { border-color: var(--border-strong); }
+        .tlist-filter-select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-bg); }
+        
         .tlist-count {
-          font-size: 12px; color: var(--text-muted); white-space: nowrap;
-          padding: 0 4px;
+          font-size: 12px; font-weight: 600; color: var(--text-muted); 
+          white-space: nowrap; padding: 0 8px;
         }
 
-        /* Tabela */
+        /* ── Tabela ── */
         .tlist-table { width: 100%; border-collapse: collapse; }
 
-        .tlist-table thead tr {
-          border-bottom: 1px solid var(--border);
-        }
+        .tlist-table thead tr { border-bottom: 1px solid var(--border); }
         .tlist-table th {
-          padding: 8px 14px; text-align: left;
+          padding: 12px 16px; text-align: left;
           font-size: 10px; font-weight: 700; color: var(--text-muted);
-          text-transform: uppercase; letter-spacing: 0.6px;
+          text-transform: uppercase; letter-spacing: 0.8px;
           cursor: pointer; user-select: none; white-space: nowrap;
           transition: color 0.15s;
         }
@@ -7662,92 +7667,100 @@ function confirmAssign() {
         }
         .tlist-table tbody tr:hover { background: var(--bg-hover); }
         .tlist-table tbody tr:last-child { border-bottom: none; }
+        .tlist-table td { padding: 14px 16px; font-size: 13px; color: var(--text); vertical-align: middle; }
 
-        .tlist-table td { padding: 12px 14px; font-size: 13px; color: var(--text); vertical-align: middle; }
-
-        /* ── NOWE STYLE AVATARÓW ── */
-        .tlist-avatar {
-          width: 30px; height: 30px; border-radius: 50%;
+        /* ── AWATARY (Z obwódką sygnalizującą stan) ── */
+        .avatar-border {
+          width: 32px; height: 32px; border-radius: 50%;
           display: inline-flex; align-items: center; justify-content: center;
-          font-size: 10px; font-weight: 700; color: #fff;
-          flex-shrink: 0;
+          font-size: 11px; font-weight: 800;
+          flex-shrink: 0; transition: all 0.2s;
           background: #2a2d31 !important;
-          border: 2px solid;
+          border: 2px solid transparent; /* Jawnie czyścimy kolor domyślny */
+          color: #fff;
           box-sizing: border-box;
         }
-        .avatar-high { border-color: var(--danger, #f87171); box-shadow: 0 0 8px rgba(248,113,113,0.15); }
-        .avatar-medium { border-color: #eb8d3d; box-shadow: 0 0 8px rgba(235,141,61,0.15); }
-        .avatar-ready { border-color: var(--success, #4ade80); box-shadow: 0 0 8px rgba(74,222,128,0.15); }
-        .avatar-standard { border-color: #5a6068; }
-
-        .tlist-name-cell { display: flex; align-items: center; gap: 10px; }
-        .tlist-name { font-weight: 600; font-size: 13px; }
-        .tlist-role { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
-
-        .tlist-pmc {
-          font-size: 13px; font-weight: 700;
-          display: flex; align-items: center; gap: 6px;
+        
+        /* Wymuszamy kolory poprzez podniesienie wagi selektora i !important */
+        .avatar-border.avatar-danger {
+          border-color: var(--danger) !important;
+          box-shadow: 0 0 8px rgba(231,77,60,0.15); 
         }
-        .tlist-pmc-bar {
+        .avatar-border.avatar-muted {
+          border-color: var(--text-muted) !important;
+        }
+
+        .tlist-name-cell { display: flex; align-items: center; gap: 12px; }
+        .tlist-name { font-weight: 600; font-size: 13px; color: var(--text); margin-bottom: 2px;}
+        .tlist-role { font-size: 11px; color: var(--text-secondary); }
+
+        /* ── KATEGORIA MDR (Subtelne badge) ── */
+        .mdr-subtle-badge {
+          display: inline-flex; align-items: center; gap: 6px;
+          font-size: 11px; font-weight: 600; padding: 4px 10px;
+          border-radius: 12px; white-space: nowrap;
+          background: transparent;
+        }
+        .mdr-subtle-badge.accent { color: var(--accent); border: 1px solid var(--border-strong); }
+        .mdr-subtle-badge.danger { color: var(--danger); border: 1px solid var(--danger-border); }
+        .mdr-subtle-badge.muted  { color: var(--text-muted); border: 1px solid var(--border-strong); }
+
+        /* ── PMC / SOP ── */
+        .score-val { font-size: 13px; font-weight: 700; color: var(--text); }
+        .score-max { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+
+        /* ── Postęp planu ── */
+        .tlist-prog-bar {
           width: 48px; height: 4px; border-radius: 2px;
-          background: var(--bg-card-3); overflow: hidden; flex-shrink: 0;
+          background: var(--border); overflow: hidden; flex-shrink: 0;
         }
-        .tlist-pmc-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+        .tlist-prog-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
 
-        .tlist-sop { font-size: 13px; font-weight: 700; }
-
-        .tlist-trend { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
-
+        /* ── Status Planu ── */
         .tlist-badge {
           display: inline-flex; align-items: center; gap: 5px;
-          font-size: 11px; font-weight: 600; padding: 3px 9px;
-          border-radius: 20px; white-space: nowrap;
+          font-size: 11px; font-weight: 600; padding: 4px 10px;
+          border-radius: 12px; white-space: nowrap;
         }
-        .tlist-badge.approved  { background: var(--success-bg);  color: var(--success);  border: 1px solid var(--success-border); }
-        .tlist-badge.waiting   { background: var(--accent-bg);   color: var(--accent);   border: 1px solid var(--accent-border); }
-        .tlist-badge.overdue   { background: var(--danger-bg);   color: var(--danger);   border: 1px solid var(--danger-border); }
-        .tlist-badge.none      { background: var(--bg-card-3);   color: var(--text-muted); border: 1px solid var(--border); }
-        .tlist-badge.draft     { background: var(--bg-card-3);   color: var(--text-muted); border: 1px solid var(--border); }
-
-        .tlist-action-btn {
-          background: none; border: 1px solid var(--border);
-          color: var(--text-secondary); border-radius: 8px;
-          padding: 5px 10px; font-size: 11px; font-weight: 600;
-          cursor: pointer; transition: all 0.15s;
-          font-family: 'General Sans', sans-serif;
-          display: inline-flex; align-items: center; gap: 4px;
-        }
-        .tlist-action-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .tlist-badge.approved  { background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent-border); }
+        .tlist-badge.overdue   { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
+        .tlist-badge.waiting   { background: transparent; color: var(--text-muted); border: 1px solid var(--border-strong); }
+        .tlist-badge.none      { background: transparent; color: var(--text-muted); border: 1px dashed var(--border-strong); }
+        .tlist-badge.draft     { background: var(--bg-card-3); color: var(--text-muted); border: 1px solid var(--border); }
 
         .tlist-empty {
-          text-align: center; padding: 48px 24px;
-          color: var(--text-muted); font-size: 14px;
+          text-align: center; padding: 60px 24px;
+          color: var(--text-muted); font-size: 13px; font-weight: 500;
+        }
+        .tlist-empty .material-symbols-outlined {
+          font-size: 32px; color: var(--border-strong); margin-bottom: 8px; display: block;
         }
       </style>
 
       <div class="tlist-wrap">
         <div class="tlist-toolbar">
           <input class="tlist-search" type="text" id="tlistSearch" placeholder="Szukaj po nazwisku, stanowisku…" oninput="tlistRender()">
+          
+          <select class="tlist-filter-select" id="tlistFilterMdr" onchange="tlistRender()">
+            <option value="">Kategoria MDR: Wszyscy</option>
+            <option value="future_leader">Lider/ka Przyszłości</option>
+            <option value="emerging_leader">Wschodzący/a Lider/ka</option>
+            <option value="subject_matter_leader">Lider/ka Merytoryczny/a</option>
+            <option value="effective_in_role">Skuteczny/a w Roli</option>
+            <option value="new_employee">Nowy Pracownik</option>
+            <option value="question_mark">Znak Zapytania</option>
+            <option value="alert">Alert</option>
+            <option value="outside_mdr">Poza MDR</option>
+          </select>
+
           <select class="tlist-filter-select" id="tlistFilterPlan" onchange="tlistRender()">
             <option value="">Status planu: Wszyscy</option>
             <option value="approved">Zatwierdzony</option>
-            <option value="waiting">Czeka na zatwierdzenie</option>
+            <option value="waiting">Oczekuje / Roboczy</option>
             <option value="overdue">Plan zaległy</option>
             <option value="none">Brak planu</option>
-            <option value="draft">Wersja robocza</option>
           </select>
-          <select class="tlist-filter-select" id="tlistFilterPmc" onchange="tlistRender()">
-            <option value="">PMC: Wszyscy</option>
-            <option value="high">PMC wysoki (≥3.5)</option>
-            <option value="mid">PMC średni (2.5–3.5)</option>
-            <option value="low">PMC niski (&lt;2.5)</option>
-          </select>
-          <select class="tlist-filter-select" id="tlistFilterSop" onchange="tlistRender()">
-            <option value="">SOP: Wszyscy</option>
-            <option value="high">SOP wysoki (≥3.5)</option>
-            <option value="mid">SOP średni (2.5–3.5)</option>
-            <option value="low">SOP niski (&lt;2.5)</option>
-          </select>
+          
           <span class="tlist-count" id="tlistCount"></span>
         </div>
 
@@ -7755,11 +7768,11 @@ function confirmAssign() {
           <thead>
             <tr>
               <th onclick="tlistSort('name')" id="th-name">Pracownik <span class="tlist-sort-icon" id="si-name"></span></th>
-              <th onclick="tlistSort('pmc')"  id="th-pmc">PMC <span class="tlist-sort-icon" id="si-pmc">↓</span></th>
-              <th onclick="tlistSort('sop')"  id="th-sop">SOP <span class="tlist-sort-icon" id="si-sop"></span></th>
+              <th onclick="tlistSort('mdr')" id="th-mdr">Kategoria MDR <span class="tlist-sort-icon" id="si-mdr"></span></th>
+              <th onclick="tlistSort('pmc')"  id="th-pmc">PMC (Wyniki) <span class="tlist-sort-icon" id="si-pmc">↓</span></th>
+              <th onclick="tlistSort('sop')"  id="th-sop">SOP (Potencjał) <span class="tlist-sort-icon" id="si-sop"></span></th>
               <th onclick="tlistSort('plan')" id="th-plan">Postęp planu <span class="tlist-sort-icon" id="si-plan"></span></th>
               <th onclick="tlistSort('status')" id="th-status">Status planu <span class="tlist-sort-icon" id="si-status"></span></th>
-              <th>Akcja</th>
             </tr>
           </thead>
           <tbody id="tlistBody"></tbody>
@@ -7767,91 +7780,98 @@ function confirmAssign() {
       </div>
 
       <script>
-      // Łączy dane TOV_EMPLOYEES z MATRIX_EMPLOYEES (PMC/SOP)
       let tlistSortCol = 'pmc';
-      let tlistSortDir = -1; // -1 = malejąco
+      let tlistSortDir = -1; 
 
-      function tlistGetData() {
-        return TOV_EMPLOYEES.map(e => {
-          const mx = MATRIX_EMPLOYEES.find(m => m.id === e.id) || {};
-          return { ...e, pmc: mx.pmc || e.pmc, sop: mx.sop || 3.0,
-                   pmcPrev: mx.pmcPrev || e.pmc, sopPrev: mx.sopPrev || 3.0,
-                   risk: mx.risk || e.risk, succ: mx.succ || e.succ, // Dodano przepisanie properties ryzyka i sukcesji, jeśli istnieją w powiązanym obiekcie
-                   color: mx.color || '#444' };
-        });
-      }
+      const TLIST_EMPLOYEES = [
+        { id:1,  initials:'PM', name:'Piotr Malinowski',   role:'Spec. ds. Planowania',          cat:'alert',                pmc:1.5, sop:2.1, plan: 20, planStatus: 'overdue' },
+        { id:2,  initials:'JW', name:'Jan Wiśniewski',     role:'Z-ca Kierownika Sklepu',        cat:'emerging_leader',      pmc:3.5, sop:3.8, plan: 45, planStatus: 'waiting' },
+        { id:3,  initials:'KM', name:'Katarzyna Mazur',    role:'Koord. Sekcji Obsługi Klienta', cat:'future_leader',        pmc:4.2, sop:4.1, plan: 80, planStatus: 'approved' },
+        { id:4,  initials:'AW', name:'Anna Wróbel',        role:'St. Monodżer Sprzedaży',        cat:'emerging_leader',      pmc:2.8, sop:3.6, plan: 30, planStatus: 'waiting' },
+        { id:5,  initials:'MK', name:'Marcin Kowal',       role:'Reg. Manager Działu Nieruch.',  cat:'effective_in_role',    pmc:3.1, sop:2.9, plan: 55, planStatus: 'approved' },
+        { id:6,  initials:'ZN', name:'Zofia Nowak',        role:'Spec. ds. Opakowań i Rekl.',    cat:'subject_matter_leader',pmc:3.8, sop:2.5, plan: 65, planStatus: 'approved' },
+        { id:7,  initials:'TP', name:'Tomasz Poprzeczka',  role:'Dyrektor Operacyjny',           cat:'question_mark',        pmc:2.2, sop:1.8, plan: 0,  planStatus: 'none' },
+        { id:8,  initials:'EL', name:'Ewa Lisowska',       role:'Spec. ds. Magazynowych',        cat:'effective_in_role',    pmc:3.4, sop:3.2, plan: 40, planStatus: 'waiting' },
+        { id:9,  initials:'BK', name:'Bartosz Kubiak',     role:'St. Mon. ds. Aplikacji HR',     cat:'subject_matter_leader',pmc:3.6, sop:3.0, plan: 50, planStatus: 'approved' },
+        { id:10, initials:'MR', name:'Maja Rutkowska',     role:'Koord. Sekcji Opakowań',        cat:'future_leader',        pmc:4.0, sop:4.3, plan: 70, planStatus: 'approved' },
+        { id:11, initials:'KW', name:'Kamil Wiśniak',      role:'Spec. ds. Rozw. Oprogr. IT',    cat:'outside_mdr',          pmc:null,sop:null,plan: 25, planStatus: 'draft' },
+        { id:12, initials:'NK', name:'Natalia Kowalczyk',  role:'St. Monodżer Sprzedaży',        cat:'effective_in_role',    pmc:3.3, sop:3.1, plan: 45, planStatus: 'overdue' },
+        { id:13, initials:'AB', name:'Adam Burza',         role:'Analityk Danych',               cat:'effective_in_role',    pmc:3.2, sop:3.0, plan: 60, planStatus: 'approved' },
+        { id:14, initials:'CJ', name:'Celina Jantar',      role:'Księgowa',                      cat:'effective_in_role',    pmc:3.0, sop:3.5, plan: 10, planStatus: 'draft' },
+        { id:15, initials:'DK', name:'Dawid Kruk',         role:'Specjalista ds. Jakości',       cat:'effective_in_role',    pmc:3.4, sop:3.4, plan: 90, planStatus: 'approved' }
+      ];
 
-      function tlistPmcColor(v) {
-        return v >= 3.5 ? 'var(--success)' : v >= 2.5 ? 'var(--accent)' : 'var(--danger)';
-      }
+      const MDR_DICTIONARY = {
+        'future_leader':         { label: 'Lider/ka Przyszłości',     cls: 'accent' },
+        'emerging_leader':       { label: 'Wschodzący/a Lider/ka',    cls: 'accent' },
+        'subject_matter_leader': { label: 'Lider/ka Merytoryczny/a',  cls: 'accent' },
+        'effective_in_role':     { label: 'Skuteczny/a w Roli',       cls: 'muted' },
+        'new_employee':          { label: 'Nowy Pracownik',           cls: 'muted' },
+        'question_mark':         { label: 'Znak Zapytania',           cls: 'muted' },
+        'alert':                 { label: 'Alert',                    cls: 'danger' },
+        'outside_mdr':           { label: 'Poza MDR',                 cls: 'muted' }
+      };
 
       function tlistStatusLabel(s) {
-        const map = { approved:'Zatwierdzony', waiting:'Czeka', overdue:'Zaległy', none:'Brak planu', draft:'Roboczy' };
+        const map = { approved:'Zatwierdzony', waiting:'Oczekuje', overdue:'Zaległy', none:'Brak planu', draft:'Roboczy' };
         return map[s] || s;
       }
 
       function tlistRender() {
-        const search = document.getElementById('tlistSearch').value.toLowerCase();
-        const fPlan  = document.getElementById('tlistFilterPlan').value;
-        const fPmc   = document.getElementById('tlistFilterPmc').value;
-        const fSop   = document.getElementById('tlistFilterSop').value;
+        const search  = document.getElementById('tlistSearch').value.toLowerCase();
+        const fMdr    = document.getElementById('tlistFilterMdr').value;
+        const fPlan   = document.getElementById('tlistFilterPlan').value;
 
-        let data = tlistGetData().filter(e => {
+        let data = TLIST_EMPLOYEES.filter(e => {
           if (search && !e.name.toLowerCase().includes(search) && !e.role.toLowerCase().includes(search)) return false;
-          if (fPlan && e.planStatus !== fPlan) return false;
-          if (fPmc === 'high' && e.pmc < 3.5)  return false;
-          if (fPmc === 'mid'  && (e.pmc < 2.5 || e.pmc > 3.5)) return false;
-          if (fPmc === 'low'  && e.pmc >= 2.5)  return false;
-          if (fSop === 'high' && e.sop < 3.5)   return false;
-          if (fSop === 'mid'  && (e.sop < 2.5 || e.sop > 3.5)) return false;
-          if (fSop === 'low'  && e.sop >= 2.5)  return false;
+          if (fMdr && e.cat !== fMdr) return false;
+          
+          if (fPlan) {
+            if (fPlan === 'waiting' && e.planStatus !== 'waiting' && e.planStatus !== 'draft') return false;
+            if (fPlan !== 'waiting' && e.planStatus !== fPlan) return false;
+          }
           return true;
         });
 
-        // Sortowanie
         data.sort((a, b) => {
           let va, vb;
           if (tlistSortCol === 'name')   { va = a.name; vb = b.name; return tlistSortDir * va.localeCompare(vb); }
-          if (tlistSortCol === 'pmc')    { va = a.pmc;  vb = b.pmc; }
-          if (tlistSortCol === 'sop')    { va = a.sop;  vb = b.sop; }
+          if (tlistSortCol === 'mdr')    { va = a.cat;  vb = b.cat;  return tlistSortDir * va.localeCompare(vb); }
+          if (tlistSortCol === 'pmc')    { va = a.pmc || 0;  vb = b.pmc || 0; }
+          if (tlistSortCol === 'sop')    { va = a.sop || 0;  vb = b.sop || 0; }
           if (tlistSortCol === 'plan')   { va = a.plan; vb = b.plan; }
-          if (tlistSortCol === 'trend')  { va = (a.pmc-a.pmcPrev)+(a.sop-a.sopPrev); vb = (b.pmc-b.pmcPrev)+(b.sop-b.sopPrev); }
-          if (tlistSortCol === 'status') { const o={approved:4,waiting:3,overdue:2,draft:1,none:0}; va=o[a.planStatus]||0; vb=o[b.planStatus]||0; }
-          return tlistSortDir * ((va||0) - (vb||0));
+          if (tlistSortCol === 'status') { const o={approved:4,waiting:3,draft:3,overdue:2,none:0}; va=o[a.planStatus]||0; vb=o[b.planStatus]||0; }
+          return tlistSortDir * (va - vb);
         });
 
-        document.getElementById('tlistCount').textContent = `${data.length} z ${TOV_EMPLOYEES.length} pracowników`;
+        document.getElementById('tlistCount').textContent = `${data.length} z ${TLIST_EMPLOYEES.length} pracowników`;
 
         const tbody = document.getElementById('tlistBody');
         if (!data.length) {
-          tbody.innerHTML = `<tr><td colspan="7" class="tlist-empty">Brak wyników dla podanych filtrów</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="6" class="tlist-empty"><span class="material-symbols-outlined">search_off</span>Brak wyników dla podanych filtrów</td></tr>`;
           return;
         }
 
         tbody.innerHTML = data.map(e => {
-          const pmcColor = tlistPmcColor(e.pmc);
-          const pmcPct = Math.round((e.pmc / 5) * 100);
-          const sopColor = tlistPmcColor(e.sop);
-          const overallDiff = (e.pmc - e.pmcPrev) + (e.sop - e.sopPrev);
-          const trendArrow = overallDiff > 0.2 ? '▲' : overallDiff < -0.2 ? '▼' : '●';
-          const trendColor = overallDiff > 0.2 ? 'var(--success)' : overallDiff < -0.2 ? 'var(--danger)' : 'var(--text-muted)';
-          const trendLabel = overallDiff > 0.2 ? `+${overallDiff.toFixed(1)}` : overallDiff < -0.2 ? overallDiff.toFixed(1) : '0.0';
-
-          // Logika klas awatara
-          let avatarClass = 'avatar-standard';
-          if (e.risk === 'high') {
-            avatarClass = 'avatar-high';
-          } else if (e.risk === 'medium') {
-            avatarClass = 'avatar-medium';
-          } else if (e.succ === 'ready') {
-            avatarClass = 'avatar-ready';
-          }
+          // 1. Logika formatowania PMC / SOP do ułamka (x.x / 5.0)
+          const pmcHtml = e.pmc !== null ? `<span class="score-val">${e.pmc.toFixed(1)}</span><span class="score-max"> / 5.0</span>` : `<span class="score-max">—</span>`;
+          const sopHtml = e.sop !== null ? `<span class="score-val">${e.sop.toFixed(1)}</span><span class="score-max"> / 5.0</span>` : `<span class="score-max">—</span>`;
+          
+          // 2. Logika kolorowania awatara (Tylko danger jeśli wymaga akcji, inaczej muted)
+          const needsAttention = e.planStatus === 'overdue' || e.planStatus === 'none' || e.cat === 'alert';
+          const avatarClass = needsAttention ? 'avatar-danger' : 'avatar-muted';
+          
+          // 3. Status MDR
+          const mdrInfo = MDR_DICTIONARY[e.cat] || MDR_DICTIONARY['outside_mdr'];
+          
+          // 4. Kolor paska planu
+          const planColor = e.plan > 0 ? 'var(--accent)' : 'var(--border-strong)';
 
           return `
-          <tr onclick="tovOpenSingle(${e.id});">
+          <tr onclick="goToProfile('dash','p1')">
             <td>
               <div class="tlist-name-cell">
-                <div class="tlist-avatar ${avatarClass}">${e.initials}</div>
+                <div class="avatar-border ${avatarClass}">${e.initials}</div>
                 <div>
                   <div class="tlist-name">${e.name}</div>
                   <div class="tlist-role">${e.role}</div>
@@ -7859,24 +7879,17 @@ function confirmAssign() {
               </div>
             </td>
             <td>
-              <div class="tlist-pmc">
-                <div class="tlist-pmc-bar"><div class="tlist-pmc-fill" style="width:${pmcPct}%;background:${pmcColor}"></div></div>
-                <span style="color:${pmcColor}">${e.pmc.toFixed(1)}</span>
-              </div>
+              <span class="mdr-subtle-badge ${mdrInfo.cls}">${mdrInfo.label}</span>
             </td>
-            <td><span class="tlist-sop" style="color:${sopColor}">${e.sop.toFixed(1)}</span></td>
+            <td>${pmcHtml}</td>
+            <td>${sopHtml}</td>
             <td>
-              <div style="display:flex;align-items:center;gap:8px;">
-                <div class="tlist-pmc-bar" style="width:60px"><div class="tlist-pmc-fill" style="width:${e.plan}%;background:var(--accent)"></div></div>
-                <span style="font-size:12px;color:var(--text-secondary)">${e.plan}%</span>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div class="tlist-prog-bar"><div class="tlist-prog-fill" style="width:${e.plan}%; background:${planColor};"></div></div>
+                <span style="font-size:12px; font-weight:600; color:var(--text-secondary)">${e.plan}%</span>
               </div>
             </td>
             <td><span class="tlist-badge ${e.planStatus}">${tlistStatusLabel(e.planStatus)}</span></td>
-            <td>
-              <button class="tlist-action-btn" onclick="event.stopPropagation(); tovOpenSingle(${e.id});">
-                <span class="material-symbols-outlined" style="font-size:13px">open_in_new</span> Podgląd
-              </button>
-            </td>
           </tr>`;
         }).join('');
       }
