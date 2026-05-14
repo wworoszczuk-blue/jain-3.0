@@ -7765,9 +7765,9 @@ function confirmAssign() {
           <thead>
             <tr>
               <th onclick="tlistSort('name')" id="th-name">Pracownik <span class="tlist-sort-icon" id="si-name"></span></th>
-              <th onclick="tlistSort('mdr')" id="th-mdr">Kategoria MDR <span class="tlist-sort-icon" id="si-mdr"></span></th>
-              <th onclick="tlistSort('pmc')"  id="th-pmc">PMC (Wyniki) <span class="tlist-sort-icon" id="si-pmc">↓</span></th>
-              <th onclick="tlistSort('sop')"  id="th-sop">SOP (Potencjał) <span class="tlist-sort-icon" id="si-sop"></span></th>
+              <th onclick="tlistSort('sop')"  id="th-sop">SOP <span class="tlist-sort-icon" id="si-sop"></span></th>
+              <th onclick="tlistSort('pmc')"  id="th-pmc">PMC <span class="tlist-sort-icon" id="si-pmc">↓</span></th>
+              <th onclick="tlistSort('mdr')" id="th-mdr">Pole na matrycy<span class="tlist-sort-icon" id="si-mdr"></span></th>
               <th onclick="tlistSort('plan')" id="th-plan">Postęp planu <span class="tlist-sort-icon" id="si-plan"></span></th>
               <th onclick="tlistSort('status')" id="th-status">Status planu <span class="tlist-sort-icon" id="si-status"></span></th>
             </tr>
@@ -7781,12 +7781,12 @@ function confirmAssign() {
       let tlistSortDir = -1; 
 
       const TLIST_EMPLOYEES = [
-        { id:1,  initials:'PM', name:'Piotr Malinowski',   role:'Spec. ds. Planowania',          cat:'alert',                pmc:1.5, sop:2.1, plan: 20, planStatus: 'overdue' },
-        { id:2,  initials:'JW', name:'Jan Wiśniewski',     role:'Z-ca Kierownika Sklepu',        cat:'emerging_leader',      pmc:3.5, sop:3.8, plan: 45, planStatus: 'waiting' },
-        { id:3,  initials:'KM', name:'Katarzyna Mazur',    role:'Koord. Sekcji Obsługi Klienta', cat:'future_leader',        pmc:4.2, sop:4.1, plan: 80, planStatus: 'approved' },
+        { id:1,  initials:'PM', name:'Piotr Malinowski',   role:'Spec. ds. Planowania',          cat:'alert',                pmc:1.5, sop:null, plan: 20, planStatus: 'overdue' },
+        { id:2,  initials:'JW', name:'Jan Wiśniewski',     role:'Z-ca Kierownika Sklepu',        cat:'emerging_leader',      pmc:3.5, sop:null, plan: 45, planStatus: 'waiting' },
+        { id:3,  initials:'KM', name:'Katarzyna Mazur',    role:'Koord. Sekcji Obsługi Klienta', cat:'future_leader',        pmc:null, sop:4.1, plan: 80, planStatus: 'approved' },
         { id:4,  initials:'AW', name:'Anna Wróbel',        role:'St. Monodżer Sprzedaży',        cat:'emerging_leader',      pmc:2.8, sop:3.6, plan: 30, planStatus: 'waiting' },
         { id:5,  initials:'MK', name:'Marcin Kowal',       role:'Reg. Manager Działu Nieruch.',  cat:'effective_in_role',    pmc:3.1, sop:2.9, plan: 55, planStatus: 'approved' },
-        { id:6,  initials:'ZN', name:'Zofia Nowak',        role:'Spec. ds. Opakowań i Rekl.',    cat:'subject_matter_leader',pmc:3.8, sop:2.5, plan: 65, planStatus: 'approved' },
+        { id:6,  initials:'ZN', name:'Zofia Nowak',        role:'Spec. ds. Opakowań i Rekl.',    cat:'subject_matter_leader',pmc:null, sop:2.5, plan: 65, planStatus: 'approved' },
         { id:7,  initials:'TP', name:'Tomasz Poprzeczka',  role:'Dyrektor Operacyjny',           cat:'question_mark',        pmc:2.2, sop:1.8, plan: 0,  planStatus: 'none' },
         { id:8,  initials:'EL', name:'Ewa Lisowska',       role:'Spec. ds. Magazynowych',        cat:'effective_in_role',    pmc:3.4, sop:3.2, plan: 40, planStatus: 'waiting' },
         { id:9,  initials:'BK', name:'Bartosz Kubiak',     role:'St. Mon. ds. Aplikacji HR',     cat:'subject_matter_leader',pmc:3.6, sop:3.0, plan: 50, planStatus: 'approved' },
@@ -7794,7 +7794,7 @@ function confirmAssign() {
         { id:11, initials:'KW', name:'Kamil Wiśniak',      role:'Spec. ds. Rozw. Oprogr. IT',    cat:'outside_mdr',          pmc:null,sop:null,plan: 25, planStatus: 'draft' },
         { id:12, initials:'NK', name:'Natalia Kowalczyk',  role:'St. Monodżer Sprzedaży',        cat:'effective_in_role',    pmc:3.3, sop:3.1, plan: 45, planStatus: 'overdue' },
         { id:13, initials:'AB', name:'Adam Burza',         role:'Analityk Danych',               cat:'effective_in_role',    pmc:3.2, sop:3.0, plan: 60, planStatus: 'approved' },
-        { id:14, initials:'CJ', name:'Celina Jantar',      role:'Księgowa',                      cat:'effective_in_role',    pmc:3.0, sop:3.5, plan: 10, planStatus: 'draft' },
+        { id:14, initials:'CJ', name:'Celina Jantar',      role:'Księgowa',                      cat:'effective_in_role',    pmc:3.0, sop:null, plan: 10, planStatus: 'draft' },
         { id:15, initials:'DK', name:'Dawid Kruk',         role:'Specjalista ds. Jakości',       cat:'effective_in_role',    pmc:3.4, sop:3.4, plan: 90, planStatus: 'approved' }
       ];
 
@@ -7875,11 +7875,11 @@ function confirmAssign() {
                 </div>
               </div>
             </td>
+            <td>${sopHtml}</td>
+            <td>${pmcHtml}</td>
             <td>
               <span class="mdr-subtle-badge ${mdrInfo.cls}">${mdrInfo.label}</span>
             </td>
-            <td>${pmcHtml}</td>
-            <td>${sopHtml}</td>
             <td>
               <div style="display:flex;align-items:center;gap:10px;">
                 <div class="tlist-prog-bar"><div class="tlist-prog-fill" style="width:${e.plan}%; background:${planColor};"></div></div>
@@ -8141,9 +8141,8 @@ function confirmAssign() {
               </div>
             </div>
             ${tovBadge(isApproved?'approved':e.planStatus)}
-            ${e.pending&&!isApproved?`<div class="tov-pending${e.danger?' danger':''}">${e.pending}</div>`:''}
             <div class="tov-prog-bar"><div class="tov-prog-fill ${tovProgCls(e.plan)}" style="width:${e.plan}%"></div></div>
-            <div class="tov-card-meta"><span>Postęp: ${e.plan}%</span><span>PMC ${e.pmc.toFixed(1)}</span></div>
+            <div class="tov-card-meta"><span>Postęp: ${e.plan}%</span></div>
             <div class="tov-card-btns">
               <button class="tov-cb" onclick="event.stopPropagation();tovOpenSingle(${e.id})">
                 <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle">open_in_new</span> Podgląd
