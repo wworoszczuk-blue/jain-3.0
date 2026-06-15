@@ -1870,8 +1870,8 @@
   </div>
   <div class="topbar-nav" id="topbarNav">
     <a href="#" class="active" data-view="lp">Start</a>
-    <a href="#" data-view="profile" data-label-p1="Profil" data-label-p0="Twój profil">Twój profil</a>
-    <a href="#" data-view="team">Twój zespół
+    <a href="#" data-view="profile" data-label-p1="Profil" data-label-p0="Twój profil">Mój profil</a>
+    <a href="#" data-view="team">Mój zespół
       <span style="font-size:9px;border:1px solid var(--border);color:var(--text-secondary);padding:2px 6px;border-radius:6px;margin-left:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">P1</span>
     </a>
     <a href="#" data-view="area">Podległy obszar
@@ -1946,7 +1946,7 @@
       </div>
         <div class="nav-popover-body" style="padding:8px 0;">
           <div class="nav-popover-item" style="padding:10px 20px;" onclick="goToProfile('dane','p0')">
-            <span class="material-symbols-outlined" style="font-size:18px;color:var(--text-secondary);">person</span> Twój profil
+            <span class="material-symbols-outlined" style="font-size:18px;color:var(--text-secondary);">person</span> Mój profil
           </div>
           <div class="nav-popover-item" style="padding:10px 20px;margin-top:4px;border-top:1px solid var(--border);color:var(--danger);">
             <span class="material-symbols-outlined" style="font-size:18px;color:var(--danger);">logout</span> Wyloguj się
@@ -1979,7 +1979,7 @@
 
         <!-- Role toggles -->
         <div class="lp-role-toggles">
-          <span class="lp-role-toggles-label">Twoje role:</span>
+          <span class="lp-role-toggles-label">Moje role:</span>
           <button class="lp-role-toggle active" data-lp-role="p0"><span class="check"></span> Pracownik (P0)</button>
           <button class="lp-role-toggle active" data-lp-role="p1"><span class="check"></span> Przełożony (P1)</button>
           <button class="lp-role-toggle active" data-lp-role="hrbp"><span class="check"></span> HRBP</button>
@@ -1991,7 +1991,7 @@
             <div class="lp-role-icon"><span class="material-symbols-outlined">person</span></div>
             <div>
               <div class="lp-role-title">Jako pracownik</div>
-              <div class="lp-role-subtitle">Twoje zadania i rozwój</div>
+              <div class="lp-role-subtitle">Moje zadania i rozwój</div>
             </div>
           </div>
 
@@ -2006,7 +2006,7 @@
             <div class="lp-grid" id="p0-grid">
               
               <div class="lp-sub-section col-tasks">
-                <div class="lp-sub-title">Twoje najbliższe zadania</div>
+                <div class="lp-sub-title">Moje najbliższe zadania</div>
                 
                 <div class="lp-task task-red" onclick="goToProfile('zadania','p0')">
                   <span class="lp-task-icon material-symbols-outlined" style="color:var(--danger);">error</span>
@@ -2046,7 +2046,7 @@
               <div class="lp-sub-section col-dev">
                 
                 <div class="dev-plan-wrapper">
-                  <div class="lp-sub-title">Twój plan</div>
+                  <div class="lp-sub-title">Mój plan</div>
 
                   <div class="quest-container quest-active-plan" onclick="goToProfile('plan','p0')">
                     <div class="quest-header">
@@ -2107,7 +2107,7 @@
                 </div>
               </div>
               <div class="col-trainings">
-                  <div class="lp-sub-title">Twoje aktywności rozwojowe</div>
+                  <div class="lp-sub-title">Moje aktywności rozwojowe</div>
                   
                   <div class="training-carousel-container">
                     
@@ -2148,7 +2148,7 @@
 
             <div class="lp-cta-row">
               <button class="lp-cta primary" onclick="goToProfile('dane','p0')">
-                <span class="material-symbols-outlined" style="font-size:18px;">badge</span> Twój profil
+                <span class="material-symbols-outlined" style="font-size:18px;">badge</span> Mój profil
               </button>
               <button class="lp-cta ghost" onclick="goToProfile('dash','p0')">
                 <span class="material-symbols-outlined" style="font-size:18px;">auto_awesome</span> Mój rozwój
@@ -2353,11 +2353,11 @@
     </div>
     <div>
       <div class="lp-role-title">Jako przełożony</div>
-      <div class="lp-role-subtitle">Rozwój Twojego zespołu</div>
+      <div class="lp-role-subtitle">Rozwój mojego zespołu</div>
     </div>
     <div style="margin-left:auto;">
       <button class="lp-cta ghost" onclick="goToTeamTab('team-overview')">
-        Twój zespół <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+        Mój zespół <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
       </button>
     </div>
   </div>
@@ -2800,7 +2800,7 @@
           <span class="nav-label">Plan Rozwoju i Asystent AI</span>
         </div>
         <div class="profile-nav-subitem" id="subnav-activities" onclick="switchDevTabFromSidebar('dev-activities')">
-          <span class="nav-label" data-label-p0="Twoje Aktywności" data-label-p1="Aktywności">Twoje Aktywności</span>
+          <span class="nav-label" data-label-p0="Twoje Aktywności" data-label-p1="Aktywności">Moje Aktywności</span>
         </div>
       </div>
       <div class="profile-nav-item" style="display:none !important;"></div>
@@ -2838,7 +2838,7 @@
               <!-- Nagłówek -->
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:36px;">
                 <div>
-                  <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;"><b>Twój kierunek rozwoju</b></div>
+                  <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;"><b>Mój kierunek rozwoju</b></div>
                   <div style="font-size:18px;font-weight:700;color:var(--ls-text);">Awans na Kierownika Rejonu</div>
                 </div>
                 <div style="background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:12px;padding:10px 20px;text-align:center;flex-shrink:0;margin-left:24px;">
@@ -2942,7 +2942,7 @@
           </div>
 
           <div class="lp-role-block" style="margin-bottom:0;">
-            <div class="lp-role-block-header"><div class="lp-role-title">Aktywności rozwojowe</div></div>
+            <div class="lp-role-block-header"><div class="lp-role-title">Moje Aktywności rozwojowe</div></div>
             <div class="lp-role-block-body">
               <div class="lp-task task-grey" onclick="goToProfile('szkolenia','p0')">
                 <span class="lp-task-icon material-symbols-outlined" style="color:var(--ls-text);">school</span>
@@ -3389,7 +3389,7 @@
           
           <button class="split-layout-btn dev-nav-tab" onclick="switchDevTab('dev-activities', this)">
             <span class="material-symbols-outlined">school</span>
-            <span class="btn-text" data-label-p1="Aktywności" data-label-p0="Twoje Aktywności">Twoje Aktywności</span>
+            <span class="btn-text" data-label-p1="Aktywności" data-label-p0="Twoje Aktywności">Moje Aktywności</span>
           </button>
         </div>
         </div>
@@ -5069,7 +5069,7 @@ function confirmAssign() {
       </button>
     <div class="view-header">
       <div>
-        <h1>Twój zespół</h1>
+        <h1>Mój zespół</h1>
       </div>
     </div>
 
@@ -8739,24 +8739,18 @@ function setLPTheme(themeName, tabElement) {
     });
   });
 
-  // Skoki do profilu i odpowiednich zakładek (Dla przycisków typu "Twój rozwój", "Karty oceny" itp.)
-  // Skoki do profilu i odpowiednich zakładek
 function goToProfile(tabName, role) {
-  // 1. Zmień główny widok na profil
   switchView('profile');
   
-  // 2. Jeśli podano rolę, kliknij odpowiedni przycisk roli w profilu
   if (role) {
     const roleBtn = document.querySelector(`.profile-role-btn[data-profile-role="${role}"]`);
     if(roleBtn) roleBtn.click();
   }
 
-  // 3. Zmienne określające, która główna zakładka w sidebarze ma być aktywna
   let targetViewId = 'view-profile-dash';
   let targetNavIndex = 0;
   
-  // Zmienna śledząca, czy musimy przełączyć podzakładkę w sekcji "Mój rozwój"
-  let targetDevSubTab = null; 
+  let targetDevSubTab = null;
 
   switch(tabName) {
     case 'dash': 
@@ -8769,30 +8763,26 @@ function goToProfile(tabName, role) {
         break;
     case 'plan': 
         targetViewId = 'view-profile-plan'; 
-        targetNavIndex = 2; // Główna zakładka "Mój rozwój"
-        targetDevSubTab = 'dev-plan'; // Podzakładka "Plan i Czat AI"
+        targetNavIndex = 2;
+        targetDevSubTab = 'dev-plan';
         break;
     case 'szkolenia': 
-        targetViewId = 'view-profile-plan'; // Szkolenia są wewnątrz "Mój rozwój" (które jest pod indeksem 2)
+        targetViewId = 'view-profile-plan';
         targetNavIndex = 2; 
-        targetDevSubTab = 'dev-activities'; // <-- KLUCZOWA ZMIANA: Podzakładka "Twoje Aktywności"
+        targetDevSubTab = 'dev-activities';
         break;
     case 'dane': 
         targetViewId = 'view-profile-data'; 
-        targetNavIndex = 4; // Upewnij się, że indeks się zgadza z Twoim układem
+        targetNavIndex = 4;
         break;
     case 'kompetencje': 
         targetViewId = 'view-profile-comp'; 
         targetNavIndex = 5; 
         break;
   }
-
-  // 4. Przełącz na główną zakładkę
   switchProfileTab(targetViewId, targetNavIndex);
-  
-  // 5. Jeśli celowaliśmy w podzakładkę (Plan lub Szkolenia), wywołaj funkcję przełączającą podzakładki
+
   if (targetDevSubTab) {
-      // Drobne opóźnienie zapewnia, że główna zakładka zdąży się załadować/wyrenderować
       setTimeout(() => {
           if (typeof switchDevTabFromSidebar === 'function') {
               switchDevTabFromSidebar(targetDevSubTab);
@@ -8830,8 +8820,6 @@ function goToProfile(tabName, role) {
     });
   });
 
-  // Przełączanie ról i zakładek wewnętrznych W PROFILU
-  // Przełączanie ról i zakładek wewnętrznych W PROFILU
   let currentProfileRole = 'p0';
   function updateLabelsForRole(role) {
   const isP0 = role === 'p0';
@@ -8849,7 +8837,6 @@ function goToProfile(tabName, role) {
       updateLabelsForRole(currentProfileRole);
 
 
-      // Obsługa menu po lewej - pokazywanie/ukrywanie opcji na bazie data-roles
       document.querySelectorAll('.profile-nav-item').forEach(item => {
         const roles = item.getAttribute('data-roles');
         if (roles && roles.includes(currentProfileRole)) {
@@ -8859,12 +8846,10 @@ function goToProfile(tabName, role) {
         }
       });
 
-      // Zmiana wewnętrznych contentów Dashbordu (P0 vs P1 vs HRBP)
       document.querySelectorAll('.role-dash-content').forEach(c => c.style.display = 'none');
       const targetContent = document.getElementById(`dash-content-${currentProfileRole}`);
       if(targetContent) targetContent.style.display = 'block';
 
-      // Globalne banery i logiki widoków
       const p0elements = document.querySelectorAll('.p0-only');
       const nonP0elements = document.querySelectorAll('.non-p0-only');
       const p1elements = document.querySelectorAll('.p1-only');
@@ -8894,7 +8879,6 @@ function goToProfile(tabName, role) {
              splitRight.classList.remove('chat-session-inactive');
              splitRight.classList.add('chat-session-active');
           }
-          // Pokaż panel rozmowy o pracowniku (jak P1)
           const msgP0 = document.getElementById('chat-messages-p0');
           const msgMgr = document.getElementById('chat-messages-manager');
           if(msgP0) msgP0.style.display = 'none';
@@ -8914,7 +8898,6 @@ function goToProfile(tabName, role) {
         } else if (currentProfileRole === 'hrbp') {
           p1elements.forEach(el => el.style.display = 'none');
           p0hrbpElements.forEach(el => el.style.display = '');
-          // HRBP też widzi czat menedżera
           const splitRight = document.getElementById('splitRightCol');
           if(splitRight) {
              splitRight.classList.remove('chat-session-inactive');
@@ -8938,7 +8921,6 @@ function goToProfile(tabName, role) {
     });
   });
 
-  // Dodana funkcja: Pokazywanie/ukrywanie komentarza przy odrzucaniu
   function toggleMgrRejectComment(show) {
     const btnRow = document.getElementById('mgrActionsButtons');
     const commentBox = document.getElementById('mgrRejectCommentBox');
@@ -9009,7 +8991,6 @@ function goToProfile(tabName, role) {
     });
   }
 
-  // Wyczyść input czatu po enterze
   const chatInput = document.querySelector('.chat-input');
   const chatSendBtn = document.querySelector('.chat-send-btn');
   if(chatInput && chatSendBtn) {
@@ -9020,16 +9001,13 @@ function goToProfile(tabName, role) {
     });
   }
 
-  // Funkcja wywoływana po kliknięciu w jedną z dwóch głównych kart na splash screenie
   function startChatSession(mode) {
     const splitRight = document.getElementById('splitRightCol');
     const sysMsg = document.getElementById('chatSysMsgP0');
 
-    // Ukryj splash screen i pokaż wiadomości oraz input
     splitRight.classList.remove('chat-session-inactive');
     splitRight.classList.add('chat-session-active');
 
-    // Ustaw odpowiedni komunikat systemowy na samej górze czatu
     if (mode === 'plan') {
       sysMsg.innerText = "Tryb: Praca z planem — AI analizuje strukturę i proponuje akcje";
     } else {
@@ -9037,21 +9015,15 @@ function goToProfile(tabName, role) {
     }
   }
 
-  // Obsługa przycisku "Plusik" w nagłówku czatu (Powrót do wyboru)
   const btnNewChatSession = document.getElementById('btnNewChatSession');
   if(btnNewChatSession) {
     btnNewChatSession.addEventListener('click', () => {
       const splitRight = document.getElementById('splitRightCol');
-      
-      // Ukryj input i wiadomości, pokaż z powrotem splash screen
       splitRight.classList.remove('chat-session-active');
       splitRight.classList.add('chat-session-inactive');
-      
-      // Tutaj w pełnej implementacji można by również wyczyścić historię `#chat-messages-p0`
     });
   }
 
-  // Popovery w Topbarze
   const notifBtn = document.getElementById('notifBell');
   const notifPopover = document.getElementById('notifPopover');
   const avatarBtn = document.getElementById('avatarBtn');
@@ -9091,11 +9063,9 @@ function goToProfile(tabName, role) {
   document.addEventListener('click', () => { closePopovers(); });
   document.querySelectorAll('.nav-popover').forEach(p => p.addEventListener('click', e => e.stopPropagation()));
 
-  // Prosty kod dla formularza Admina Aktualności
   function toggleAdminForm() {
       const form = document.getElementById('adminNewsForm');
       if (!form) return;
-      // zamiast toggle klasy — przełącz inline style
       form.style.display = (form.style.display === 'none' || form.style.display === '')
           ? 'block'
           : 'none';
