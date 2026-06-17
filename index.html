@@ -2339,7 +2339,7 @@
 </style>
 
 <div class="lp-role-block" id="lp-block-p1">
- 
+
   <!-- NAGŁÓWEK -->
   <div class="lp-role-block-header">
     <div class="lp-role-icon">
@@ -2349,48 +2349,74 @@
       <div class="lp-role-title">Jako przełożony</div>
       <div class="lp-role-subtitle">Rozwój mojego zespołu</div>
     </div>
-    <div style="margin-left:auto;">
+    <div style="margin-left:auto; display: flex; align-items: center; gap: 16px;">
+
+      <div style="display: flex; align-items: center; gap: 8px; background: var(--ls-card, rgba(255,255,255,0.02)); border: 1px solid var(--ls-border, rgba(255,255,255,0.06)); padding: 6px 16px 6px 18px; border-radius: 24px; cursor: pointer; transition: background 0.2s;" onmouseenter="showTeamBirthdays(event)" onmouseleave="hideTeamBirthdays()">
+
+        <span class="material-symbols-outlined" style="font-size: 18px; color: var(--accent);">cake</span>
+        <span style="font-size: 14px; font-weight: 500;">Urodziny</span>
+
+        <div style="display: flex; align-items: center; margin-left: 6px;">
+
+          <div style="width: 26px; height: 26px; border-radius: 50%; background: var(--avatar-bg); display: flex; justify-content: center; align-items: center; font-size: 10px; font-weight: 700; color: #fff; border: 2px solid #22252a; z-index: 3; box-sizing: border-box;">
+            KN
+          </div>
+
+          <div style="width: 26px; height: 26px; border-radius: 50%; background: var(--avatar-bg); display: flex; justify-content: center; align-items: center; font-size: 10px; font-weight: 700; color: #fff; border: 2px solid #22252a; margin-left: -10px; z-index: 2; box-sizing: border-box;">
+            AW
+          </div>
+
+          <div style="width: 26px; height: 26px; border-radius: 50%; background: var(--avatar-bg); display: flex; justify-content: center; align-items: center; font-size: 10px; font-weight: 700; color: #fff; border: 2px solid #22252a; margin-left: -10px; z-index: 1; box-sizing: border-box;">
+            PK
+          </div>
+
+        </div>
+      </div>
+
       <button class="lp-cta ghost" onclick="goToTeamTab('team-overview')">
         Mój zespół <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
       </button>
     </div>
   </div>
- 
+
+  <div id="team-birthdays-tooltip" style="display: none; position: fixed; z-index: 9999; background: var(--ls-bg, #1e1e20); border: 1px solid #333; border-radius: 8px; padding: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); pointer-events: none; min-width: 200px;"></div>
+
   <!-- PASEK KPI — 4 karty ze statystykami -->
   <div class="p1-pulse-bar">
- 
+
     <div class="p1-pulse-item neutral" onclick="goToTeamTab('team-overview')">
       <div class="p1-pulse-num">12</div>
       <div class="p1-pulse-label">Osób<br>w zespole</div>
     </div>
- 
+
     <div class="p1-pulse-item accent" onclick="goToTeamTab('team-overview'); tovSetFilter('plan_approval');">
       <div class="p1-pulse-num">3</div>
       <div class="p1-pulse-label">Planów do<br>zatwierdzenia</div>
     </div>
- 
+
     <div class="p1-pulse-item warn" onclick="goToTeamTab('team-overview'); tovSetFilter('overdue_step');">
       <div class="p1-pulse-num">2</div>
       <div class="p1-pulse-label">Zaległych<br>kroków</div>
     </div>
- 
+
     <div class="p1-pulse-item danger" onclick="goToTeamTab('team-overview'); tovSetFilter('no_plan');">
       <div class="p1-pulse-num">2</div>
       <div class="p1-pulse-label">Brak planu<br>rozwoju</div>
     </div>
- 
+
   </div>
- 
+
+
   <!-- CIAŁO: WYMAGA REAKCJI + STAN ZESPOŁU -->
   <div class="p1-body">
- 
+
     <!-- LEWA: Co na mnie czeka -->
     <div class="p1-col">
       <div class="p1-col-title">
         <span class="material-symbols-outlined" style="font-size:14px;color:var(--accent)">bolt</span>
         wymaga reakcji
       </div>
- 
+
       <div class="p1-action-item urgent" onclick="goToProfile('plan','p1'); setTimeout(()=>{ tovSetFilter('plan_approval'); }, 100);">
         <div class="p1-action-icon blue">
           <span class="material-symbols-outlined" style="font-size:16px">edit_document</span>
@@ -2401,7 +2427,7 @@
         </div>
         <div class="p1-action-tag blue">Zatwierdź</div>
       </div>
- 
+
       <div class="p1-action-item urgent" onclick="goToProfile('plan','p1'); setTimeout(()=>{ tovSetFilter('plan_approval'); }, 100);">
         <div class="p1-action-icon blue">
           <span class="material-symbols-outlined" style="font-size:16px">edit_document</span>
@@ -2412,9 +2438,9 @@
         </div>
         <div class="p1-action-tag blue">Zatwierdź</div>
       </div>
- 
+
     </div>
- 
+
     <!-- PRAWA: Stan zespołu (zastępuje "Sygnały z zespołu") -->
     <div class="p1-col">
       <style>
@@ -2479,9 +2505,9 @@
       </div>
 
     </div>
- 
+
   </div>
- 
+
 </div><!-- /#lp-block-p1 -->
 
 
@@ -3873,6 +3899,49 @@
         </style>
 
         <script>
+          function showTeamBirthdays(event) {
+            const tooltip = document.getElementById('team-birthdays-tooltip');
+
+            tooltip.innerHTML = `
+  <div style="font-size: 15px; font-weight: 600; margin-bottom: 14px; color: #fff; display: flex; align-items: center; gap: 8px;">
+    Zbliżające się urodziny
+  </div>
+
+  <table class="tooltip-table" style="width: 100%; border-collapse: collapse;">
+    <tr>
+      <td style="padding: 8px 0; color: #fff; line-height: 1.3;">
+          Kamil Nowak 🎉 <br>
+      </td>
+      <td style="text-align: right; color: #fff; font-weight: 600; vertical-align: top; padding-top: 8px;">Dziś</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px 0; color: #fff; line-height: 1.3;">
+          Anna Wróbel<br>
+      </td>
+      <td style="text-align: right; color: #fff; font-weight: 600; vertical-align: top; padding-top: 8px;">Jutro</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px 0; color: #fff; line-height: 1.3;">
+          Piotr Kowalski<br>
+      </td>
+      <td style="text-align: right; color: #fff; font-weight: 600; vertical-align: top; padding-top: 8px;">21.06</td>
+    </tr>
+  </table>
+`;
+
+            tooltip.style.display = 'block';
+
+            // Pozycjonowanie pod pigułką
+            const rect = event.currentTarget.getBoundingClientRect();
+            tooltip.style.top = (rect.bottom + 10) + 'px';
+            tooltip.style.left = (rect.left - (tooltip.offsetWidth / 2) + (rect.width / 2)) + 'px';
+          }
+
+          function hideTeamBirthdays() {
+            document.getElementById('team-birthdays-tooltip').style.display = 'none';
+          }
+
+
           function showHRBPDetails(event, type) {
             const tooltip = document.getElementById('hrbp-data-tooltip');
             let content = '';
