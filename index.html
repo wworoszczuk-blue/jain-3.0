@@ -2495,156 +2495,194 @@
 
   <!-- BLOK HRBP -->
         <div class="lp-role-block" id="lp-block-hrbp">
- 
-  <!-- NAGŁÓWEK -->
-  <div class="lp-role-block-header">
-    <div class="lp-role-icon"><span class="material-symbols-outlined">domain</span></div>
-    <div>
-      <div class="lp-role-title">Jako HRBP</div>
-      <div class="lp-role-subtitle">Sukcesja i rozwój w podległym obszarze</div>
-    </div>
-  </div>
- 
-  <!-- PASEK KPI — reuse .p1-pulse-bar i .p1-pulse-item -->
-  <div class="p1-pulse-bar">
- 
-    <div class="p1-pulse-item neutral" onclick="goToAreaTab('area-people')">
-      <div class="p1-pulse-num">142</div>
-      <div class="p1-pulse-label">Pracownicy<br>w obszarze</div>
-    </div>
- 
-    <div class="p1-pulse-item neutral" onclick="goToAreaTab('area-dash')">
-      <div class="p1-pulse-num">45</div>
-      <div class="p1-pulse-label">W programach<br>rozwoju</div>
-    </div>
- 
-    <div class="p1-pulse-item neutral" onclick="goToAreaTab('area-dash')">
-      <div class="p1-pulse-num">12</div>
-      <div class="p1-pulse-label">Sukcesji<br>w toku</div>
-    </div>
- 
-    <div class="p1-pulse-item danger" onclick="goToAreaTab('area-risk')">
-      <div class="p1-pulse-num">5</div>
-      <div class="p1-pulse-label">Ryzyk<br>odejścia</div>
-    </div>
- 
-  </div>
- 
-  <!-- CIAŁO: WYMAGA REAKCJI HRBP + PIPELINE SUKCESJI -->
-  <div class="p1-body">
- 
-    <!-- LEWA: Wymaga reakcji HRBP -->
-    <div class="p1-col">
-      <div class="p1-col-title">
-        <span class="material-symbols-outlined" style="font-size:14px;color:var(--accent)">bolt</span>
-        wymaga reakcji
-      </div>
- 
-      <!-- Pusty pipeline — krytyczne -->
-      <div class="p1-action-item overdue" onclick="goToAreaTab('area-risk')">
-        <div class="p1-action-icon red">
-          <span class="material-symbols-outlined" style="font-size:16px">person_off</span>
-        </div>
-        <div class="p1-action-body">
-          <div class="p1-action-name">Brak kandydatów - Kierownik Regionalny</div>
-        </div>
-      </div>
- 
-      <!-- Ryzyko odejścia -->
-      <div class="p1-action-item overdue" onclick="goToAreaTab('area-risk')">
-        <div class="p1-action-icon red">
-          <span class="material-symbols-outlined" style="font-size:16px">trending_down</span>
-        </div>
-        <div class="p1-action-body">
-          <div class="p1-action-name">Wysokie ryzyko odejścia: 5 osób</div>
-        </div>
-      </div>
- 
-      <!-- Brak planów -->
-      <div class="p1-action-item" onclick="goToAreaTab('area-people')">
-        <div class="p1-action-icon orange">
-          <span class="material-symbols-outlined" style="font-size:16px">assignment_late</span>
-        </div>
-        <div class="p1-action-body">
-          <div class="p1-action-name">Brak aktywnego planu: 18 osób</div>
-        </div>
-      </div>
- 
-    </div>
- 
-    <!-- PRAWA: Pipeline sukcesji — skrót z widoku Sukcesja -->
-    <div class="p1-col">
-      <style>
-        /* Zabezpieczenie stylów dla obwódek (ikony statusu na dashboardzie) */
-        .dash-icon-border {
-          background: #2a2d31 !important;
-          border: 2px solid;
-          color: #fff;
-          box-sizing: border-box;
-        }
-        .icon-danger { border-color: var(--danger, #f87171); color: var(--danger, #f87171) !important; box-shadow: 0 0 8px rgba(248,113,113,0.15); }
-        .icon-success { border-color: var(--success, #4ade80); color: var(--success, #4ade80) !important; box-shadow: 0 0 8px rgba(74,222,128,0.15); }
-        .icon-accent { border-color:var(--accent); color: var(--accent) !important; box-shadow: 0 0 8px rgba(41,128,185,0.15); }
-      </style>
 
-      <div class="p1-col-title">
-        <span class="material-symbols-outlined" style="font-size:14px;color:var(--text-muted)">workspace_premium</span>
-        Ścieżki sukcesji
-      </div>
- 
-      <!-- Dyrektor Logistyki — gotowy -->
-      <div class="p1-signal" onclick="switchView('succession')">
-        <div class="p1-signal-avatar dash-icon-border icon-accent" style="font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center;">2</div>
-        <div class="p1-signal-body">
-          <div class="p1-signal-name">Dyrektor Logistyki</div>
-          <div class="p1-signal-desc">2 kandydatów </div>
-        </div>
-        <div class="p1-signal-indicator" style="background:var(--success)"></div>
-      </div>
- 
-      <!-- Kierownik Regionalny — krytyczny, pusty -->
-      <div class="p1-signal" style="border-color:var(--danger-border); background:var(--danger-bg);" onclick="switchView('succession')">
-        <div class="p1-signal-avatar dash-icon-border icon-danger" style="font-size:16px; font-weight:700; display:flex; align-items:center; justify-content:center;">!</div>
-        <div class="p1-signal-body">
-          <div class="p1-signal-name" style="color:var(--danger);">Kierownik Regionalny</div>
-          <div class="p1-signal-desc">brak kandydatów</div>
-        </div>
-        <div class="p1-signal-indicator" style="background:var(--danger)"></div>
-      </div>
- 
-      <!-- Z-ca Dyrektora Operacyjnego — w przygotowaniu -->
-      <div class="p1-signal" onclick="switchView('succession')">
-        <div class="p1-signal-avatar dash-icon-border icon-accent" style="font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center;">1</div>
-        <div class="p1-signal-body">
-          <div class="p1-signal-name">Z-ca Dyrektora Operacyjnego</div>
-          <div class="p1-signal-desc">1 kandydat  horyzont 2–3 lata</div>
-        </div>
-        <div class="p1-signal-indicator" style="background:rgba(235,141,61,0.9)"></div>
-      </div>
- 
-    </div>
- 
-  </div>
- 
-  <!-- FOOTER CTA — spójny ze strukturą P0 (.lp-cta-row) -->
-  <div class="p1-footer">
-    <div class="p1-footer-hint">
-      <span class="material-symbols-outlined" style="font-size:16px;">domain</span>
-      Obszar obejmuje 142 pracowników
-    </div>
-    <div style="display:flex; gap:10px;">
-      <button class="lp-cta primary" onclick="goToAreaTab('area-dash')">
-        <span class="material-symbols-outlined" style="font-size:18px;">domain</span> Podległy obszar HR
-      </button>
-      <button class="lp-cta ghost" onclick="switchView('succession')">
-        <span class="material-symbols-outlined" style="font-size:18px;">workspace_premium</span> Sukcesja
-      </button>
-    </div>
-  </div>
- 
-</div><!-- /#lp-block-hrbp -->
+          <div class="lp-role-block-header">
+            <div class="lp-role-icon"><span class="material-symbols-outlined">domain</span></div>
+            <div>
+              <div class="lp-role-title">Jako HRBP</div>
+              <div class="lp-role-subtitle">Sukcesja, rozwój i kadry w podległym obszarze</div>
+            </div>
+          </div>
 
+          <div style="position: relative; margin: 24px;">
+            <div style="position: absolute; inset: -24px; background: radial-gradient(ellipse at top, rgba(255,255,255,0.06) 0%, transparent 70%); pointer-events: none; border-radius: 16px; z-index: 0;"></div>
 
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; position: relative; z-index: 1;">
+              <div class="p1-pulse-item" style="margin:0; background:var(--ls-hover);">
+                <div class="p1-pulse-num">142</div>
+                <div class="p1-pulse-label">Pracownicy<br>w obszarze</div>
+              </div>
+              <div class="p1-pulse-item" style="margin:0; background:var(--ls-hover);">
+                <div class="p1-pulse-num">37</div>
+                <div class="p1-pulse-label">Gotowi<br>teraz</div>
+              </div>
+              <div class="p1-pulse-item" style="margin:0; background:var(--ls-hover);">
+                <div class="p1-pulse-num">58</div>
+                <div class="p1-pulse-label">Gotowi<br>do 1 roku</div>
+              </div>
+              <div class="p1-pulse-item" style="margin:0; background:var(--ls-hover);">
+                <div class="p1-pulse-num">242</div>
+                <div class="p1-pulse-label">wiek<br>55+</div>
+              </div>
+
+              <div class="p1-pulse-item danger" style="margin:0; grid-row: span 2; display:flex; flex-direction:column; justify-content:center;">
+                <div class="p1-pulse-num">5</div>
+                <div class="p1-pulse-label">Wysokie<br>ryzyko<br>odejścia</div>
+              </div>
+
+              <div class="p1-pulse-item" style="margin:0; background:var(--ls-hover);">
+                <div class="p1-pulse-num">45</div>
+                <div class="p1-pulse-label">W programach<br>rozwoju</div>
+              </div>
+              <div class="p1-pulse-item" style="margin:0; background:var(--ls-hover);">
+                <div class="p1-pulse-num">299</div>
+                <div class="p1-pulse-label">Potencjał<br>liderski</div>
+              </div>
+              <div class="p1-pulse-item" style="margin:0; background:var(--ls-hover);">
+                <div class="p1-pulse-num">185</div>
+                <div class="p1-pulse-label">Gotowi<br>1-2 lata</div>
+              </div>
+              <div class="p1-pulse-item" style="margin:0; background:var(--ls-hover);">
+                <div class="p1-pulse-num">105</div>
+                <div class="p1-pulse-label">Gotowi<br>3-5 lat</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p1-body">
+
+            <div class="p1-col">
+              <div class="p1-col-title">
+                <span class="material-symbols-outlined" style="font-size:14px;color:var(--accent)">bolt</span>
+                Wymaga reakcji
+              </div>
+
+              <div class="p1-action-item overdue" onclick="goToAreaTab('area-risk')">
+                <div class="p1-action-icon red">
+                  <span class="material-symbols-outlined" style="font-size:16px">person_off</span>
+                </div>
+                <div class="p1-action-body">
+                  <div class="p1-action-name">Brak kandydatów - Kierownik Regionalny</div>
+                </div>
+              </div>
+
+              <div class="p1-action-item overdue" onclick="goToAreaTab('area-risk')">
+                <div class="p1-action-icon red">
+                  <span class="material-symbols-outlined" style="font-size:16px">trending_down</span>
+                </div>
+                <div class="p1-action-body">
+                  <div class="p1-action-name">Wysokie ryzyko odejścia: 5 osób</div>
+                </div>
+              </div>
+
+              <div class="p1-action-item" onclick="goToAreaTab('area-people')">
+                <div class="p1-action-icon orange">
+                  <span class="material-symbols-outlined" style="font-size:16px">assignment_late</span>
+                </div>
+                <div class="p1-action-body">
+                  <div class="p1-action-name">Brak aktywnego planu: 18 osób</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="p1-col">
+              <style>
+                /* Styl dla dymków z danymi szczegółowymi */
+                #hrbp-data-tooltip {
+                  display: none;
+                  position: fixed;
+                  z-index: 9999;
+                  background: var(--ls-bg, #1e1e20);
+                  border: 1px solid var(--ls-border, #333);
+                  border-radius: 8px;
+                  padding: 16px;
+                  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                  color: var(--text-main, #ececec);
+                  min-width: 250px;
+                  pointer-events: none;
+                }
+
+                .tooltip-table {
+                  width: 100%;
+                  border-collapse: collapse;
+                  font-size: 13px;
+                }
+
+                .tooltip-table th {
+                  text-align: left;
+                  color: var(--text-muted, #999);
+                  border-bottom: 1px solid var(--ls-border, #333);
+                  padding-bottom: 6px;
+                  font-weight: 500;
+                }
+
+                .tooltip-table td {
+                  padding: 8px 0;
+                  border-bottom: 1px solid rgba(255,255,255,0.05);
+                }
+
+                .tooltip-table tr:last-child td {
+                  border-bottom: none;
+                  padding-bottom: 0;
+                }
+              </style>
+
+              <div class="p1-col-title">
+                <span class="material-symbols-outlined" style="font-size:14px;color:var(--text-muted)">analytics</span>
+                Zmiany kadrowe
+              </div>
+
+              <div class="p1-action-item" onmouseenter="showHRBPDetails(event, 'zatrudnienie')" onmouseleave="hideHRBPDetails()">
+                <div class="p1-action-icon blue">
+                  <span class="material-symbols-outlined" style="font-size:16px">group</span>
+                </div>
+                <div class="p1-action-body" style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                  <span class="p1-action-name">Zatrudnienie aktualne</span>
+                  <strong style="font-size: 16px;">142</strong>
+                </div>
+              </div>
+
+              <div class="p1-action-item" onmouseenter="showHRBPDetails(event, 'umowy')" onmouseleave="hideHRBPDetails()">
+                <div class="p1-action-icon orange">
+                  <span class="material-symbols-outlined" style="font-size:16px">description</span>
+                </div>
+                <div class="p1-action-body" style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                  <span class="p1-action-name">Kończące się umowy (14 dni)</span>
+                  <strong style="font-size: 16px;">12</strong>
+                </div>
+              </div>
+
+              <div class="p1-action-item" onmouseenter="showHRBPDetails(event, 'absencje')" onmouseleave="hideHRBPDetails()">
+                <div class="p1-action-icon green">
+                  <span class="material-symbols-outlined" style="font-size:16px">health_and_safety</span>
+                </div>
+                <div class="p1-action-body" style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
+                  <span class="p1-action-name">Powroty z absencji (3+ tyg)</span>
+                  <strong style="font-size: 16px;">3</strong>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="p1-footer">
+            <div class="p1-footer-hint">
+              <span class="material-symbols-outlined" style="font-size:16px;">domain</span>
+              Obszar obejmuje 142 pracowników
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button class="lp-cta primary" onclick="goToAreaTab('area-dash')">
+                <span class="material-symbols-outlined" style="font-size:18px;">domain</span> Podległy obszar HR
+              </button>
+              <button class="lp-cta ghost" onclick="switchView('succession')">
+                <span class="material-symbols-outlined" style="font-size:18px;">workspace_premium</span> Sukcesja
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <div id="hrbp-data-tooltip"></div>
       </div><!-- /.lp-main-col -->
 
       <!-- SIDEBAR PRAWY -->
@@ -3843,6 +3881,158 @@
         </style>
 
         <script>
+          function showHRBPDetails(event, type) {
+            const tooltip = document.getElementById('hrbp-data-tooltip');
+            let content = '';
+
+            const renderBars = (data, labels, color, showYAxis = false) => {
+              const maxVal = Math.max(...data);
+              const step = Math.ceil(maxVal / 4); // Tworzymy 4 poziomy skali
+
+              // Generowanie osi Y (tylko jeśli showYAxis jest true)
+              let yAxis = '';
+              if (showYAxis) {
+                yAxis = `<div style="display: flex; flex-direction: column; justify-content: space-between; height: 90px; margin-right: 10px; font-size: 9px; color: #777;">
+               <span>${maxVal}</span><span>${step*3}</span><span>${step*2}</span><span>0</span>
+             </div>`;
+              }
+
+              let bars = '';
+              data.forEach((val, i) => {
+                const heightPercent = maxVal === 0 ? 0 : (val / maxVal) * 100;
+                const isLast = i === data.length - 1;
+                bars += `
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 55px; flex: 1;">
+        <div style="width: 12px; background: ${color}; height: ${heightPercent}%; opacity: ${isLast ? '1' : '0.4'}; border-radius: 2px 2px 0 0;"></div>
+        <span style="font-size: 9px; color: #E0E0E0; margin-top: 6px;">${labels[i]}</span>
+      </div>
+    `;
+              });
+
+              return `
+    <div style="display: flex; align-items: flex-end;">
+      ${yAxis}
+      <div style="display: flex; gap: 6px; flex-grow: 1; align-items: flex-end;">${bars}</div>
+    </div>
+  `;
+            };
+
+            // 2. Logika wyświetlania danych
+            if (type === 'zatrudnienie') {
+              content = `
+    <div style="font-size: 15px; font-weight: 600; margin-bottom: 14px; color: #fff;">Zatrudnienie - ostatnie 2 tygodnie</div>
+
+    <div style="margin-bottom: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 8px;">
+      ${renderBars(
+                      [90, 100, 136, 138, 140, 139, 140, 142],
+                      ['01.06','03.06','05.06', '07.06', '09.06', '11.06', '13.06', '15.06'],
+                      '#ffffff',
+                      true // Włączamy oś Y
+              )}
+    </div>
+  `;
+            } else if (type === 'umowy') {
+              content = `
+    <div style="font-size: 15px; font-weight: 600; margin-bottom: 14px; color: #fff;">Kończące się umowy</div>
+
+    <div style="margin-bottom: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 8px;">
+      <div style="font-size: 11px; color: #A0A0A0; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">23 os. / 14 dni</div>
+      ${renderBars([2,1,3,4,1,2,5], ['16.06','18.06','20.06','22.06','24.06','26.06','28.06'], '#ffffff', true)}
+    </div>
+
+    <table class="tooltip-table" style="width: 100%; border-collapse: collapse;">
+      <tr>
+        <th style="font-size: 12px; color: #999; padding: 4px 0; text-align: left;">Pracownik</th>
+        <th style="font-size: 12px; color: #999; padding: 4px 0; text-align: right;">Data do</th>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; color: #fff; line-height: 1.3;">
+            Jan Kowalski<br>
+            <span style="font-size: 10px; color: #888;">Produkcja | umowa o pracę</span>
+        </td>
+        <td style="text-align: right; color: #fff; font-weight: 600; vertical-align: top; padding-top: 8px;">21.06.2026</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; color: #fff; line-height: 1.3;">
+            Anna Nowak<br>
+            <span style="font-size: 10px; color: #888;">Logistyka | zlecenie</span>
+        </td>
+        <td style="text-align: right; color: #fff; font-weight: 600; vertical-align: top; padding-top: 8px;">24.06.2026</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; color: #fff; line-height: 1.3;">
+            Michał Wiśniewski<br>
+            <span style="font-size: 10px; color: #888;">Magazyn | okres próbny</span>
+        </td>
+        <td style="text-align: right; color: #fff; font-weight: 600; vertical-align: top; padding-top: 8px;">28.06.2026</td>
+      </tr>
+      <tr>
+        <td colspan="2" style="text-align: center; color: #777; font-size: 11px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.05);">
+          + 9 innych umów...
+        </td>
+      </tr>
+    </table>
+  `;
+            } else if (type === 'absencje') {
+              content = `
+    <div style="font-size: 15px; font-weight: 600; margin-bottom: 14px; color: #fff;">Powroty z absencji (L4)</div>
+
+    <div style="margin-bottom: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 8px;">
+      <div style="font-size: 11px; color: #A0A0A0; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">8 os. / 14 dni</div>
+      ${renderBars([1,1,1,1,1,3,2], ['16.06','18.06','20.06','22.06','24.06','26.06','28.06'], '#ffffff', true)}
+    </div>
+
+    <table class="tooltip-table" style="width: 100%; border-collapse: collapse;">
+      <tr>
+        <th style="font-size: 12px; color: #999; padding: 4px 0; text-align: left;">Pracownik</th>
+        <th style="font-size: 12px; color: #999; padding: 4px 0; text-align: right;">Powrót</th>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; color: #fff; line-height: 1.3;">
+            Katarzyna Lis<br>
+            <span style="font-size: 10px; color: #888;">Produkcja | L4 | 26 dni</span>
+        </td>
+        <td style="text-align: right; color: #fff; font-weight: 600; vertical-align: top; padding-top: 8px;">18.06</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; color: #fff; line-height: 1.3;">
+            Tomasz Kot<br>
+            <span style="font-size: 10px; color: #888;">Magazyn | L4 | 32 dni</span>
+        </td>
+        <td style="text-align: right; color: #fff; font-weight: 600; vertical-align: top; padding-top: 8px;">22.06</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; color: #fff; line-height: 1.3;">
+            Ewa Maj<br>
+            <span style="font-size: 10px; color: #888;">Kontrola jakości | L4 | 21 dni</span>
+        </td>
+        <td style="text-align: right; color: #fff; font-weight: 600; vertical-align: top; padding-top: 8px;">25.06</td>
+      </tr>
+    </table>
+  `;
+            }
+
+            tooltip.innerHTML = content;
+            tooltip.style.display = 'block';
+
+            // Pozycjonowanie
+            const rect = event.currentTarget.getBoundingClientRect();
+            const topPos = rect.top + (rect.height / 2) - (tooltip.offsetHeight / 2);
+            const leftPos = rect.right + 15;
+
+            tooltip.style.top = topPos + 'px';
+            tooltip.style.left = leftPos + 'px';
+          }
+
+          function hideHRBPDetails() {
+            const tooltip = document.getElementById('hrbp-data-tooltip');
+            tooltip.style.display = 'none';
+          }
+          function hideHRBPDetails() {
+            const tooltip = document.getElementById('hrbp-data-tooltip');
+            tooltip.style.display = 'none';
+          }
+
           var p0Activities = [
             { id:'act1', tab:'active', icon:'school', status:'W toku', badgeCls:'act-badge-active',
               name:'Akademia Lidera Biedronki 2.0',
