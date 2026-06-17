@@ -1157,6 +1157,8 @@
   .chat-session-active .chat-input-area { display: block; }
   .chat-session-inactive .chat-messages { display: none !important; }
   .chat-session-inactive .chat-input-area { display: none !important; }
+  .chat-session-inactive #btnBackToMenu { display: none !important; }
+  .chat-session-active #btnBackToMenu { display: flex !important; }
 
   /* Main profile layout */
   .main-profile { display: none; height: calc(100vh - 64px); margin-top: 64px; width: 100%; }
@@ -2952,7 +2954,7 @@
               <div class="lp-task task-grey" onclick="goToProfile('szkolenia','p0')">
                 <span class="lp-task-icon material-symbols-outlined" style="color:var(--ls-text-secondary);">play_circle</span>
                 <div class="lp-task-body"><div class="lp-task-name">Bezpieczeństwo informacji (BHP)</div><div class="lp-task-meta">E-learning • Obowiązkowe</div></div>
-                <span class="lp-task-badge badge-grey">75%</span>
+                <button class="btn-ghost" style="padding:4px 10px;font-size:11px;">Otwórz</button>
               </div>
             </div>
           </div>
@@ -3669,9 +3671,9 @@
     
     <div class="chat-header" style="flex-direction: row; justify-content: space-between; align-items: center;">
       <div class="chat-title"><span class="material-symbols-outlined">auto_awesome</span> Asystent Rozwoju AI</div>
-      
-      <button class="btn-ghost p0-only" id="btnNewChatSession" title="Rozpocznij nowy czat" style="padding: 6px; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-        <span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+
+      <button class="btn-ghost p0-only" id="btnBackToMenu" title="Zamknij czat. Historia rozmowy zostanie zachowana" style="padding: 6px; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+        <span class="material-symbols-outlined" style="font-size: 20px;">close</span>
       </button>
     </div>
 
@@ -3750,124 +3752,274 @@
       <!-- Aktywności -->
       <div id="dev-activities" class="dev-view" style="display:none;">
 
-  <!-- ══ WIDOK P0: Aktualna aktywność ══ -->
-  <div class="p0-hrbp-only">
-    <div id="p0-assigned-banner" style="display:none;" class="assign-success-banner">
-      <span class="material-symbols-outlined" style="font-size:18px;">check_circle</span>
-      <span id="p0-assigned-banner-text">Nowa aktywność została przypisana przez Twojego przełożonego.</span>
-    </div>
+        <!-- ══ WIDOK P0: Moje aktywności ══ -->
+        <div id="p0-activities-root">
+          <div id="p0-assigned-banner" style="display:none;" class="assign-success-banner">
+            <span class="material-symbols-outlined" style="font-size:18px;">check_circle</span>
+            <span id="p0-assigned-banner-text">Nowa aktywność została przypisana.</span>
+          </div>
 
-    <div class="lp-role-block block-neutral" id="p0-activity-card">
-      <div class="lp-role-block-body" style="padding:32px 40px;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;">
-          <div style="width:64px;height:64px;border-radius:16px;background:var(--ls-hover);display:flex;align-items:center;justify-content:center;border:1px solid var(--ls-border);">
-            <span class="material-symbols-outlined" style="color:var(--ls-text);font-size:32px;" id="p0-activity-icon">school</span>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <div class="split-layout-bar" style="margin-bottom:0;">
+              <button class="split-layout-btn active" id="p0-tab-active" onclick="p0SwitchTab('active',this)">
+                <span class="material-symbols-outlined">play_circle</span> Aktywne
+              </button>
+              <div class="split-layout-divider"></div>
+              <button class="split-layout-btn" id="p0-tab-archive" onclick="p0SwitchTab('archive',this)">
+                <span class="material-symbols-outlined">inventory_2</span> Archiwalne
+              </button>
+            </div>
+            <div style="font-size:12px;color:var(--ls-text-muted);" id="p0-activity-count"></div>
           </div>
-          <span class="lp-task-badge" style="font-size:13px;padding:6px 14px;background:var(--ls-accent-bg);color:var(--ls-accent);border:1px solid var(--ls-accent-border);">W toku</span>
-        </div>
-        <div class="lp-role-title" style="font-size:24px;margin-bottom:12px;font-weight:700;" id="p0-activity-name">Akademia Lidera Biedronki 2.0</div>
-        <div style="font-size:14px;color:var(--ls-text-secondary);margin-bottom:32px;line-height:1.6;max-width:800px;" id="p0-activity-desc">
-          Kompleksowy program rozwojowy przygotowujący do roli Kierownika Rejonu. Aktualny zjazd szkoleniowy skupia się na zaawansowanym zarządzaniu zespołem, facylitacji konfliktów oraz budowaniu strategii w oparciu o twarde dane analityczne.
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;padding:20px;background:var(--ls-hover);border-radius:12px;border:1px solid var(--ls-border);" id="p0-activity-meta">
-          <div>
-            <div style="font-size:11px;color:var(--ls-text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;font-weight:700;">Format</div>
-            <div style="font-size:14px;font-weight:600;color:var(--ls-text);" id="p0-meta-format">Szkolenie stacjonarne</div>
-          </div>
-          <div>
-            <div style="font-size:11px;color:var(--ls-text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;font-weight:700;">Termin zjazdu</div>
-            <div style="font-size:14px;font-weight:600;color:var(--ls-text);" id="p0-meta-date">15.03 — 17.03.2026</div>
-          </div>
-          <div>
-            <div style="font-size:11px;color:var(--ls-text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;font-weight:700;">Lokalizacja</div>
-            <div style="font-size:14px;font-weight:600;color:var(--ls-text);" id="p0-meta-location">Centrum Szkoleniowe</div>
-          </div>
-          <div>
-            <div style="font-size:11px;color:var(--ls-text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;font-weight:700;">Trener prowadzący</div>
-            <div style="font-size:14px;font-weight:600;color:var(--ls-text);" id="p0-meta-trainer">Tomasz Kaczmarek</div>
+
+          <div style="display: flex; gap: 24px; align-items: flex-start; position: relative;">
+
+            <div id="p0-cards-grid" style="flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; transition: grid-template-columns 0.3s ease;"></div>
+
+            <div id="p0-detail-sidebar" style="display: none; width: 45%; min-width: 400px; flex-shrink: 0; background: var(--ls-card); border: 1px solid var(--ls-accent-border); border-radius: 20px; position: sticky; top: 0; box-shadow: var(--shadow-card); flex-direction: column; overflow: hidden; max-height: calc(100vh - 150px);">
+
+              <div style="overflow-y: auto; padding: 28px 24px;">
+                <div id="p0-detail-content"></div>
+              </div>
+
+            </div>
           </div>
         </div>
+
+        <style>
+          /* ── Nowe Kafelki aktywności (Masterpiece Typograficzny) ── */
+          .act-card {
+            background: var(--ls-card);
+            border-radius: 16px;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+          }
+
+
+          .act-card:hover {
+            border-color: var(--ls-border-strong);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+          }
+          .act-card:hover::before { background: var(--ls-accent); }
+
+          /* Stan wybrany (Aktywny) */
+          .act-card.selected {
+            border-color: var(--ls-accent);
+            background: var(--ls-accent-bg);
+            transform: translateY(0);
+            box-shadow: 0 0 0 1px var(--ls-accent-border) inset;
+          }
+          .act-card.selected::before { background: var(--ls-accent); }
+
+          /* Typografia kafelka */
+          .act-card-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--ls-text);
+            line-height: 1.4;
+            margin: 12px 0 6px;
+          }
+          .act-card-meta {
+            font-size: 12px;
+            color: var(--ls-text-muted);
+            font-weight: 500;
+          }
+
+          /* Badge'y */
+          .act-badge-active { display: inline-block; width: fit-content; background:var(--ls-accent-bg); color:var(--ls-accent); border:1px solid var(--ls-accent-border); padding:3px 10px; border-radius:6px; font-size:10px; font-weight:700; white-space:nowrap; }
+          .act-badge-done   { display: inline-block; width: fit-content; background:var(--ls-success-bg); color:var(--ls-success); border:1px solid var(--ls-success-border); padding:3px 10px; border-radius:6px; font-size:10px; font-weight:700; white-space:nowrap; }
+          .act-badge-plan   { display: inline-block; width: fit-content; background:var(--ls-hover); color:var(--ls-text-muted); border:1px solid var(--ls-border); padding:3px 10px; border-radius:6px; font-size:10px; font-weight:700; white-space:nowrap; }
+
+          /* Dostosowanie dla trybu jasnego (Dusk-light) */
+          [data-theme="dusk-light"] .act-card { background:#FFFFFF; border-color:#D8E0F0; }
+          [data-theme="dusk-light"] .act-card:hover { border-color:#B0BDD8; }
+          [data-theme="dusk-light"] .act-card.selected { background:#FEF3C7; border-color:#F9BA42; }
+        </style>
+
+        <script>
+          var p0Activities = [
+            { id:'act1', tab:'active', icon:'school', status:'W toku', badgeCls:'act-badge-active',
+              name:'Akademia Lidera Biedronki 2.0',
+              desc:'Kompleksowy program rozwojowy przygotowujący do roli Kierownika Rejonu. Aktualny zjazd szkoleniowy skupia się na zaawansowanym zarządzaniu zespołem, facylitacji konfliktów oraz budowaniu strategii w oparciu o twarde dane analityczne.',
+              format:'Szkolenie stacjonarne', date:'15.03 — 17.03.2026', location:'Centrum Szkoleniowe', trainer:'Tomasz Kaczmarek' },
+            { id:'act2', tab:'active', icon:'trending_up', status:'W toku', badgeCls:'act-badge-active',
+              name:'Warsztat: Analiza Danych Sprzedażowych',
+              desc:'Praktyczny warsztat z interpretacji raportów sprzedażowych i KPI na poziomie rejonu. Nacisk na podejmowanie decyzji opartych o dane i planowanie taktyczne.',
+              format:'Online (Teams)', date:'22.04.2026', location:'Platforma online', trainer:'Anna Kowalska' },
+            { id:'act3', tab:'active', icon:'groups', status:'Zaplanowane', badgeCls:'act-badge-plan',
+              name:'Mentoring: Zarządzanie Konfliktem',
+              desc:'Cykl 4 sesji mentoringowych z doświadczonym Kierownikiem Rejonu. Tematyka obejmuje mediacje, budowanie autorytetu i zarządzanie trudnymi rozmowami.',
+              format:'Mentoring 1:1', date:'05.05 — 26.05.2026', location:'Sklep Wrocław Centrum', trainer:'Marek Wiśniewski' },
+            { id:'act6', tab:'active', icon:'campaign', status:'W toku', badgeCls:'act-badge-active',
+              name:'Komunikacja Menedżerska — Moduł II',
+              desc:'Drugi moduł serii szkoleń z zakresu komunikacji wewnętrznej i zewnętrznej. Skupia się na prowadzeniu trudnych rozmów, feedbacku rozwojowym i komunikacji w sytuacjach kryzysowych.',
+              format:'Szkolenie stacjonarne', date:'10.04.2026', location:'Centrum Szkoleniowe', trainer:'Karolina Maj' },
+            { id:'act7', tab:'active', icon:'psychology', status:'Zaplanowane', badgeCls:'act-badge-plan',
+              name:'Design Thinking w Zarządzaniu',
+              desc:'Warsztaty z metodologii design thinking zastosowanej w kontekście operacyjnym sieci detalicznej. Praca na realnych przypadkach z codziennego funkcjonowania sklepu.',
+              format:'Workshop', date:'18.06.2026', location:'Centrum Innowacji Biedronki', trainer:'Piotr Zając' },
+            { id:'act8', tab:'active', icon:'volunteer_activism', status:'Zaplanowane', badgeCls:'act-badge-plan',
+              name:'Onboarding Coaching — nowi Kierownicy',
+              desc:'Program coachingowy wspierający nowych Kierowników Sklepu w pierwszych 90 dniach. Obejmuje sesje indywidualne, peer learning i pracę z mentorem z regionu.',
+              format:'Coaching indywidualny', date:'01.07 — 30.09.2026', location:'Sklep macierzysty', trainer:'Agnieszka Wrona' },
+            { id:'act9', tab:'active', icon:'insights', status:'W toku', badgeCls:'act-badge-active',
+              name:'Akademia Danych: Power BI dla Menedżerów',
+              desc:'Praktyczne szkolenie z narzędzia Power BI w zastosowaniu do raportowania wyników sklepu. Uczestnicy tworzą własne dashboardy KPI i uczą się interpretacji trendów.',
+              format:'Online (Teams)', date:'05.04 — 26.04.2026', location:'Platforma online', trainer:'Marek Lewandowski' },
+            { id:'act4', tab:'archive', icon:'workspace_premium', status:'Ukończone', badgeCls:'act-badge-done',
+              name:'Akademia Lidera Biedronki 1.0',
+              desc:'Podstawowy program przygotowujący do roli Zastępcy Kierownika Sklepu. Obejmował moduły: komunikacja, planowanie zmian, podstawy zarządzania zespołem.',
+              format:'Szkolenie stacjonarne', date:'10.09 — 12.09.2025', location:'Centrum Szkoleniowe', trainer:'Tomasz Kaczmarek' },
+            { id:'act5', tab:'archive', icon:'bar_chart', status:'Ukończone', badgeCls:'act-badge-done',
+              name:'Szkolenie: Excel dla Menedżerów',
+              desc:'Intensywny dwudniowy kurs zaawansowanego Excela w kontekście raportowania operacyjnego i analizy wyników sprzedaży w sieci detalicznej.',
+              format:'Szkolenie stacjonarne', date:'03.02.2025', location:'Centrum Szkoleniowe', trainer:'Piotr Nowak' },
+            { id:'act10', tab:'archive', icon:'record_voice_over', status:'Ukończone', badgeCls:'act-badge-done',
+              name:'Komunikacja Menedżerska — Moduł I',
+              desc:'Pierwszy moduł serii szkoleń komunikacyjnych. Podstawy aktywnego słuchania, struktury komunikatu i prowadzenia zebrań zespołowych. Ocena końcowa: bardzo dobry.',
+              format:'Szkolenie stacjonarne', date:'14.11.2024', location:'Centrum Szkoleniowe', trainer:'Karolina Maj' },
+            { id:'act11', tab:'archive', icon:'emoji_events', status:'Ukończone', badgeCls:'act-badge-done',
+              name:'Certyfikacja: Zarządzanie Zapasami',
+              desc:'Program certyfikacyjny z zakresu zarządzania zapasami i logistyki sklepu. Obejmował moduły: rotacja towaru, strata, optymalizacja zamówień. Egzamin zdany z wynikiem 94%.',
+              format:'E-learning + egzamin', date:'08.08.2024', location:'Platforma e-learningowa', trainer:'System LMS' },
+            { id:'act12', tab:'archive', icon:'handshake', status:'Ukończone', badgeCls:'act-badge-done',
+              name:'Warsztaty: Negocjacje i Wywieranie Wpływu',
+              desc:'Dwudniowe warsztaty z negocjacji w środowisku biznesowym. Symulacje, case studies i praca z aktorem biznesowym w scenach negocjacyjnych.',
+              format:'Szkolenie stacjonarne', date:'22.05.2024', location:'Hotel Novotel Wrocław', trainer:'Bartosz Sikora' },
+            { id:'act13', tab:'archive', icon:'diversity_3', status:'Ukończone', badgeCls:'act-badge-done',
+              name:'Team Building — Integracja Regionalna',
+              desc:'Jednodniowe wydarzenie integracyjne dla Kierowników Sklepu z regionu. Ćwiczenia z budowania zaufania, komunikacji pod presją i współpracy międzyzespołowej.',
+              format:'Wydarzenie terenowe', date:'12.10.2023', location:'Ośrodek Szkoleniowy Sudety', trainer:'Zewnętrzny fasylitator' }
+          ];
+
+          var p0CurrentTab = 'active';
+          var p0SelectedId = null;
+
+          function p0SwitchTab(tab, btn) {
+            p0CurrentTab = tab;
+            document.querySelectorAll('#p0-tab-active,#p0-tab-archive').forEach(function(b){ b.classList.remove('active'); });
+            btn.classList.add('active');
+            p0CloseDetail(); // Zamykamy panel po zmianie zakładki
+            p0RenderCards();
+          }
+
+          function p0RenderCards() {
+            var items = p0Activities.filter(function(a){ return a.tab === p0CurrentTab; });
+            var countEl = document.getElementById('p0-activity-count');
+            if (countEl) countEl.textContent = items.length + ' aktywności';
+
+            var grid = document.getElementById('p0-cards-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            // Generowanie kafelków
+            items.forEach(function(a) {
+              var card = document.createElement('div');
+              card.className = 'act-card' + (p0SelectedId === a.id ? ' selected' : '');
+              card.setAttribute('data-act-id', a.id);
+              card.onclick = function(){ p0OpenDetail(a); };
+
+              card.innerHTML =
+                      '<div class="' + a.badgeCls + '">' + a.status + '</div>' +
+                      '<div class="act-card-name">' + a.name + '</div>' +
+                      '<div class="act-card-meta">' + a.date + ' &nbsp;&middot;&nbsp; ' + a.format + '</div>';
+
+              grid.appendChild(card);
+            });
+          }
+
+          function p0BuildPanelHTML(a) {
+            // Szablon informacji o aktywności (wędruje do panelu bocznego nad pole dokumentów)
+            return `
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 24px;">
+      <div>
+        <span class="${a.badgeCls}" style="margin-bottom: 12px;">${a.status}</span>
+        <div style="font-size: 20px; font-weight: 700; color: var(--ls-text); line-height: 1.2;">${a.name}</div>
+      </div>
+      <button onclick="p0CloseDetail()" class="btn-ghost" style="padding: 6px; border-radius: 8px; flex-shrink: 0; margin-left: 16px;">
+        <span class="material-symbols-outlined" style="font-size: 20px;">close</span>
+      </button>
+    </div>
+    <div style="font-size: 13px; color: var(--ls-text-secondary); line-height: 1.7; margin-bottom: 32px;">${a.desc}</div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 32px;">
+      <div style="padding: 14px; background: var(--ls-hover); border-radius: 12px; border: 1px solid var(--ls-border);">
+        <div style="font-size: 10px; color: var(--ls-text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Format</div>
+        <div style="font-size: 13px; font-weight: 600; color: var(--ls-text);">${a.format}</div>
+      </div>
+      <div style="padding: 14px; background: var(--ls-hover); border-radius: 12px; border: 1px solid var(--ls-border);">
+        <div style="font-size: 10px; color: var(--ls-text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Termin</div>
+        <div style="font-size: 13px; font-weight: 600; color: var(--ls-text);">${a.date}</div>
+      </div>
+      <div style="padding: 14px; background: var(--ls-hover); border-radius: 12px; border: 1px solid var(--ls-border);">
+        <div style="font-size: 10px; color: var(--ls-text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Lokalizacja</div>
+        <div style="font-size: 13px; font-weight: 600; color: var(--ls-text);">${a.location}</div>
+      </div>
+      <div style="padding: 14px; background: var(--ls-hover); border-radius: 12px; border: 1px solid var(--ls-border);">
+        <div style="font-size: 10px; color: var(--ls-text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Trener</div>
+        <div style="font-size: 13px; font-weight: 600; color: var(--ls-text);">${a.trainer}</div>
       </div>
     </div>
-  </div>
+  `;
+          }
 
-  <!-- ══ WIDOK P1: Przypisz aktywność ══ -->
-  <div class="p1-only" style="display:none;">
+          function p0OpenDetail(a) {
+            var grid = document.getElementById('p0-cards-grid');
+            var sidebar = document.getElementById('p0-detail-sidebar');
+            var content = document.getElementById('p0-detail-content');
+            var docSection = document.getElementById('devDocSection');
+            var alreadyOpen = p0SelectedId === a.id;
 
-  <div style="background:var(--bg-card-2); border:1px solid var(--border); border-radius:14px; padding:14px 20px; margin-bottom:16px; display:flex; align-items:center; gap:12px;">
-    <div style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.8px; white-space:nowrap;">Aktualnie przypisana</div>
-    <div style="width:1px; height:20px; background:var(--border); flex-shrink:0;"></div>
-    <span class="material-symbols-outlined" style="font-size:18px; color:var(--ls-accent); flex-shrink:0;">school</span>
-    <span id="p1-current-activity-name" style="font-size:15px; font-weight:600; color:var(--ls-text);">Akademia Lidera Biedronki 2.0</span>
-    <span class="lp-task-badge" style="font-size:11px; padding:3px 10px; background:var(--ls-accent-bg); color:var(--ls-accent); border:1px solid var(--ls-accent-border);">W toku</span>
-  </div>
+            // Odznacz wszystko
+            document.querySelectorAll('.act-card').forEach(function(c){ c.classList.remove('selected'); });
 
-  <div class="assign-activity-panel">
-    <div class="assign-activity-header">
-      <div class="assign-activity-title">
-        <span class="material-symbols-outlined" style="color:var(--ls-accent); font-size:18px;">add_circle</span>
-        Przypisz aktywność pracownikowi
-      </div>
-      <div style="font-size:12px; color:var(--ls-text-muted);">Wybierz jedną</div>
-    </div>
+            if (alreadyOpen) {
+              p0CloseDetail();
+              return;
+            }
 
-    <div class="assign-activity-grid" id="assignActivityGrid">
-      <div class="assign-activity-card" onclick="toggleAssignCard(this)">
-        <div class="check-indicator"></div>
-        <div class="assign-activity-card-icon"><span class="material-symbols-outlined" style="font-size:22px; color:var(--ls-text);">school</span></div>
-        <div class="assign-activity-card-name">Akademia Lidera Biedronki 2.0</div>
-        <div class="assign-activity-card-meta">Program certyfikacyjny · 3 zjazdy stacjonarne</div>
-        <span class="assign-activity-card-tag assign-tag-program">Program</span>
-      </div>
-      <div class="assign-activity-card" onclick="toggleAssignCard(this)">
-        <div class="check-indicator"></div>
-        <div class="assign-activity-card-icon"><span class="material-symbols-outlined" style="font-size:22px; color:var(--ls-text);">menu_book</span></div>
-        <div class="assign-activity-card-name">Komunikacja interpersonalna</div>
-        <div class="assign-activity-card-meta">E-learning · ok. 4h · EduAkcja</div>
-        <span class="assign-activity-card-tag assign-tag-elearning">E-learning</span>
-      </div>
-      <div class="assign-activity-card" onclick="toggleAssignCard(this)">
-        <div class="check-indicator"></div>
-        <div class="assign-activity-card-icon"><span class="material-symbols-outlined" style="font-size:22px; color:var(--ls-text);">groups</span></div>
-        <div class="assign-activity-card-name">Warsztaty Design Thinking</div>
-        <div class="assign-activity-card-meta">Warsztat stacjonarny · 2 dni · Warszawa</div>
-        <span class="assign-activity-card-tag assign-tag-workshop">Warsztat</span>
-      </div>
-      <div class="assign-activity-card" onclick="toggleAssignCard(this)">
-        <div class="check-indicator"></div>
-        <div class="assign-activity-card-icon"><span class="material-symbols-outlined" style="font-size:22px; color:var(--ls-text);">bar_chart</span></div>
-        <div class="assign-activity-card-name">Excel dla Liderów</div>
-        <div class="assign-activity-card-meta">E-learning · ok. 6h · EduAkcja</div>
-        <span class="assign-activity-card-tag assign-tag-elearning">E-learning</span>
-      </div>
-      <div class="assign-activity-card" onclick="toggleAssignCard(this)">
-        <div class="check-indicator"></div>
-        <div class="assign-activity-card-icon"><span class="material-symbols-outlined" style="font-size:22px; color:var(--ls-text);">psychology</span></div>
-        <div class="assign-activity-card-name">Zarządzanie przez feedback</div>
-        <div class="assign-activity-card-meta">Program certyfikacyjny · 2 zjazdy</div>
-        <span class="assign-activity-card-tag assign-tag-program">Program</span>
-      </div>
-      <div class="assign-activity-card" onclick="toggleAssignCard(this)">
-        <div class="check-indicator"></div>
-        <div class="assign-activity-card-icon"><span class="material-symbols-outlined" style="font-size:22px; color:var(--ls-text);">fact_check</span></div>
-        <div class="assign-activity-card-name">Bezpieczeństwo informacji</div>
-        <div class="assign-activity-card-meta">E-learning · ok. 2h · Obowiązkowe</div>
-        <span class="assign-activity-card-tag assign-tag-elearning">E-learning</span>
-      </div>
-    </div>
+            // Zaznacz nowy
+            p0SelectedId = a.id;
+            document.querySelector('[data-act-id="' + a.id + '"]').classList.add('selected');
 
-    <div class="assign-footer">
-      <div class="assign-selected-count" id="assignSelectedCount">Nie wybrano żadnej aktywności</div>
-      <div style="display:flex; gap:10px;">
-        <button class="btn-ghost" style="font-size:12px; padding:8px 16px;" onclick="clearAssignSelection()">Wyczyść</button>
-        <button class="btn-primary" style="font-size:12px; padding:8px 20px;" onclick="confirmAssign()">
-          <span class="material-symbols-outlined" style="font-size:16px;">send</span> Przypisz pracownikowi
-        </button>
-      </div>
-    </div>
-  </div>
+            // Magia układu Google Images (Master-Detail):
+            // 1. Zmieniamy siatkę lewą na 2 kolumny (żeby ustąpić miejsca)
+            grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
 
-</div>
+            // 2. Otwieramy prawy panel
+            sidebar.style.display = 'flex';
+            content.innerHTML = p0BuildPanelHTML(a);
+
+            // 3. Wstrzykujemy blok "Dokumenty i wyniki" na sam dół panelu szczegółów
+            if(docSection) {
+              docSection.style.display = 'block';
+              docSection.style.marginTop = '0'; // reset marginesu
+              sidebar.querySelector('div').appendChild(docSection);
+            }
+          }
+
+          function p0CloseDetail() {
+            p0SelectedId = null;
+            document.querySelectorAll('.act-card').forEach(function(c){ c.classList.remove('selected'); });
+
+            var grid = document.getElementById('p0-cards-grid');
+            var sidebar = document.getElementById('p0-detail-sidebar');
+
+            // Reset układu (znów 3 kolumny)
+            if (grid) grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+            if (sidebar) sidebar.style.display = 'none';
+          }
+
+          // Inicjalizacja przy starcie
+          (function(){ p0RenderCards(); })();
+        </script>
+
 
   <!-- ══ DOKUMENTY (wspólne) ══ -->
   <div class="doc-section" id="devDocSection" style="margin-bottom:50px;">
@@ -8860,60 +9012,51 @@ function goToProfile(tabName, role) {
       const p0hrbpElements = document.querySelectorAll('.p0-hrbp-only');
 
       if (currentProfileRole === 'p0') {
+        // --- LOGIKA DLA PRACOWNIKA (P0) ---
         p0elements.forEach(el => el.style.display = '');
         nonP0elements.forEach(el => el.style.display = 'none');
         p1elements.forEach(el => el.style.display = 'none');
         p0hrbpElements.forEach(el => el.style.display = '');
-        globalBanner.style.display = 'none';
+
+        if(globalBanner) globalBanner.style.display = 'none';
         if(subtitle) subtitle.innerText = "Podsumowanie Twojego planu i najbliższe kroki";
+
         const splitRight = document.getElementById('splitRightCol');
         if(splitRight) {
           splitRight.classList.add('chat-session-inactive');
           splitRight.classList.remove('chat-session-active');
         }
-      } else if (currentProfileRole === 'hrbp') {
-          p1elements.forEach(el => el.style.display = 'none');
-          p0hrbpElements.forEach(el => el.style.display = '');
-          const splitRight = document.getElementById('splitRightCol');
-          if(splitRight) {
-             splitRight.classList.remove('chat-session-inactive');
-             splitRight.classList.add('chat-session-active');
-          }
-          const msgP0 = document.getElementById('chat-messages-p0');
-          const msgMgr = document.getElementById('chat-messages-manager');
-          if(msgP0) msgP0.style.display = 'none';
-          if(msgMgr) msgMgr.style.display = 'flex';
+
       } else {
         p0elements.forEach(el => el.style.display = 'none');
         nonP0elements.forEach(el => el.style.display = '');
 
-        if(currentProfileRole === 'p1') {
+        if(globalBanner) globalBanner.style.display = 'flex';
+        if(subtitle) subtitle.innerText = "Przegląd profilu i planu rozwoju pracownika";
+
+        const splitRight = document.getElementById('splitRightCol');
+        if(splitRight) {
+          splitRight.classList.remove('chat-session-inactive');
+          splitRight.classList.add('chat-session-active');
+        }
+
+        if (currentProfileRole === 'p1') {
           p1elements.forEach(el => el.style.display = 'flex');
           p0hrbpElements.forEach(el => el.style.display = 'none');
-          const splitRight = document.getElementById('splitRightCol');
-          if(splitRight) {
-             splitRight.classList.remove('chat-session-inactive');
-             splitRight.classList.add('chat-session-active');
-          }
+          if(globalBannerText) globalBannerText.innerText = 'Przełożony';
+
         } else if (currentProfileRole === 'hrbp') {
           p1elements.forEach(el => el.style.display = 'none');
           p0hrbpElements.forEach(el => el.style.display = '');
-          const splitRight = document.getElementById('splitRightCol');
-          if(splitRight) {
-             splitRight.classList.remove('chat-session-inactive');
-             splitRight.classList.add('chat-session-active');
-          }
-        } else {
-          p1elements.forEach(el => el.style.display = 'none');
-          p0hrbpElements.forEach(el => el.style.display = 'none');
-        }
+          if(globalBannerText) globalBannerText.innerText = 'HR Business Partner';
 
-        globalBanner.style.display = 'flex';
-        if(globalBannerText) globalBannerText.innerText = currentProfileRole === 'p1' ? 'Przełożony' : 'HRBP';
-        if(subtitle) subtitle.innerText = "Przegląd profilu i planu rozwoju pracownika";
+          const msgP0 = document.getElementById('chat-messages-p0');
+          const msgMgr = document.getElementById('chat-messages-manager');
+          if(msgP0) msgP0.style.display = 'none';
+          if(msgMgr) msgMgr.style.display = 'flex';
+        }
       }
 
-      // Jeśli jesteśmy na zakładce niewidocznej dla roli, wróć na Dashboard
       const activeNav = document.querySelector('.profile-nav-item.active');
       if (activeNav && activeNav.style.display === 'none') {
         switchProfileTab('view-profile-dash', 0);
@@ -9015,9 +9158,9 @@ function goToProfile(tabName, role) {
     }
   }
 
-  const btnNewChatSession = document.getElementById('btnNewChatSession');
-  if(btnNewChatSession) {
-    btnNewChatSession.addEventListener('click', () => {
+  const btnBackToMenu = document.getElementById('btnBackToMenu');
+  if(btnBackToMenu) {
+    btnBackToMenu.addEventListener('click', () => {
       const splitRight = document.getElementById('splitRightCol');
       splitRight.classList.remove('chat-session-active');
       splitRight.classList.add('chat-session-inactive');
