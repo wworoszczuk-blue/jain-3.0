@@ -5484,10 +5484,6 @@ function confirmAssign() {
             <span class="material-symbols-outlined">dashboard</span> Przegląd zespołu
           </button>
           <div class="split-layout-divider"></div>
-          <button class="split-layout-btn" onclick="switchTeamView('team-matrix', this)">
-            <span class="material-symbols-outlined">grid_on</span> Macierz zespołu
-          </button>
-          <div class="split-layout-divider"></div>
           <button class="split-layout-btn" onclick="switchTeamView('team-list', this)">
             <span class="material-symbols-outlined">format_list_bulleted</span> Lista pracowników
           </button>
@@ -6446,458 +6442,6 @@ function confirmAssign() {
 
       <div class="tov-grid" id="tovGrid"></div>
     </div>
-
-    <!-- ═══════════════════════════════════════════════════
-        ZAKŁADKA 2: MACIERZ MDR
-    ═══════════════════════════════════════════════════ -->
-    <div class="module-view" id="team-matrix" style="display:none;">
-      <style>
-        .mdr-wrap {
-          padding: 8px 0 40px;
-        }
-
-        .mdr-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 24px;
-          color: var(--text);
-          align-items: stretch;
-        }
-
-        @media (max-width: 1400px) {
-          .mdr-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-        @media (max-width: 1100px) {
-          .mdr-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        /* ── Masywna Karta Kategorii (Styl Premium) ── */
-        .mdr-cat-card {
-          background: var(--bg-card); /* Spójność z Przeglądem Zespołu */
-          border: 1px solid var(--border);
-          border-radius: 20px;
-          display: flex;
-          flex-direction: column;
-          position: relative;
-          overflow: visible;
-          transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-          box-shadow: var(--shadow-card);
-          min-height: 320px; /* Wymuszona wysokość dla efektu tablicy */
-          z-index: 1; /* Podstawa dla stackingu */
-        }
-        
-        /* Dynamiczne podświetlenie ramki i podbicie karty na hover */
-        .mdr-cat-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 16px 40px rgba(0,0,0,0.3);
-          border-color: var(--border-strong);
-          z-index: 50;
-        }
-
-        /* ── Nagłówek Karty ── */
-        .mdr-cat-header {
-          padding: 20px 24px 16px;
-          border-bottom: 1px solid var(--border);
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 12px;
-          background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
-          border-radius: 20px 20px 0 0;
-        }
-
-        .mdr-cat-title-wrap {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-
-        .mdr-cat-label {
-          font-size: 12px;
-          font-weight: 800;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          color: var(--mdr-c);
-          line-height: 1.3;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .mdr-info-icon {
-          color: var(--text-muted);
-          cursor: help;
-          display: inline-flex;
-          align-items: center;
-          position: relative;
-          transition: color 0.2s;
-          font-size: 11px;
-          font-weight: 600;
-          text-transform: none;
-          letter-spacing: 0;
-          gap: 4px;
-          margin-top: 2px;
-        }
-        .mdr-info-icon:hover { color: var(--text); }
-        .mdr-info-icon .material-symbols-outlined { font-size: 14px; }
-
-        /* Duży, masywny licznik */
-        .mdr-cat-count-badge {
-          background: var(--bg-card-3);
-          border: 1px solid var(--border-strong);
-          padding: 6px 14px;
-          border-radius: 12px;
-          font-size: 18px;
-          font-weight: 800;
-          color: var(--text);
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          transition: all 0.3s;
-        }
-        .mdr-cat-card:hover .mdr-cat-count-badge {
-          border-color: var(--mdr-c);
-          color: var(--mdr-c);
-        }
-
-        /* Tooltip z opisem (Definicja) */
-        .mdr-info-tooltip {
-          position: absolute;
-          top: calc(100% + 8px);
-          left: 0;
-          width: 260px;
-          background: rgba(15, 15, 20, 0.95);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border: 1px solid var(--border-strong);
-          padding: 16px;
-          border-radius: 16px;
-          font-size: 12px;
-          color: #eaeaea;
-          line-height: 1.5;
-          opacity: 0;
-          pointer-events: none;
-          transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-          z-index: 100;
-          box-shadow: 0 16px 40px rgba(0,0,0,0.6);
-        }
-        .mdr-info-icon:hover .mdr-info-tooltip {
-          opacity: 1;
-          transform: translateY(4px);
-        }
-
-        /* ── Wnętrze: Lista Pracowników ── */
-        .mdr-people {
-          padding: 16px 20px;
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          flex: 1;
-        }
-
-        .mdr-list-item {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 10px 14px 10px 10px;
-          background: var(--bg-card-2);
-          border: 1px solid var(--border);
-          border-radius: 14px;
-          cursor: pointer;
-          transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-          position: relative;
-        }
-        
-        .mdr-list-item:hover {
-          background: var(--bg-hover);
-          border-color: var(--mdr-c);
-          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-          z-index: 60; /* Wewnętrzny z-index wyższy niż reszta karty */
-        }
-
-        /* Avatar — Kolor Kategorii */
-        .mdr-avatar {
-          width: 32px; height: 32px;
-          border-radius: 10px; 
-          background: var(--mdr-c);
-          color: #111; 
-          font-size: 11px;
-          font-weight: 800;
-          display: flex; align-items: center; justify-content: center;
-          flex-shrink: 0;
-          transition: all 0.2s;
-        }
-
-        .mdr-info-wrap {
-          flex: 1;
-          min-width: 0; 
-        }
-        .mdr-list-name {
-          font-size: 13px;
-          font-weight: 600;
-          color: var(--text);
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          margin-bottom: 2px;
-        }
-        .mdr-list-role {
-          font-size: 11px;
-          color: var(--text-secondary);
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        /* ── Rozwijanie (Show More) ── */
-        .mdr-list-item.hidden-item { display: none; }
-        .mdr-cat-card.is-expanded .mdr-list-item.hidden-item {
-          display: flex;
-          animation: slideDown 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
-        }
-        
-        @keyframes slideDown {
-          0% { opacity: 0; transform: translateY(-10px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .mdr-expand-btn {
-          width: 100%;
-          background: transparent;
-          border: 1px dashed var(--border-strong);
-          color: var(--text-muted);
-          font-weight: 600;
-          font-size: 12px;
-          padding: 10px;
-          border-radius: 12px;
-          cursor: pointer;
-          transition: all 0.2s;
-          margin-top: 4px;
-        }
-        .mdr-expand-btn:hover {
-          background: var(--bg-hover);
-          color: var(--text);
-          border-color: var(--text);
-        }
-        .mdr-cat-card.is-expanded .mdr-expand-btn { display: none; }
-
-        .mdr-collapse-btn {
-          display: none;
-          width: 100%;
-          text-align: center;
-          font-size: 11px;
-          font-weight: 700;
-          color: var(--text-secondary);
-          cursor: pointer;
-          padding: 14px 0;
-          border-top: 1px solid var(--border);
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          background: var(--bg-card-2);
-          border-radius: 0 0 20px 20px;
-          transition: color 0.2s, background 0.2s;
-        }
-        .mdr-collapse-btn:hover { color: var(--mdr-c); background: var(--bg-hover); }
-        .mdr-cat-card.is-expanded .mdr-collapse-btn { display: block; }
-
-        /* Tooltip dla pracownika */
-        .mdr-tooltip {
-          display: none;
-          position: absolute;
-          top: 50%;
-          left: calc(100% + 14px);
-          transform: translateY(-50%);
-          min-width: 240px;
-          background: var(--bg-card-2);
-          border: 1px solid var(--border-strong);
-          border-radius: 16px;
-          padding: 16px;
-          box-shadow: 0 16px 40px rgba(0,0,0,0.6);
-          pointer-events: none;
-          z-index: 100;
-        }
-        .mdr-tooltip::before {
-          content: ''; position: absolute; top: 50%; right: 100%; transform: translateY(-50%);
-          border: 8px solid transparent; border-right-color: var(--border-strong);
-        }
-        /* Jeśli jesteśmy w ostatniej kolumnie, tooltip leci w lewo */
-        .mdr-grid > .mdr-cat-card:nth-child(4n) .mdr-tooltip,
-        .mdr-grid > .mdr-cat-card:nth-child(4n-1) .mdr-tooltip {
-          left: auto; right: calc(100% + 14px);
-        }
-        .mdr-grid > .mdr-cat-card:nth-child(4n) .mdr-tooltip::before,
-        .mdr-grid > .mdr-cat-card:nth-child(4n-1) .mdr-tooltip::before {
-          right: auto; left: 100%; border-right-color: transparent; border-left-color: var(--border-strong);
-        }
-        
-        .mdr-list-item:hover .mdr-tooltip { display: block; animation: floatSide 0.2s ease forwards; }
-        
-        @keyframes floatSide {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-
-        .mdr-tt-name  { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
-        .mdr-tt-role  { font-size: 11.5px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.4; }
-        .mdr-tt-row   { display: flex; justify-content: space-between; gap: 16px; font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
-        .mdr-tt-row:last-child { margin-bottom: 0; }
-        .mdr-tt-row span:last-child { font-weight: 700; color: var(--text); }
-        .mdr-tt-hint  { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border); font-size: 11px; color: var(--accent); display: flex; align-items: center; gap: 6px; font-weight: 600;}
-
-        /* Pusty stan */
-        .mdr-empty {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 10px;
-          padding: 32px 16px;
-          height: 100%;
-          background: rgba(255, 255, 255, 0.01);
-          border: 1px dashed var(--border-strong);
-          border-radius: 14px;
-          font-size: 13px;
-          color: var(--text-muted);
-          font-weight: 500;
-          text-align: center;
-        }
-        .mdr-empty .material-symbols-outlined {
-          font-size: 28px;
-          color: var(--border-strong);
-          margin-bottom: 4px;
-        }
-      </style>
-
-      <div class="mdr-wrap">
-        <div class="mdr-grid" id="mdrGrid"></div>
-      </div>
-
-      <script>
-      // Zaktualizowane nazwy i opisy z Twojego wyliczenia
-      const MDR_CATEGORIES = [
-        { id:'future_leader',        label:'Lider/ka Przyszłości',     color:'var(--accent)', desc:'Pracownicy o wysokim potencjale liderskim i osiągający wysokie wyniki. Predysponują do awansu o 2 lub więcej poziomów, docelowo na role kluczowe i strategiczne.' },
-        { id:'emerging_leader',      label:'Wschodzący/a Lider/ka',    color:'var(--accent)', desc:'Pracownicy o wysokim potencjale liderskim i osiągający oczekiwane wyniki. Predysponują do awansu o 1 poziom.' },
-        { id:'subject_matter_leader',label:'Lider/ka Merytoryczny/a',  color:'var(--accent)', desc:'Pracownicy z potencjałem liderskim, regularnie osiągający wyniki. Predysponują do poszerzenia zakresu odpowiedzialności na obecnym stanowisku lub do awansu poziomego.' },
-        { id:'effective_in_role',    label:'Skuteczny/a w Roli',       color:'var(--text-muted)', desc:'Pracownicy, którzy niezawodnie realizują stawiane przed nimi cele i osiągają wyniki. Obecnie nie wykazują potencjału liderskiego. Predysponują do rozwoju eksperckiego w swoim obszarze, bez zwiększania poziomu odpowiedzialności.' },
-        { id:'new_employee',         label:'Nowy Pracownik',           color:'var(--text-muted)', desc:'Nowi pracownicy w trakcie wdrożenia; poziom menedżerski do 6 miesięcy w organizacji; poziom nie menedżerski do 3 miesięcy w organizacji. To nie jest pracownik po awansie.' },
-        { id:'question_mark',        label:'Znak Zapytania',           color:'var(--text-muted)', desc:'Pracownicy, którzy wymagają wsparcia i czasu, by osiągać oczekiwane wyniki. Do dalszej obserwacji w celu potwierdzenia dopasowania do stanowiska lub odkrycia ich możliwości.' },
-        { id:'alert',                label:'Alert',                    color:'var(--danger)', desc:'Pracownicy, których aktualne wyniki są niesatysfakcjonujące lub uległy pogorszeniu. Wymagają jasno zdefiniowanego planu naprawczego, by móc utrzymać obecny poziom odpowiedzialności.' },
-        { id:'outside_mdr',          label:'Poza MDR',                 color:'var(--text-muted)', desc:'Pracownicy z własnym planem rozwojowym stworzonym indywidualnie — nieobjęci firmowym procesem MDR.' },
-      ];
-
-      const MDR_EMPLOYEES = [
-        { id:1,  initials:'PM', name:'Piotr Malinowski',   role:'Spec. ds. Planowania',          cat:'alert',                staz:'2 lata', kierunek: 'Testowy' },
-        { id:2,  initials:'JW', name:'Jan Wiśniewski',     role:'Z-ca Kierownika Sklepu',        cat:'emerging_leader',      staz:'5 lat', kierunek: 'Testowy' },
-        { id:3,  initials:'KM', name:'Katarzyna Mazur',    role:'Koord. Sekcji Obsługi Klienta', cat:'future_leader',        staz:'12 lat', kierunek: 'Testowy' },
-        { id:4,  initials:'AW', name:'Anna Wróbel',        role:'St. Monodżer Sprzedaży',        cat:'emerging_leader',      staz:'8 mies.', kierunek: 'Testowy' },
-        { id:5,  initials:'MK', name:'Marcin Kowal',       role:'Reg. Manager Działu Nieruch.',  cat:'effective_in_role',    staz:'7 lat', kierunek: 'Testowy' },
-        { id:6,  initials:'ZN', name:'Zofia Nowak',        role:'Spec. ds. Opakowań i Rekl.',    cat:'subject_matter_leader',staz:'9 lat', kierunek: 'Testowy' },
-        { id:7,  initials:'TP', name:'Tomasz Poprzeczka',  role:'Dyrektor Operacyjny',           cat:'question_mark',        staz:'11 lat', kierunek: 'Testowy' },
-        { id:8,  initials:'EL', name:'Ewa Lisowska',       role:'Spec. ds. Magazynowych',        cat:'effective_in_role',    staz:'4 lata', kierunek: 'Testowy' },
-        { id:9,  initials:'BK', name:'Bartosz Kubiak',     role:'St. Mon. ds. Aplikacji HR',     cat:'subject_matter_leader',staz:'6 lat', kierunek: 'Testowy' },
-        { id:10, initials:'MR', name:'Maja Rutkowska',     role:'Koord. Sekcji Opakowań',        cat:'future_leader',        staz:'8 lat', kierunek: 'Testowy' },
-        { id:11, initials:'KW', name:'Kamil Wiśniak',      role:'Spec. ds. Rozw. Oprogr. IT',    cat:'outside_mdr',          staz:'3 lata', kierunek: 'Testowy' },
-        { id:12, initials:'NK', name:'Natalia Kowalczyk',  role:'St. Monodżer Sprzedaży',        cat:'effective_in_role',    staz:'3 lata', kierunek: 'Testowy' },
-        { id:13, initials:'AB', name:'Adam Burza',         role:'Analityk Danych',               cat:'effective_in_role',    staz:'4 lata', kierunek: 'Testowy' },
-        { id:14, initials:'CJ', name:'Celina Jantar',      role:'Księgowa',                      cat:'effective_in_role',    staz:'6 lat', kierunek: 'Testowy' },
-        { id:15, initials:'DK', name:'Dawid Kruk',         role:'Specjalista ds. Jakości',       cat:'effective_in_role',    staz:'2 lata', kierunek: 'Testowy' },
-      ];
-
-      function mdrPmcColor(v) {
-        if (v === null) return 'var(--text-secondary)';
-        return v >= 3.5 ? 'var(--success)' : v >= 2.5 ? 'var(--warn)' : 'var(--danger)';
-      }
-
-      function mdrRender() {
-        const grid = document.getElementById('mdrGrid');
-        grid.innerHTML = '';
-
-        MDR_CATEGORIES.forEach(cat => {
-          const people = MDR_EMPLOYEES.filter(e => e.cat === cat.id);
-          
-          const card = document.createElement('div');
-          card.className = 'mdr-cat-card';
-          card.style.setProperty('--mdr-c', cat.color);
-
-          // Limit widoczności ustawiony na 3 aby karty trzymały równą wysokość
-          const DISPLAY_LIMIT = 3;
-          const hasMore = people.length > DISPLAY_LIMIT;
-
-          const listHTML = people.length === 0
-            ? `<div class="mdr-empty">
-                <span class="material-symbols-outlined">person_search</span>
-                <div>Brak pracowników</div>
-              </div>`
-            : people.map((p, idx) => {
-                const isHiddenClass = idx >= DISPLAY_LIMIT ? 'hidden-item' : '';
-                
-                return `
-                  <div class="mdr-list-item ${isHiddenClass}" onclick="goToProfile('dash','p1')">
-                    <div class="mdr-avatar">${p.initials}</div>
-                    <div class="mdr-info-wrap">
-                      <div class="mdr-list-name">${p.name}</div>
-                      <div class="mdr-list-role">${p.role}</div>
-                    </div>
-                    
-                    <div class="mdr-tooltip">
-                      <div class="mdr-tt-name">${p.name}</div>
-                      <div class="mdr-tt-role">${p.role}</div>
-                      ${p.pmc !== null ? `
-                        <div class="mdr-tt-row"><span>Staż pracy w JMP</span><span>${p.staz}</span></div>
-                        <div class="mdr-tt-row"><span>Kierunek rozwoju</span><span>${p.kierunek}</span></div>
-                      ` : `
-                        <div class="mdr-tt-row"><span>Staż pracy w JMP</span><span>${p.staz}</span></div>
-                        <div class="mdr-tt-row"><span>Kierunek rozwoju</span><span>${p.kierunek}</span></div>
-                      `}
-                      <div class="mdr-tt-hint">
-                        <span class="material-symbols-outlined" style="font-size:16px;">open_in_new</span>
-                        Kliknij, aby przejść do profilu
-                      </div>
-                    </div>
-                  </div>
-                `;
-              }).join('');
-
-          const expandBtnHTML = hasMore ? `
-            <button class="mdr-expand-btn" onclick="this.closest('.mdr-cat-card').classList.add('is-expanded')">
-              Pokaż pozostałych (${people.length - DISPLAY_LIMIT})
-            </button>
-          ` : '';
-
-          const collapseBtnHTML = hasMore ? `
-            <div class="mdr-collapse-btn" onclick="this.closest('.mdr-cat-card').classList.remove('is-expanded'); event.stopPropagation();">
-              Zwiń <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">expand_less</span>
-            </div>
-          ` : '';
-
-          card.innerHTML = `
-            <div class="mdr-cat-header">
-              <div class="mdr-cat-title-wrap">
-                <div class="mdr-cat-label">${cat.label}</div>
-                <div class="mdr-info-icon">
-                  <span class="material-symbols-outlined">help</span> Definicja
-                  <div class="mdr-info-tooltip">${cat.desc}</div>
-                </div>
-              </div>
-              <div class="mdr-cat-count-badge">
-                ${people.length}
-              </div>
-            </div>
-            <div class="mdr-people">
-              ${listHTML}
-              ${expandBtnHTML}
-            </div>
-            ${collapseBtnHTML}
-          `;
-
-          grid.appendChild(card);
-        });
-      }
-
-      document.addEventListener('DOMContentLoaded', mdrRender);
-      </script>
-    </div>
-
     <!-- ═══════════════════════════════════════════════════
         ZAKŁADKA 3: LISTA PRACOWNIKÓW
     ═══════════════════════════════════════════════════ -->
@@ -7655,6 +7199,10 @@ function confirmAssign() {
           <div class="split-layout-divider"></div>
           <button class="split-layout-btn" onclick="switchAreaView('area-risk', this)">
             <span class="material-symbols-outlined">shield_with_heart</span> Ryzyko i Sukcesja
+          </button>
+          <div class="split-layout-divider"></div>
+          <button class="split-layout-btn" onclick="switchAreaView('area-matrix', this)">
+            <span class="material-symbols-outlined">grid_on</span> Macierz zespołu
           </button>
         </div>
       </div>
@@ -8672,10 +8220,459 @@ function confirmAssign() {
             </div>
           </div>
         </div>
-
       </div>
     </div>
+    <!-- ═══════════════════════════════════════════════════
+    ZAKŁADKA 2: MACIERZ MDR
+═══════════════════════════════════════════════════ -->
+    <div class="module-view" id="area-matrix" style="display:none;">
+      <style>
+        .mdr-wrap {
+          padding: 8px 0 40px;
+        }
 
+        .mdr-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 24px;
+          color: var(--text);
+          align-items: stretch;
+        }
+
+        @media (max-width: 1400px) {
+          .mdr-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 1100px) {
+          .mdr-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* ── Masywna Karta Kategorii (Styl Premium) ── */
+        .mdr-cat-card {
+          background: var(--bg-card); /* Spójność z Przeglądem Zespołu */
+          border: 1px solid var(--border);
+          border-radius: 20px;
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          overflow: visible;
+          transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+          box-shadow: var(--shadow-card);
+          min-height: 320px; /* Wymuszona wysokość dla efektu tablicy */
+          z-index: 1; /* Podstawa dla stackingu */
+        }
+
+        /* Dynamiczne podświetlenie ramki i podbicie karty na hover */
+        .mdr-cat-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+          border-color: var(--border-strong);
+          z-index: 50;
+        }
+
+        /* ── Nagłówek Karty ── */
+        .mdr-cat-header {
+          padding: 20px 24px 16px;
+          border-bottom: 1px solid var(--border);
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 12px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+          border-radius: 20px 20px 0 0;
+        }
+
+        .mdr-cat-title-wrap {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .mdr-cat-label {
+          font-size: 12px;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          color: var(--mdr-c);
+          line-height: 1.3;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .mdr-info-icon {
+          color: var(--text-muted);
+          cursor: help;
+          display: inline-flex;
+          align-items: center;
+          position: relative;
+          transition: color 0.2s;
+          font-size: 11px;
+          font-weight: 600;
+          text-transform: none;
+          letter-spacing: 0;
+          gap: 4px;
+          margin-top: 2px;
+        }
+        .mdr-info-icon:hover { color: var(--text); }
+        .mdr-info-icon .material-symbols-outlined { font-size: 14px; }
+
+        /* Duży, masywny licznik */
+        .mdr-cat-count-badge {
+          background: var(--bg-card-3);
+          border: 1px solid var(--border-strong);
+          padding: 6px 14px;
+          border-radius: 12px;
+          font-size: 18px;
+          font-weight: 800;
+          color: var(--text);
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          transition: all 0.3s;
+        }
+        .mdr-cat-card:hover .mdr-cat-count-badge {
+          border-color: var(--mdr-c);
+          color: var(--mdr-c);
+        }
+
+        /* Tooltip z opisem (Definicja) */
+        .mdr-info-tooltip {
+          position: absolute;
+          top: calc(100% + 8px);
+          left: 0;
+          width: 260px;
+          background: rgba(15, 15, 20, 0.95);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid var(--border-strong);
+          padding: 16px;
+          border-radius: 16px;
+          font-size: 12px;
+          color: #eaeaea;
+          line-height: 1.5;
+          opacity: 0;
+          pointer-events: none;
+          transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+          z-index: 100;
+          box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+        }
+        .mdr-info-icon:hover .mdr-info-tooltip {
+          opacity: 1;
+          transform: translateY(4px);
+        }
+
+        /* ── Wnętrze: Lista Pracowników ── */
+        .mdr-people {
+          padding: 16px 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          flex: 1;
+        }
+
+        .mdr-list-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 14px 10px 10px;
+          background: var(--bg-card-2);
+          border: 1px solid var(--border);
+          border-radius: 14px;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+          position: relative;
+        }
+
+        .mdr-list-item:hover {
+          background: var(--bg-hover);
+          border-color: var(--mdr-c);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          z-index: 60; /* Wewnętrzny z-index wyższy niż reszta karty */
+        }
+
+        /* Avatar — Kolor Kategorii */
+        .mdr-avatar {
+          width: 32px; height: 32px;
+          border-radius: 10px;
+          background: var(--mdr-c);
+          color: #111;
+          font-size: 11px;
+          font-weight: 800;
+          display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0;
+          transition: all 0.2s;
+        }
+
+        .mdr-info-wrap {
+          flex: 1;
+          min-width: 0;
+        }
+        .mdr-list-name {
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--text);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin-bottom: 2px;
+        }
+        .mdr-list-role {
+          font-size: 11px;
+          color: var(--text-secondary);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        /* ── Rozwijanie (Show More) ── */
+        .mdr-list-item.hidden-item { display: none; }
+        .mdr-cat-card.is-expanded .mdr-list-item.hidden-item {
+          display: flex;
+          animation: slideDown 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+
+        @keyframes slideDown {
+          0% { opacity: 0; transform: translateY(-10px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .mdr-expand-btn {
+          width: 100%;
+          background: transparent;
+          border: 1px dashed var(--border-strong);
+          color: var(--text-muted);
+          font-weight: 600;
+          font-size: 12px;
+          padding: 10px;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: all 0.2s;
+          margin-top: 4px;
+        }
+        .mdr-expand-btn:hover {
+          background: var(--bg-hover);
+          color: var(--text);
+          border-color: var(--text);
+        }
+        .mdr-cat-card.is-expanded .mdr-expand-btn { display: none; }
+
+        .mdr-collapse-btn {
+          display: none;
+          width: 100%;
+          text-align: center;
+          font-size: 11px;
+          font-weight: 700;
+          color: var(--text-secondary);
+          cursor: pointer;
+          padding: 14px 0;
+          border-top: 1px solid var(--border);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          background: var(--bg-card-2);
+          border-radius: 0 0 20px 20px;
+          transition: color 0.2s, background 0.2s;
+        }
+        .mdr-collapse-btn:hover { color: var(--mdr-c); background: var(--bg-hover); }
+        .mdr-cat-card.is-expanded .mdr-collapse-btn { display: block; }
+
+        /* Tooltip dla pracownika */
+        .mdr-tooltip {
+          display: none;
+          position: absolute;
+          top: 50%;
+          left: calc(100% + 14px);
+          transform: translateY(-50%);
+          min-width: 240px;
+          background: var(--bg-card-2);
+          border: 1px solid var(--border-strong);
+          border-radius: 16px;
+          padding: 16px;
+          box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+          pointer-events: none;
+          z-index: 100;
+        }
+        .mdr-tooltip::before {
+          content: ''; position: absolute; top: 50%; right: 100%; transform: translateY(-50%);
+          border: 8px solid transparent; border-right-color: var(--border-strong);
+        }
+        /* Jeśli jesteśmy w ostatniej kolumnie, tooltip leci w lewo */
+        .mdr-grid > .mdr-cat-card:nth-child(4n) .mdr-tooltip,
+        .mdr-grid > .mdr-cat-card:nth-child(4n-1) .mdr-tooltip {
+          left: auto; right: calc(100% + 14px);
+        }
+        .mdr-grid > .mdr-cat-card:nth-child(4n) .mdr-tooltip::before,
+        .mdr-grid > .mdr-cat-card:nth-child(4n-1) .mdr-tooltip::before {
+          right: auto; left: 100%; border-right-color: transparent; border-left-color: var(--border-strong);
+        }
+
+        .mdr-list-item:hover .mdr-tooltip { display: block; animation: floatSide 0.2s ease forwards; }
+
+        @keyframes floatSide {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        .mdr-tt-name  { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+        .mdr-tt-role  { font-size: 11.5px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.4; }
+        .mdr-tt-row   { display: flex; justify-content: space-between; gap: 16px; font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
+        .mdr-tt-row:last-child { margin-bottom: 0; }
+        .mdr-tt-row span:last-child { font-weight: 700; color: var(--text); }
+        .mdr-tt-hint  { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border); font-size: 11px; color: var(--accent); display: flex; align-items: center; gap: 6px; font-weight: 600;}
+
+        /* Pusty stan */
+        .mdr-empty {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          padding: 32px 16px;
+          height: 100%;
+          background: rgba(255, 255, 255, 0.01);
+          border: 1px dashed var(--border-strong);
+          border-radius: 14px;
+          font-size: 13px;
+          color: var(--text-muted);
+          font-weight: 500;
+          text-align: center;
+        }
+        .mdr-empty .material-symbols-outlined {
+          font-size: 28px;
+          color: var(--border-strong);
+          margin-bottom: 4px;
+        }
+      </style>
+
+      <div class="mdr-wrap">
+        <div class="mdr-grid" id="mdrGrid"></div>
+      </div>
+
+      <script>
+        // Zaktualizowane nazwy i opisy z Twojego wyliczenia
+        const MDR_CATEGORIES = [
+          { id:'future_leader',        label:'Lider/ka Przyszłości',     color:'var(--accent)', desc:'Pracownicy o wysokim potencjale liderskim i osiągający wysokie wyniki. Predysponują do awansu o 2 lub więcej poziomów, docelowo na role kluczowe i strategiczne.' },
+          { id:'emerging_leader',      label:'Wschodzący/a Lider/ka',    color:'var(--accent)', desc:'Pracownicy o wysokim potencjale liderskim i osiągający oczekiwane wyniki. Predysponują do awansu o 1 poziom.' },
+          { id:'subject_matter_leader',label:'Lider/ka Merytoryczny/a',  color:'var(--accent)', desc:'Pracownicy z potencjałem liderskim, regularnie osiągający wyniki. Predysponują do poszerzenia zakresu odpowiedzialności na obecnym stanowisku lub do awansu poziomego.' },
+          { id:'effective_in_role',    label:'Skuteczny/a w Roli',       color:'var(--text-muted)', desc:'Pracownicy, którzy niezawodnie realizują stawiane przed nimi cele i osiągają wyniki. Obecnie nie wykazują potencjału liderskiego. Predysponują do rozwoju eksperckiego w swoim obszarze, bez zwiększania poziomu odpowiedzialności.' },
+          { id:'new_employee',         label:'Nowy Pracownik',           color:'var(--text-muted)', desc:'Nowi pracownicy w trakcie wdrożenia; poziom menedżerski do 6 miesięcy w organizacji; poziom nie menedżerski do 3 miesięcy w organizacji. To nie jest pracownik po awansie.' },
+          { id:'question_mark',        label:'Znak Zapytania',           color:'var(--text-muted)', desc:'Pracownicy, którzy wymagają wsparcia i czasu, by osiągać oczekiwane wyniki. Do dalszej obserwacji w celu potwierdzenia dopasowania do stanowiska lub odkrycia ich możliwości.' },
+          { id:'alert',                label:'Alert',                    color:'var(--danger)', desc:'Pracownicy, których aktualne wyniki są niesatysfakcjonujące lub uległy pogorszeniu. Wymagają jasno zdefiniowanego planu naprawczego, by móc utrzymać obecny poziom odpowiedzialności.' },
+          { id:'outside_mdr',          label:'Poza MDR',                 color:'var(--text-muted)', desc:'Pracownicy z własnym planem rozwojowym stworzonym indywidualnie — nieobjęci firmowym procesem MDR.' },
+        ];
+
+        const MDR_EMPLOYEES = [
+          { id:1,  initials:'PM', name:'Piotr Malinowski',   role:'Spec. ds. Planowania',          cat:'alert',                staz:'2 lata', kierunek: 'Testowy' },
+          { id:2,  initials:'JW', name:'Jan Wiśniewski',     role:'Z-ca Kierownika Sklepu',        cat:'emerging_leader',      staz:'5 lat', kierunek: 'Testowy' },
+          { id:3,  initials:'KM', name:'Katarzyna Mazur',    role:'Koord. Sekcji Obsługi Klienta', cat:'future_leader',        staz:'12 lat', kierunek: 'Testowy' },
+          { id:4,  initials:'AW', name:'Anna Wróbel',        role:'St. Monodżer Sprzedaży',        cat:'emerging_leader',      staz:'8 mies.', kierunek: 'Testowy' },
+          { id:5,  initials:'MK', name:'Marcin Kowal',       role:'Reg. Manager Działu Nieruch.',  cat:'effective_in_role',    staz:'7 lat', kierunek: 'Testowy' },
+          { id:6,  initials:'ZN', name:'Zofia Nowak',        role:'Spec. ds. Opakowań i Rekl.',    cat:'subject_matter_leader',staz:'9 lat', kierunek: 'Testowy' },
+          { id:7,  initials:'TP', name:'Tomasz Poprzeczka',  role:'Dyrektor Operacyjny',           cat:'question_mark',        staz:'11 lat', kierunek: 'Testowy' },
+          { id:8,  initials:'EL', name:'Ewa Lisowska',       role:'Spec. ds. Magazynowych',        cat:'effective_in_role',    staz:'4 lata', kierunek: 'Testowy' },
+          { id:9,  initials:'BK', name:'Bartosz Kubiak',     role:'St. Mon. ds. Aplikacji HR',     cat:'subject_matter_leader',staz:'6 lat', kierunek: 'Testowy' },
+          { id:10, initials:'MR', name:'Maja Rutkowska',     role:'Koord. Sekcji Opakowań',        cat:'future_leader',        staz:'8 lat', kierunek: 'Testowy' },
+          { id:11, initials:'KW', name:'Kamil Wiśniak',      role:'Spec. ds. Rozw. Oprogr. IT',    cat:'outside_mdr',          staz:'3 lata', kierunek: 'Testowy' },
+          { id:12, initials:'NK', name:'Natalia Kowalczyk',  role:'St. Monodżer Sprzedaży',        cat:'effective_in_role',    staz:'3 lata', kierunek: 'Testowy' },
+          { id:13, initials:'AB', name:'Adam Burza',         role:'Analityk Danych',               cat:'effective_in_role',    staz:'4 lata', kierunek: 'Testowy' },
+          { id:14, initials:'CJ', name:'Celina Jantar',      role:'Księgowa',                      cat:'effective_in_role',    staz:'6 lat', kierunek: 'Testowy' },
+          { id:15, initials:'DK', name:'Dawid Kruk',         role:'Specjalista ds. Jakości',       cat:'effective_in_role',    staz:'2 lata', kierunek: 'Testowy' },
+        ];
+
+        function mdrPmcColor(v) {
+          if (v === null) return 'var(--text-secondary)';
+          return v >= 3.5 ? 'var(--success)' : v >= 2.5 ? 'var(--warn)' : 'var(--danger)';
+        }
+
+        function mdrRender() {
+          const grid = document.getElementById('mdrGrid');
+          grid.innerHTML = '';
+
+          MDR_CATEGORIES.forEach(cat => {
+            const people = MDR_EMPLOYEES.filter(e => e.cat === cat.id);
+
+            const card = document.createElement('div');
+            card.className = 'mdr-cat-card';
+            card.style.setProperty('--mdr-c', cat.color);
+
+            // Limit widoczności ustawiony na 3 aby karty trzymały równą wysokość
+            const DISPLAY_LIMIT = 3;
+            const hasMore = people.length > DISPLAY_LIMIT;
+
+            const listHTML = people.length === 0
+                    ? `<div class="mdr-empty">
+                <span class="material-symbols-outlined">person_search</span>
+                <div>Brak pracowników</div>
+              </div>`
+                    : people.map((p, idx) => {
+                      const isHiddenClass = idx >= DISPLAY_LIMIT ? 'hidden-item' : '';
+
+                      return `
+                  <div class="mdr-list-item ${isHiddenClass}" onclick="goToProfile('dash','p1')">
+                    <div class="mdr-avatar">${p.initials}</div>
+                    <div class="mdr-info-wrap">
+                      <div class="mdr-list-name">${p.name}</div>
+                      <div class="mdr-list-role">${p.role}</div>
+                    </div>
+
+                    <div class="mdr-tooltip">
+                      <div class="mdr-tt-name">${p.name}</div>
+                      <div class="mdr-tt-role">${p.role}</div>
+                      ${p.pmc !== null ? `
+                        <div class="mdr-tt-row"><span>Staż pracy w JMP</span><span>${p.staz}</span></div>
+                        <div class="mdr-tt-row"><span>Kierunek rozwoju</span><span>${p.kierunek}</span></div>
+                      ` : `
+                        <div class="mdr-tt-row"><span>Staż pracy w JMP</span><span>${p.staz}</span></div>
+                        <div class="mdr-tt-row"><span>Kierunek rozwoju</span><span>${p.kierunek}</span></div>
+                      `}
+                      <div class="mdr-tt-hint">
+                        <span class="material-symbols-outlined" style="font-size:16px;">open_in_new</span>
+                        Kliknij, aby przejść do profilu
+                      </div>
+                    </div>
+                  </div>
+                `;
+                    }).join('');
+
+            const expandBtnHTML = hasMore ? `
+            <button class="mdr-expand-btn" onclick="this.closest('.mdr-cat-card').classList.add('is-expanded')">
+              Pokaż pozostałych (${people.length - DISPLAY_LIMIT})
+            </button>
+          ` : '';
+
+            const collapseBtnHTML = hasMore ? `
+            <div class="mdr-collapse-btn" onclick="this.closest('.mdr-cat-card').classList.remove('is-expanded'); event.stopPropagation();">
+              Zwiń <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">expand_less</span>
+            </div>
+          ` : '';
+
+            card.innerHTML = `
+            <div class="mdr-cat-header">
+              <div class="mdr-cat-title-wrap">
+                <div class="mdr-cat-label">${cat.label}</div>
+                <div class="mdr-info-icon">
+                  <span class="material-symbols-outlined">help</span> Definicja
+                  <div class="mdr-info-tooltip">${cat.desc}</div>
+                </div>
+              </div>
+              <div class="mdr-cat-count-badge">
+                ${people.length}
+              </div>
+            </div>
+            <div class="mdr-people">
+              ${listHTML}
+              ${expandBtnHTML}
+            </div>
+            ${collapseBtnHTML}
+          `;
+
+            grid.appendChild(card);
+          });
+        }
+
+        document.addEventListener('DOMContentLoaded', mdrRender);
+      </script>
+    </div>
+  </div>
   </div>
 </div>
 
@@ -8690,7 +8687,7 @@ function confirmAssign() {
     if (btnElement) btnElement.classList.add('active');
 
     // Ukryj wszystkie widoki
-    ['area-dash', 'area-people', 'area-risk'].forEach(id => {
+    ['area-dash', 'area-people', 'area-risk', 'area-matrix'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.style.display = 'none';
     });
