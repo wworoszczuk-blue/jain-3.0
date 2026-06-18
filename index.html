@@ -2664,8 +2664,8 @@
                 <div class="p1-action-icon orange">
                   <span class="material-symbols-outlined" style="font-size:16px">description</span>
                 </div>
-                <div class="p1-action-body" style="display:flex; justify-content:space-between; align-items:center; width: 100%;">
-                  <span class="p1-action-name">Kończące się umowy (14 dni)</span>
+                <div class="p1-action-body" style="displayKończące się:flex; justify-content:space-between; align-items:center; width: 100%;">
+                  <span class="p1-action-name"> umowy (14 dni)</span>
                   <strong style="font-size: 16px;">12</strong>
                 </div>
               </div>
@@ -6557,148 +6557,105 @@ function confirmAssign() {
     ═══════════════════════════════════════════════════ -->
     <div class="module-view" id="team-list" style="display:none;">
       <style>
-        .tlist-wrap { padding: 8px 0; color: var(--text); }
+        .ui-wrap { padding: 8px 0; color: var(--text); }
 
         /* ── Pasek narzędziowy ── */
-        .tlist-toolbar {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 12px;
-          align-items: center;
-          padding: 16px 20px;
-          background: var(--ls-card);
-          border-bottom: 1px solid var(--ls-border);
+        .ui-toolbar {
+          display: flex; flex-wrap: wrap; gap: 16px; align-items: center;
+          padding: 16px 20px; background: var(--ls-card, var(--bg-card));
+          border-bottom: 1px solid var(--border);
           border-radius: 12px 12px 0 0;
         }
-        
-        .tlist-search {
-          flex: 1; min-width: 220px;
-          background: var(--bg-card-2); border: 1px solid var(--border);
-          border-radius: 12px; padding: 10px 14px 10px 36px;
-          font-size: 13px; color: var(--text); font-family: 'General Sans', sans-serif;
-          outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+
+        .ui-input, .ui-select {
+          background: var(--bg-card-2); border: 1px solid var(--border); color: var(--text);
+          border-radius: 8px; font-size: 13px; font-family: inherit;
+          outline: none; transition: all 0.2s ease;
+        }
+
+        .ui-input {
+          flex: 1; min-width: 250px; padding: 10px 14px 10px 36px;
           background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238e9094' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
-          background-repeat: no-repeat; background-position: 12px center; background-size: 16px;
+          background-repeat: no-repeat; background-position: 12px center;
         }
-        .tlist-search:focus { 
-          border-color: var(--accent); 
-          box-shadow: 0 0 0 2px var(--accent-bg); 
-        }
-        
-        .tlist-filter-select {
-          background: var(--bg-card-2); border: 1px solid var(--border);
-          color: var(--text); padding: 10px 32px 10px 14px;
-          border-radius: 12px; font-family: 'General Sans', sans-serif;
-          font-size: 12px; font-weight: 500; outline: none; cursor: pointer;
-          appearance: none;
+
+        .ui-select {
+          padding: 10px 32px 10px 14px; font-weight: 500; cursor: pointer; appearance: none;
           background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-          background-repeat: no-repeat; background-position: right 10px center; background-size: 14px;
-          transition: all 0.2s;
+          background-repeat: no-repeat; background-position: right 12px center; background-size: 14px;
         }
-        .tlist-filter-select:hover { border-color: var(--border-strong); }
-        .tlist-filter-select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-bg); }
-        
-        .tlist-count {
-          font-size: 12px; font-weight: 600; color: var(--text-muted); 
-          white-space: nowrap; padding: 0 8px;
-        }
+
+        .ui-input:focus, .ui-select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-bg); }
+        .ui-count { font-size: 12px; font-weight: 500; color: var(--text-muted); white-space: nowrap; margin-left: auto;}
 
         /* ── Tabela ── */
-        .tlist-table { width: 100%; border-collapse: collapse; }
-
-        .tlist-table thead tr { border-bottom: 1px solid var(--border); }
-        .tlist-table th {
-          padding: 12px 16px; text-align: left;
-          font-size: 10px; font-weight: 700; color: var(--text-muted);
-          text-transform: uppercase; letter-spacing: 0.8px;
-          cursor: pointer; user-select: none; white-space: nowrap;
-          transition: color 0.15s;
+        .ui-table { width: 100%; border-collapse: collapse; background: var(--ls-card, var(--bg-card)); }
+        .ui-table th {
+          padding: 14px 20px; text-align: left; font-size: 11px; font-weight: 600;
+          color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
+          border-bottom: 1px solid var(--border); cursor: pointer; user-select: none;
+          transition: color 0.2s; white-space: nowrap;
         }
-        .tlist-table th:hover { color: var(--text); }
-        .tlist-table th.sort-active { color: var(--accent); }
-        .tlist-sort-icon { margin-left: 4px; font-size: 10px; opacity: 0.6; }
+        .ui-table th:hover { color: var(--text); }
+        .ui-table th.sort-active { color: var(--accent); }
+        .ui-sort-icon { margin-left: 4px; font-size: 10px; opacity: 0.8; }
 
-        .tlist-table tbody tr {
-          border-bottom: 1px solid var(--border);
-          transition: background 0.15s; cursor: pointer;
+        .ui-table td {
+          padding: 14px 20px; font-size: 13px; color: var(--text);
+          vertical-align: middle; border-bottom: 1px solid var(--border);
         }
-        .tlist-table tbody tr:hover { background: var(--bg-hover); }
-        .tlist-table tbody tr:last-child { border-bottom: none; }
-        .tlist-table td { padding: 14px 16px; font-size: 13px; color: var(--text); vertical-align: middle; }
+        .ui-table tbody tr { transition: background 0.15s; cursor: pointer; }
+        .ui-table tbody tr:hover { background: var(--bg-hover); }
+        .ui-table tbody tr:last-child td { border-bottom: none; }
 
-        /* ── AWATARY (Z obwódką sygnalizującą stan) ── */
-        .avatar-border {
-          width: 32px; height: 32px; border-radius: 50%;
+        /* ── Awatary ── */
+        .ui-avatar {
+          width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
           display: inline-flex; align-items: center; justify-content: center;
-          font-size: 11px; font-weight: 800;
-          flex-shrink: 0; transition: all 0.2s;
-          background: #2a2d31 !important;
-          border: 2px solid transparent; /* Jawnie czyścimy kolor domyślny */
-          color: #fff;
-          box-sizing: border-box;
+          font-size: 12px; font-weight: 700; color: #fff; background: #3a3f45;
+          border: 2px solid transparent; box-sizing: border-box; transition: all 0.2s;
         }
-        
-        /* Wymuszamy kolory poprzez podniesienie wagi selektora i !important */
-        .avatar-border.avatar-danger {
-          border-color: var(--danger) !important;
-          box-shadow: 0 0 8px rgba(231,77,60,0.15); 
-        }
-        .avatar-border.avatar-muted {
-          border-color: var(--text-muted) !important;
-        }
+        .ui-avatar.danger { border-color: var(--danger); box-shadow: 0 0 0 3px var(--danger-bg); background: #2a2d31; }
+        .ui-avatar.muted { border-color: transparent; }
 
-        .tlist-name-cell { display: flex; align-items: center; gap: 12px; }
-        .tlist-name { font-weight: 600; font-size: 13px; color: var(--text); margin-bottom: 2px;}
-        .tlist-role { font-size: 11px; color: var(--text-secondary); }
+        /* ── Typografia komórek ── */
+        .ui-cell-user { display: flex; align-items: center; gap: 12px; }
+        .ui-user-name { font-weight: 600; font-size: 13px; color: var(--text); margin-bottom: 3px; }
+        .ui-user-meta { font-size: 11px; color: var(--text-secondary); }
+        .ui-score-val { font-weight: 600; color: var(--text); }
+        .ui-score-max { font-size: 11px; color: var(--text-muted); font-weight: 400; margin-left: 2px; }
 
-        /* ── KATEGORIA MDR (Subtelne badge) ── */
-        .mdr-subtle-badge {
-          display: inline-flex; align-items: center; gap: 6px;
-          font-size: 11px; font-weight: 600; padding: 4px 10px;
-          border-radius: 12px; white-space: nowrap;
-          background: transparent;
-        }
-        .mdr-subtle-badge.accent { color: var(--accent); border: 1px solid var(--border-strong); }
-        .mdr-subtle-badge.danger { color: var(--danger); border: 1px solid var(--danger-border); }
-        .mdr-subtle-badge.muted  { color: var(--text-muted); border: 1px solid var(--border-strong); }
+        /* ── Paski postępu ── */
+        .ui-progress-wrap { display: flex; align-items: center; gap: 10px; }
+        .ui-progress-track { width: 50px; height: 6px; background: var(--bg-card-3); border-radius: 3px; overflow: hidden; }
+        .ui-progress-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+        .ui-progress-text { font-size: 12px; font-weight: 600; color: var(--text-secondary); min-width: 30px; }
 
-        /* ── PMC / SOP ── */
-        .score-val { font-size: 13px; font-weight: 700; color: var(--text); }
-        .score-max { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+        /* ── Badges (Etykiety) ── */
+        .ui-badge {
+          display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+          font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px; white-space: nowrap;
+        }
+        /* Status Planu */
+        .ui-badge.approved { background: var(--accent-bg); color: var(--accent); }
+        .ui-badge.overdue  { background: var(--danger-bg); color: var(--danger); }
+        .ui-badge.waiting  { background: var(--bg-card-3); color: var(--text); }
+        .ui-badge.draft    { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+        .ui-badge.none     { background: transparent; color: var(--text-muted); border: 1px dashed var(--border-strong); }
 
-        /* ── Postęp planu ── */
-        .tlist-prog-bar {
-          width: 48px; height: 4px; border-radius: 2px;
-          background: var(--border); overflow: hidden; flex-shrink: 0;
-        }
-        .tlist-prog-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+        /* MDR Matryca */
+        .ui-badge.mdr-accent { background: transparent; color: var(--accent); border: 1px solid var(--accent-bg); }
+        .ui-badge.mdr-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger-bg); }
+        .ui-badge.mdr-muted  { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
 
-        /* ── Status Planu ── */
-        .tlist-badge {
-          display: inline-flex; align-items: center; gap: 5px;
-          font-size: 11px; font-weight: 600; padding: 4px 10px;
-          border-radius: 12px; white-space: nowrap;
-        }
-        .tlist-badge.approved  { background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent-border); }
-        .tlist-badge.overdue   { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
-        .tlist-badge.waiting   { background: transparent; color: var(--text-muted); border: 1px solid var(--border-strong); }
-        .tlist-badge.none      { background: transparent; color: var(--text-muted); border: 1px dashed var(--border-strong); }
-        .tlist-badge.draft     { background: var(--bg-card-3); color: var(--text-muted); border: 1px solid var(--border); }
-
-        .tlist-empty {
-          text-align: center; padding: 60px 24px;
-          color: var(--text-muted); font-size: 13px; font-weight: 500;
-        }
-        .tlist-empty .material-symbols-outlined {
-          font-size: 32px; color: var(--border-strong); margin-bottom: 8px; display: block;
-        }
+        .ui-empty { text-align: center; padding: 60px 24px; color: var(--text-muted); font-size: 13px; font-weight: 500; }
       </style>
 
-      <div class="tlist-wrap">
-        <div class="tlist-toolbar">
-          <input class="tlist-search" type="text" id="tlistSearch" placeholder="Szukaj po nazwisku, stanowisku…" oninput="tlistRender()">
-          
-          <select class="tlist-filter-select" id="tlistFilterMdr" onchange="tlistRender()">
+      <div class="ui-wrap">
+        <div class="ui-toolbar">
+          <input class="ui-input" type="text" id="tlistSearch" placeholder="Szukaj po nazwisku, stanowisku…" oninput="tlistRender()">
+
+          <select class="ui-select" id="tlistFilterMdr" onchange="tlistRender()">
             <option value="">Kategoria MDR: Wszyscy</option>
             <option value="future_leader">Lider/ka Przyszłości</option>
             <option value="emerging_leader">Wschodzący/a Lider/ka</option>
@@ -6710,161 +6667,152 @@ function confirmAssign() {
             <option value="outside_mdr">Poza MDR</option>
           </select>
 
-          <select class="tlist-filter-select" id="tlistFilterPlan" onchange="tlistRender()">
+          <select class="ui-select" id="tlistFilterPlan" onchange="tlistRender()">
             <option value="">Status planu: Wszyscy</option>
             <option value="approved">Zatwierdzony</option>
             <option value="waiting">Oczekuje / Roboczy</option>
             <option value="overdue">Plan zaległy</option>
             <option value="none">Brak planu</option>
           </select>
-          
-          <span class="tlist-count" id="tlistCount"></span>
+
+          <span class="ui-count" id="tlistCount"></span>
         </div>
 
-        <table class="tlist-table" id="tlistTable">
+        <table class="ui-table" id="tlistTable">
           <thead>
-            <tr>
-              <th onclick="tlistSort('name')" id="th-name">Pracownik <span class="tlist-sort-icon" id="si-name"></span></th>
-              <th onclick="tlistSort('sop')"  id="th-sop">SOP <span class="tlist-sort-icon" id="si-sop"></span></th>
-              <th onclick="tlistSort('pmc')"  id="th-pmc">PMC <span class="tlist-sort-icon" id="si-pmc">↓</span></th>
-              <th onclick="tlistSort('mdr')" id="th-mdr">Pole na matrycy<span class="tlist-sort-icon" id="si-mdr"></span></th>
-              <th onclick="tlistSort('plan')" id="th-plan">Postęp planu <span class="tlist-sort-icon" id="si-plan"></span></th>
-              <th onclick="tlistSort('status')" id="th-status">Status planu <span class="tlist-sort-icon" id="si-status"></span></th>
-            </tr>
+          <tr>
+            <th onclick="tlistSort('name')" id="th-name">Pracownik <span class="ui-sort-icon" id="si-name"></span></th>
+            <th onclick="tlistSort('sop')"  id="th-sop">SOP <span class="ui-sort-icon" id="si-sop"></span></th>
+            <th onclick="tlistSort('pmc')"  id="th-pmc">PMC <span class="ui-sort-icon" id="si-pmc">↓</span></th>
+            <th onclick="tlistSort('mdr')"  id="th-mdr">Pole na matrycy<span class="ui-sort-icon" id="si-mdr"></span></th>
+            <th onclick="tlistSort('plan')" id="th-plan">Postęp planu <span class="ui-sort-icon" id="si-plan"></span></th>
+            <th onclick="tlistSort('status')" id="th-status">Status planu <span class="ui-sort-icon" id="si-status"></span></th>
+          </tr>
           </thead>
           <tbody id="tlistBody"></tbody>
         </table>
       </div>
 
       <script>
-      let tlistSortCol = 'pmc';
-      let tlistSortDir = -1; 
+        let tlistSortCol = 'pmc';
+        let tlistSortDir = -1;
 
-      const TLIST_EMPLOYEES = [
-        { id:1,  initials:'PM', name:'Piotr Malinowski',   role:'Spec. ds. Planowania',          cat:'alert',                pmc:1.5, sop:null, plan: 20, planStatus: 'overdue' },
-        { id:2,  initials:'JW', name:'Jan Wiśniewski',     role:'Z-ca Kierownika Sklepu',        cat:'emerging_leader',      pmc:3.5, sop:null, plan: 45, planStatus: 'waiting' },
-        { id:3,  initials:'KM', name:'Katarzyna Mazur',    role:'Koord. Sekcji Obsługi Klienta', cat:'future_leader',        pmc:null, sop:4.1, plan: 80, planStatus: 'approved' },
-        { id:4,  initials:'AW', name:'Anna Wróbel',        role:'St. Monodżer Sprzedaży',        cat:'emerging_leader',      pmc:2.8, sop:3.6, plan: 30, planStatus: 'waiting' },
-        { id:5,  initials:'MK', name:'Marcin Kowal',       role:'Reg. Manager Działu Nieruch.',  cat:'effective_in_role',    pmc:3.1, sop:2.9, plan: 55, planStatus: 'approved' },
-        { id:6,  initials:'ZN', name:'Zofia Nowak',        role:'Spec. ds. Opakowań i Rekl.',    cat:'subject_matter_leader',pmc:null, sop:2.5, plan: 65, planStatus: 'approved' },
-        { id:7,  initials:'TP', name:'Tomasz Poprzeczka',  role:'Dyrektor Operacyjny',           cat:'question_mark',        pmc:2.2, sop:1.8, plan: 0,  planStatus: 'none' },
-        { id:8,  initials:'EL', name:'Ewa Lisowska',       role:'Spec. ds. Magazynowych',        cat:'effective_in_role',    pmc:3.4, sop:3.2, plan: 40, planStatus: 'waiting' },
-        { id:9,  initials:'BK', name:'Bartosz Kubiak',     role:'St. Mon. ds. Aplikacji HR',     cat:'subject_matter_leader',pmc:3.6, sop:3.0, plan: 50, planStatus: 'approved' },
-        { id:10, initials:'MR', name:'Maja Rutkowska',     role:'Koord. Sekcji Opakowań',        cat:'future_leader',        pmc:4.0, sop:4.3, plan: 70, planStatus: 'approved' },
-        { id:11, initials:'KW', name:'Kamil Wiśniak',      role:'Spec. ds. Rozw. Oprogr. IT',    cat:'outside_mdr',          pmc:null,sop:null,plan: 25, planStatus: 'draft' },
-        { id:12, initials:'NK', name:'Natalia Kowalczyk',  role:'St. Monodżer Sprzedaży',        cat:'effective_in_role',    pmc:3.3, sop:3.1, plan: 45, planStatus: 'overdue' },
-        { id:13, initials:'AB', name:'Adam Burza',         role:'Analityk Danych',               cat:'effective_in_role',    pmc:3.2, sop:3.0, plan: 60, planStatus: 'approved' },
-        { id:14, initials:'CJ', name:'Celina Jantar',      role:'Księgowa',                      cat:'effective_in_role',    pmc:3.0, sop:null, plan: 10, planStatus: 'draft' },
-        { id:15, initials:'DK', name:'Dawid Kruk',         role:'Specjalista ds. Jakości',       cat:'effective_in_role',    pmc:3.4, sop:3.4, plan: 90, planStatus: 'approved' }
-      ];
+        const TLIST_EMPLOYEES = [
+          { id:1,  initials:'PM', name:'Piotr Malinowski',   role:'Spec. ds. Planowania',          cat:'alert',                pmc:1.5, sop:null, plan: 20, planStatus: 'overdue' },
+          { id:2,  initials:'JW', name:'Jan Wiśniewski',     role:'Z-ca Kierownika Sklepu',        cat:'emerging_leader',      pmc:3.5, sop:null, plan: 45, planStatus: 'waiting' },
+          { id:3,  initials:'KM', name:'Katarzyna Mazur',    role:'Koord. Sekcji Obsługi Klienta', cat:'future_leader',        pmc:null, sop:4.1, plan: 80, planStatus: 'approved' },
+          { id:4,  initials:'AW', name:'Anna Wróbel',        role:'St. Menedżer Sprzedaży',        cat:'emerging_leader',      pmc:2.8, sop:3.6, plan: 30, planStatus: 'waiting' },
+          { id:5,  initials:'MK', name:'Marcin Kowal',       role:'Reg. Manager Działu Nieruch.',  cat:'effective_in_role',    pmc:3.1, sop:2.9, plan: 55, planStatus: 'approved' },
+          { id:6,  initials:'ZN', name:'Zofia Nowak',        role:'Spec. ds. Opakowań i Rekl.',    cat:'subject_matter_leader',pmc:null, sop:2.5, plan: 65, planStatus: 'approved' },
+          { id:7,  initials:'TP', name:'Tomasz Poprzeczka',  role:'Dyrektor Operacyjny',           cat:'question_mark',        pmc:2.2, sop:1.8, plan: 0,  planStatus: 'none' },
+          { id:8,  initials:'EL', name:'Ewa Lisowska',       role:'Spec. ds. Magazynowych',        cat:'effective_in_role',    pmc:3.4, sop:3.2, plan: 40, planStatus: 'waiting' },
+          { id:9,  initials:'BK', name:'Bartosz Kubiak',     role:'St. Mon. ds. Aplikacji HR',     cat:'subject_matter_leader',pmc:3.6, sop:3.0, plan: 50, planStatus: 'approved' },
+          { id:10, initials:'MR', name:'Maja Rutkowska',     role:'Koord. Sekcji Opakowań',        cat:'future_leader',        pmc:4.0, sop:4.3, plan: 70, planStatus: 'approved' },
+          { id:11, initials:'KW', name:'Kamil Wiśniak',      role:'Spec. ds. Rozw. Oprogr. IT',    cat:'outside_mdr',          pmc:null,sop:null,plan: 25, planStatus: 'draft' },
+          { id:12, initials:'NK', name:'Natalia Kowalczyk',  role:'St. Menedżer Sprzedaży',        cat:'effective_in_role',    pmc:3.3, sop:3.1, plan: 45, planStatus: 'overdue' },
+          { id:13, initials:'AB', name:'Adam Burza',         role:'Analityk Danych',               cat:'effective_in_role',    pmc:3.2, sop:3.0, plan: 60, planStatus: 'approved' },
+          { id:14, initials:'CJ', name:'Celina Jantar',      role:'Księgowa',                      cat:'effective_in_role',    pmc:3.0, sop:null, plan: 10, planStatus: 'draft' },
+          { id:15, initials:'DK', name:'Dawid Kruk',         role:'Specjalista ds. Jakości',       cat:'effective_in_role',    pmc:3.4, sop:3.4, plan: 90, planStatus: 'approved' }
+        ];
 
-      const MDR_DICTIONARY = {
-        'future_leader':         { label: 'Lider/ka Przyszłości',     cls: 'accent' },
-        'emerging_leader':       { label: 'Wschodzący/a Lider/ka',    cls: 'accent' },
-        'subject_matter_leader': { label: 'Lider/ka Merytoryczny/a',  cls: 'accent' },
-        'effective_in_role':     { label: 'Skuteczny/a w Roli',       cls: 'muted' },
-        'new_employee':          { label: 'Nowy Pracownik',           cls: 'muted' },
-        'question_mark':         { label: 'Znak Zapytania',           cls: 'muted' },
-        'alert':                 { label: 'Alert',                    cls: 'danger' },
-        'outside_mdr':           { label: 'Poza MDR',                 cls: 'muted' }
-      };
+        const MDR_DICTIONARY = {
+          'future_leader':         { label: 'Lider/ka Przyszłości',     cls: 'mdr-accent' },
+          'emerging_leader':       { label: 'Wschodzący/a Lider/ka',    cls: 'mdr-accent' },
+          'subject_matter_leader': { label: 'Lider/ka Merytoryczny/a',  cls: 'mdr-accent' },
+          'effective_in_role':     { label: 'Skuteczny/a w Roli',       cls: 'mdr-muted' },
+          'new_employee':          { label: 'Nowy Pracownik',           cls: 'mdr-muted' },
+          'question_mark':         { label: 'Znak Zapytania',           cls: 'mdr-muted' },
+          'alert':                 { label: 'Alert',                    cls: 'mdr-danger' },
+          'outside_mdr':           { label: 'Poza MDR',                 cls: 'mdr-muted' }
+        };
 
-      function tlistStatusLabel(s) {
-        const map = { approved:'Zatwierdzony', waiting:'Oczekuje', overdue:'Zaległy', none:'Brak planu', draft:'Roboczy' };
-        return map[s] || s;
-      }
-
-      function tlistRender() {
-        const search  = document.getElementById('tlistSearch').value.toLowerCase();
-        const fMdr    = document.getElementById('tlistFilterMdr').value;
-        const fPlan   = document.getElementById('tlistFilterPlan').value;
-
-        let data = TLIST_EMPLOYEES.filter(e => {
-          if (search && !e.name.toLowerCase().includes(search) && !e.role.toLowerCase().includes(search)) return false;
-          if (fMdr && e.cat !== fMdr) return false;
-          
-          if (fPlan) {
-            if (fPlan === 'waiting' && e.planStatus !== 'waiting' && e.planStatus !== 'draft') return false;
-            if (fPlan !== 'waiting' && e.planStatus !== fPlan) return false;
-          }
-          return true;
-        });
-
-        data.sort((a, b) => {
-          let va, vb;
-          if (tlistSortCol === 'name')   { va = a.name; vb = b.name; return tlistSortDir * va.localeCompare(vb); }
-          if (tlistSortCol === 'mdr')    { va = a.cat;  vb = b.cat;  return tlistSortDir * va.localeCompare(vb); }
-          if (tlistSortCol === 'pmc')    { va = a.pmc || 0;  vb = b.pmc || 0; }
-          if (tlistSortCol === 'sop')    { va = a.sop || 0;  vb = b.sop || 0; }
-          if (tlistSortCol === 'plan')   { va = a.plan; vb = b.plan; }
-          if (tlistSortCol === 'status') { const o={approved:4,waiting:3,draft:3,overdue:2,none:0}; va=o[a.planStatus]||0; vb=o[b.planStatus]||0; }
-          return tlistSortDir * (va - vb);
-        });
-
-        document.getElementById('tlistCount').textContent = `${data.length} z ${TLIST_EMPLOYEES.length} pracowników`;
-
-        const tbody = document.getElementById('tlistBody');
-        if (!data.length) {
-          tbody.innerHTML = `<tr><td colspan="6" class="tlist-empty"><span class="material-symbols-outlined">search_off</span>Brak wyników dla podanych filtrów</td></tr>`;
-          return;
+        function tlistStatusLabel(s) {
+          const map = { approved:'Zatwierdzony', waiting:'Oczekuje', overdue:'Zaległy', none:'Brak planu', draft:'Roboczy' };
+          return map[s] || s;
         }
 
-        tbody.innerHTML = data.map(e => {
-          // 1. Logika formatowania PMC / SOP do ułamka (x.x / 5.0)
-          const pmcHtml = e.pmc !== null ? `<span class="score-val">${e.pmc.toFixed(1)}</span><span class="score-max"> / 5.0</span>` : `<span class="score-max">—</span>`;
-          const sopHtml = e.sop !== null ? `<span class="score-val">${e.sop.toFixed(1)}</span><span class="score-max"> / 5.0</span>` : `<span class="score-max">—</span>`;
-          
-          // 2. Logika kolorowania awatara (Tylko danger jeśli wymaga akcji, inaczej muted)
-          const needsAttention = e.planStatus === 'overdue' || e.planStatus === 'none' || e.cat === 'alert';
-          const avatarClass = needsAttention ? 'avatar-danger' : 'avatar-muted';
-          
-          // 3. Status MDR
-          const mdrInfo = MDR_DICTIONARY[e.cat] || MDR_DICTIONARY['outside_mdr'];
-          
-          // 4. Kolor paska planu
-          const planColor = e.plan > 0 ? 'var(--accent)' : 'var(--border-strong)';
+        function tlistRender() {
+          const search  = document.getElementById('tlistSearch').value.toLowerCase();
+          const fMdr    = document.getElementById('tlistFilterMdr').value;
+          const fPlan   = document.getElementById('tlistFilterPlan').value;
 
-          return `
-          <tr onclick="goToProfile('dash','p1')">
-            <td>
-              <div class="tlist-name-cell">
-                <div class="avatar-border ${avatarClass}">${e.initials}</div>
-                <div>
-                  <div class="tlist-name">${e.name}</div>
-                  <div class="tlist-role">${e.role}</div>
-                </div>
-              </div>
-            </td>
-            <td>${sopHtml}</td>
-            <td>${pmcHtml}</td>
-            <td>
-              <span class="mdr-subtle-badge ${mdrInfo.cls}">${mdrInfo.label}</span>
-            </td>
-            <td>
-              <div style="display:flex;align-items:center;gap:10px;">
-                <div class="tlist-prog-bar"><div class="tlist-prog-fill" style="width:${e.plan}%; background:${planColor};"></div></div>
-                <span style="font-size:12px; font-weight:600; color:var(--text-secondary)">${e.plan}%</span>
-              </div>
-            </td>
-            <td><span class="tlist-badge ${e.planStatus}">${tlistStatusLabel(e.planStatus)}</span></td>
-          </tr>`;
-        }).join('');
-      }
+          let data = TLIST_EMPLOYEES.filter(e => {
+            if (search && !e.name.toLowerCase().includes(search) && !e.role.toLowerCase().includes(search)) return false;
+            if (fMdr && e.cat !== fMdr) return false;
+            if (fPlan) {
+              if (fPlan === 'waiting' && e.planStatus !== 'waiting' && e.planStatus !== 'draft') return false;
+              if (fPlan !== 'waiting' && e.planStatus !== fPlan) return false;
+            }
+            return true;
+          });
 
-      function tlistSort(col) {
-        if (tlistSortCol === col) { tlistSortDir *= -1; }
-        else { tlistSortCol = col; tlistSortDir = -1; }
+          data.sort((a, b) => {
+            let va, vb;
+            if (tlistSortCol === 'name')   { va = a.name; vb = b.name; return tlistSortDir * va.localeCompare(vb); }
+            if (tlistSortCol === 'mdr')    { va = a.cat;  vb = b.cat;  return tlistSortDir * va.localeCompare(vb); }
+            if (tlistSortCol === 'pmc')    { va = a.pmc || 0;  vb = b.pmc || 0; }
+            if (tlistSortCol === 'sop')    { va = a.sop || 0;  vb = b.sop || 0; }
+            if (tlistSortCol === 'plan')   { va = a.plan; vb = b.plan; }
+            if (tlistSortCol === 'status') { const o={approved:4,waiting:3,draft:3,overdue:2,none:0}; va=o[a.planStatus]||0; vb=o[b.planStatus]||0; }
+            return tlistSortDir * (va - vb);
+          });
 
-        document.querySelectorAll('[id^="si-"]').forEach(el => el.textContent = '');
-        document.querySelectorAll('[id^="th-"]').forEach(el => el.classList.remove('sort-active'));
-        const siEl = document.getElementById('si-' + col);
-        const thEl = document.getElementById('th-' + col);
-        if (siEl) siEl.textContent = tlistSortDir === -1 ? '↓' : '↑';
-        if (thEl) thEl.classList.add('sort-active');
-        tlistRender();
-      }
+          document.getElementById('tlistCount').textContent = `${data.length} z ${TLIST_EMPLOYEES.length} pracowników`;
 
-      document.addEventListener('DOMContentLoaded', tlistRender);
+          const tbody = document.getElementById('tlistBody');
+          if (!data.length) {
+            tbody.innerHTML = `<tr><td colspan="6" class="ui-empty">Brak wyników dla podanych filtrów</td></tr>`;
+            return;
+          }
+
+          tbody.innerHTML = data.map(e => {
+            const pmcHtml = e.pmc !== null ? `<span class="ui-score-val">${e.pmc.toFixed(1)}</span><span class="ui-score-max">/5.0</span>` : `<span class="ui-score-max">—</span>`;
+            const sopHtml = e.sop !== null ? `<span class="ui-score-val">${e.sop.toFixed(1)}</span><span class="ui-score-max">/5.0</span>` : `<span class="ui-score-max">—</span>`;
+
+            const needsAttention = e.planStatus === 'overdue' || e.planStatus === 'none' || e.cat === 'alert';
+            const avatarClass = needsAttention ? 'danger' : 'muted';
+            const mdrInfo = MDR_DICTIONARY[e.cat] || MDR_DICTIONARY['outside_mdr'];
+            const planColor = e.plan > 0 ? 'var(--accent)' : 'var(--border-strong)';
+
+            return `
+      <tr onclick="goToProfile('dash','p1')">
+        <td>
+          <div class="ui-cell-user">
+            <div class="ui-avatar ${avatarClass}">${e.initials}</div>
+            <div>
+              <div class="ui-user-name">${e.name}</div>
+              <div class="ui-user-meta">${e.role}</div>
+            </div>
+          </div>
+        </td>
+        <td>${sopHtml}</td>
+        <td>${pmcHtml}</td>
+        <td><span class="ui-badge ${mdrInfo.cls}">${mdrInfo.label}</span></td>
+        <td>
+          <div class="ui-progress-wrap">
+            <div class="ui-progress-track"><div class="ui-progress-fill" style="width:${e.plan}%; background:${planColor};"></div></div>
+            <span class="ui-progress-text">${e.plan}%</span>
+          </div>
+        </td>
+        <td><span class="ui-badge ${e.planStatus}">${tlistStatusLabel(e.planStatus)}</span></td>
+      </tr>`;
+          }).join('');
+        }
+
+        function tlistSort(col) {
+          if (tlistSortCol === col) { tlistSortDir *= -1; }
+          else { tlistSortCol = col; tlistSortDir = -1; }
+
+          document.querySelectorAll('[id^="si-"]').forEach(el => el.textContent = '');
+          document.querySelectorAll('[id^="th-"]').forEach(el => el.classList.remove('sort-active'));
+          const siEl = document.getElementById('si-' + col);
+          const thEl = document.getElementById('th-' + col);
+          if (siEl) siEl.textContent = tlistSortDir === -1 ? '↓' : '↑';
+          if (thEl) thEl.classList.add('sort-active');
+          tlistRender();
+        }
+
+        document.addEventListener('DOMContentLoaded', tlistRender);
       </script>
     </div>
 
@@ -7690,236 +7638,175 @@ function confirmAssign() {
     ═══════════════════════════════════════════════ -->
     <div class="module-view" id="area-people" style="display:none;">
       <style>
-        .area-people-toolbar {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 12px;
-          align-items: center;
-          padding: 16px 20px;
-          background: var(--ls-card);
-          border-bottom: 1px solid var(--ls-border);
-          border-radius: 12px 12px 0 0;
+        .ui-wrap { padding: 8px 0; color: var(--text); }
+
+        /* ── Pasek narzędziowy ── */
+        .ui-toolbar {
+          display: flex; flex-wrap: wrap; gap: 16px; align-items: center;
+          padding: 16px 20px; background: var(--ls-card, var(--bg-card));
+          border-bottom: 1px solid var(--border); border-radius: 12px 12px 0 0;
         }
-        .area-people-search {
-          background: var(--ls-bg);
-          border: 1px solid var(--ls-border);
-          color: var(--ls-text);
-          padding: 10px 14px;
-          border-radius: 8px;
-          font-size: 13px;
-          font-family: inherit;
-          outline: none;
-          transition: all 0.2s ease;
+        .ui-input, .ui-select {
+          background: var(--bg-card-2); border: 1px solid var(--border); color: var(--text);
+          border-radius: 8px; font-size: 13px; font-family: inherit; outline: none; transition: all 0.2s ease;
         }
-        .area-people-search:focus { border-color: var(--accent); }
-        .area-filter-select {
-          background: var(--bg-card-2);
-          border: 1px solid var(--border);
-          color: var(--text);
-          padding: 9px 28px 9px 12px;
-          border-radius: 10px;
-          font-family: 'General Sans', sans-serif;
-          font-size: 12px;
-          font-weight: 500;
-          outline: none;
-          cursor: pointer;
-          appearance: none;
+        .ui-input {
+          flex: 1; min-width: 200px; padding: 10px 14px 10px 36px;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238e9094' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
+          background-repeat: no-repeat; background-position: 12px center;
+        }
+        .ui-select {
+          padding: 10px 32px 10px 14px; font-weight: 500; cursor: pointer; appearance: none;
           background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-          background-repeat: no-repeat;
-          background-position: right 8px center;
-          background-size: 14px;
-          transition: border-color 0.2s;
+          background-repeat: no-repeat; background-position: right 12px center; background-size: 14px;
         }
-        .area-filter-select:focus { border-color: var(--accent); }
+        .ui-input:focus, .ui-select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-bg); }
 
-        .area-people-table { width: 100%; border-collapse: collapse; }
-        .area-people-table thead tr { border-bottom: 1px solid var(--border); }
-        .area-people-table th {
-          padding: 8px 14px;
-          text-align: left;
-          font-size: 10px;
-          font-weight: 700;
-          color: var(--text-muted);
-          text-transform: uppercase;
-          letter-spacing: 0.6px;
-          cursor: pointer;
-          user-select: none;
-          white-space: nowrap;
-          transition: color 0.15s;
+        /* ── Custom Multi-Select dla Aktywności ── */
+        .ui-multi-wrap { position: relative; display: inline-block; }
+        .ui-multi-dropdown {
+          position: absolute; top: calc(100% + 6px); left: 0; min-width: 200px;
+          background: var(--ls-card, var(--bg-card)); border: 1px solid var(--border);
+          border-radius: 8px; padding: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+          z-index: 100; display: flex; flex-direction: column; gap: 4px;
         }
-        .area-people-table th:hover { color: var(--text); }
-        .area-people-table tbody tr {
-          border-bottom: 1px solid var(--border);
-          transition: background 0.15s;
-          cursor: pointer;
+        .ui-multi-dropdown label {
+          display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text);
+          cursor: pointer; padding: 6px 8px; border-radius: 4px; transition: background 0.15s;
         }
-        .area-people-table tbody tr:hover { background: var(--bg-hover); }
-        .area-people-table tbody tr:last-child { border-bottom: none; }
-        .area-people-table td {
-          padding: 11px 14px;
-          font-size: 13px;
-          color: var(--text);
-          vertical-align: middle;
-        }
-        .area-risk-chip {
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          font-size: 11px;
-          font-weight: 700;
-          padding: 3px 10px;
-          border-radius: 20px;
-          white-space: nowrap;
-        }
-        .area-risk-chip.high   { background:var(--danger-bg);  color:var(--danger);  border:1px solid var(--danger-border); }
-        .area-risk-chip.medium { background:rgba(235,141,61,0.10); color:rgba(235,141,61,0.9); border:1px solid rgba(235,141,61,0.3); }
-        .area-risk-chip.low    { background:var(--success-bg); color:var(--success); border:1px solid var(--success-border); }
-        .area-succ-chip {
-          display: inline-flex;
-          align-items: center;
-          font-size: 11px;
-          font-weight: 600;
-          padding: 3px 10px;
-          border-radius: 20px;
-          white-space: nowrap;
-        }
-        .area-succ-chip.ready  { background:var(--ls-accent-bg); color:var(--ls-accent); border:1px solid var(--ls-accent-border); }
-        .area-succ-chip.dev    { background:var(--bg-card-3); color:var(--text-secondary); border:1px solid var(--border); }
-        .area-succ-chip.none   { background:transparent; color:var(--text-muted); border:1px dashed var(--border); }
+        .ui-multi-dropdown label:hover { background: var(--bg-hover); }
+        .ui-multi-dropdown input[type="checkbox"] { accent-color: var(--accent); cursor: pointer; }
 
-        /* ── NOWE STYLE: Dynamiczne obwódki avatarów ── */
-        .avatar-border {
-          background: #2a2d31 !important;
-          border: 2px solid;
-          color: #fff;
-          box-sizing: border-box; /* Zapewnia, że border nie powiększy wymiaru kółka */
+        .ui-count { font-size: 12px; font-weight: 500; color: var(--text-muted); white-space: nowrap; margin-left: auto;}
+
+        /* ── Tabela ── */
+        .ui-table { width: 100%; border-collapse: collapse; background: var(--ls-card, var(--bg-card)); }
+        .ui-table th {
+          padding: 14px 20px; text-align: left; font-size: 11px; font-weight: 600;
+          color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
+          border-bottom: 1px solid var(--border); white-space: nowrap;
         }
-        .avatar-high {
-          border-color: var(--danger, #f87171);
-          box-shadow: 0 0 8px rgba(248,113,113,0.15);
+        .ui-table td {
+          padding: 14px 20px; font-size: 13px; color: var(--text);
+          vertical-align: middle; border-bottom: 1px solid var(--border);
         }
-        .avatar-medium {
-          border-color: #eb8d3d;
-          box-shadow: 0 0 8px rgba(235,141,61,0.15);
+        .ui-table tbody tr { transition: background 0.15s; cursor: pointer; }
+        .ui-table tbody tr:hover { background: var(--bg-hover); }
+        .ui-table tbody tr:last-child td { border-bottom: none; }
+
+        /* ── Awatary ── */
+        .ui-avatar {
+          width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+          display: inline-flex; align-items: center; justify-content: center;
+          font-size: 12px; font-weight: 700; color: #fff; background: #3a3f45;
+          border: 2px solid transparent; box-sizing: border-box; transition: all 0.2s;
         }
-        .avatar-ready {
-          border-color: var(--success, #4ade80);
-          box-shadow: 0 0 8px rgba(74,222,128,0.15);
+        .ui-avatar.danger  { border-color: var(--danger); box-shadow: 0 0 0 3px var(--danger-bg); background: #2a2d31; }
+        .ui-avatar.muted   { border-color: transparent; }
+
+        /* ── Typografia i Mikro-UI ── */
+        .ui-cell-user { display: flex; align-items: center; gap: 12px; }
+        .ui-user-name-wrap { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+        .ui-user-name { font-weight: 600; font-size: 13px; color: var(--text); }
+
+        .ui-user-icons { display: flex; align-items: center; gap: 4px; }
+        .ui-icon-status { font-size: 15px; font-variation-settings: 'FILL' 1; cursor: default; }
+        .ui-icon-status.absence { color: var(--text-muted); }
+        .ui-icon-status.contract { color: #eb8d3d; }
+
+        .ui-hover-wrapper { position: relative; display: inline-flex; align-items: center; }
+        .ui-icon-status.training { color: var(--text-muted); transition: transform 0.2s, color 0.2s; }
+        .ui-hover-wrapper:hover .ui-icon-status.training { transform: scale(1.15); color: var(--text); }
+
+        /* Kompaktowy Dark Tooltip dla ukończonych szkoleń */
+        .ui-dark-tooltip {
+          visibility: hidden; opacity: 0; position: absolute;
+          bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%) translateY(4px);
+          background: var(--ls-bg, #1c1e21); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+          padding: 14px 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 999;
+          transition: all 0.2s ease; cursor: default; text-align: left; min-width: 180px; white-space: nowrap;
         }
-        .avatar-standard {
-          border-color: #5a6068;
+        .ui-hover-wrapper:hover .ui-dark-tooltip {
+          visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0);
+        }
+        .ui-dark-tooltip::after {
+          content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+          border-width: 6px; border-style: solid; border-color: rgba(255,255,255,0.1) transparent transparent transparent;
+        }
+        .ui-dark-tooltip::before {
+          content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+          border-width: 5px; border-style: solid; border-color: var(--ls-bg, #1c1e21) transparent transparent transparent; z-index: 1; margin-top: -2px;
         }
 
-        .area-people-toolbar,
-        .tlist-toolbar {
-          display: flex !important;
-          flex-wrap: wrap !important;
-          gap: 12px !important;
-          align-items: center !important;
-          padding: 16px 20px !important;
-          background: var(--ls-card) !important;
-          border-bottom: 1px solid var(--ls-border) !important;
-          border-radius: 12px 12px 0 0 !important;
-        }
+        .ui-user-meta { font-size: 11px; color: var(--text-secondary); }
+        .ui-score-val { font-weight: 600; color: var(--text); }
+        .ui-score-max { font-size: 11px; color: var(--text-muted); font-weight: 400; margin-left: 2px; }
 
-        /* 2. Wymuszenie wyglądu Inputów i Selectów */
-        .area-people-search,
-        .tlist-search,
-        .area-filter-select,
-        .tlist-filter-select {
-          background: var(--ls-bg) !important;
-          border: 1px solid var(--ls-border) !important;
-          color: var(--ls-text) !important;
-          padding: 10px 14px !important;
-          border-radius: 8px !important;
-          font-size: 13px !important;
-          font-family: inherit !important;
-          outline: none !important;
-        }
+        /* ── Paski postępu ── */
+        .ui-progress-wrap { display: flex; align-items: center; gap: 10px; }
+        .ui-progress-track { width: 50px; height: 6px; background: var(--bg-card-3); border-radius: 3px; overflow: hidden; }
+        .ui-progress-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+        .ui-progress-text { font-size: 12px; font-weight: 600; color: var(--text-secondary); min-width: 30px; }
 
-        .area-people-search,
-        .tlist-search {
-          flex: 1 !important;
-          min-width: 250px !important;
+        /* ── Minimalistyczne Badges ── */
+        .ui-badge {
+          display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+          font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px; white-space: nowrap;
+          background: transparent;
         }
+        .ui-badge.risk-high   { color: var(--danger); border: 1px solid var(--danger); }
+        .ui-badge.risk-medium { color: #eb8d3d; border: 1px solid #eb8d3d; }
+        .ui-badge.risk-low    { color: var(--text-muted); border: 1px solid var(--border-strong); }
 
-        .area-people-search:focus,
-        .tlist-search:focus,
-        .area-filter-select:focus,
-        .tlist-filter-select:focus {
-          border-color: var(--ls-accent) !important;
-          box-shadow: 0 0 0 2px var(--ls-accent-bg) !important;
-        }
+        .ui-badge.succ-ready  { color: var(--text); border: 1px solid var(--border-strong); }
+        .ui-badge.succ-dev    { color: var(--text-muted); border: 1px dashed var(--border-strong); }
+        .ui-badge.succ-none   { color: var(--text-muted); border: 1px dashed var(--border); opacity: 0.6; }
 
-        /* 3. Wymuszenie szkieletu samych Tabel */
-        .area-people-table,
-        .tlist-table {
-          width: 100% !important;
-          border-collapse: collapse !important;
-          background: var(--ls-card) !important;
-        }
+        .ui-badge.approved { color: var(--accent); border: 1px solid var(--accent); }
+        .ui-badge.overdue  { color: var(--danger); border: 1px solid var(--danger); }
+        .ui-badge.waiting  { color: var(--text); border: 1px solid var(--border-strong); }
+        .ui-badge.draft    { color: var(--text-muted); border: 1px dashed var(--border-strong); }
+        .ui-badge.none     { color: var(--text-muted); border: 1px dashed var(--border); opacity: 0.6; }
 
-        /* 4. Wymuszenie analitycznych Nagłówków (TH) */
-        .area-people-table th,
-        .tlist-table th {
-          text-align: left !important;
-          padding: 16px 20px !important;
-          font-size: 11px !important;
-          font-weight: 600 !important;
-          color: var(--ls-text-muted) !important;
-          text-transform: uppercase !important;
-          letter-spacing: 0.5px !important;
-          border-bottom: 1px solid var(--ls-border) !important;
-          background: var(--bg-card-2) !important;
-        }
-
-        /* 5. Wymuszenie światła w Komórkach (TD) */
-        .area-people-table td,
-        .tlist-table td {
-          padding: 16px 20px !important;
-          border-bottom: 1px solid var(--ls-border) !important;
-          color: var(--ls-text) !important;
-          vertical-align: middle !important;
-        }
-
-        /* 6. Wymuszenie interakcji z wierszami (Hover) */
-        .area-people-table tbody tr,
-        .tlist-table tbody tr {
-          cursor: pointer !important;
-        }
-
-        .area-people-table tbody tr:hover,
-        .tlist-table tbody tr:hover {
-          background: var(--ls-hover) !important;
-        }
-
-        /* Usunięcie niepotrzebnej linii na samym dole */
-        .area-people-table tbody tr:last-child td,
-        .tlist-table tbody tr:last-child td {
-          border-bottom: none !important;
-        }
+        .ui-empty { text-align: center; padding: 60px 24px; color: var(--text-muted); font-size: 13px; font-weight: 500; }
       </style>
 
-      <div class="area-people-toolbar">
-        <input class="area-people-search" type="text" id="areaPeopleSearch" placeholder="Szukaj po nazwisku, stanowisku, dziale…" oninput="areaPeopleRender()">
-        <select class="area-filter-select" id="areaPeopleFilterRisk" onchange="areaPeopleRender()">
-          <option value="">Ryzyko odejścia: Wszystkie</option>
-          <option value="high">Wysokie</option>
-          <option value="medium">Średnie</option>
-          <option value="low">Niskie</option>
-        </select>
-        <select class="area-filter-select" id="areaPeopleFilterPlan" onchange="areaPeopleRender()">
-          <option value="">Status planu: Wszystkie</option>
-          <option value="approved">Zatwierdzony</option>
-          <option value="waiting">Czeka</option>
-          <option value="none">Brak planu</option>
-          <option value="overdue">Zaległy</option>
-        </select>
-        <span id="areaPeopleCount" style="font-size:12px; color:var(--text-muted); white-space:nowrap; padding: 0 4px;"></span>
-      </div>
+      <div class="ui-wrap">
+        <div class="ui-toolbar">
+          <input class="ui-input" type="text" id="areaPeopleSearch" placeholder="Szukaj pracownika..." oninput="areaPeopleRender()">
 
-      <table class="area-people-table">
-        <thead>
+          <div class="ui-multi-wrap" id="filterTrainingsWrap">
+            <div class="ui-select" style="user-select:none; display:flex; min-width: 170px;" onclick="toggleTrainings()">
+              <span id="trainingsLabel">Aktywności: Wszystkie</span>
+            </div>
+            <div class="ui-multi-dropdown" id="trainingsDrop" style="display:none;">
+              <label><input type="checkbox" value="FRIS" onchange="areaPeopleRender()"> FRIS</label>
+              <label><input type="checkbox" value="CCL" onchange="areaPeopleRender()"> CCL</label>
+              <label><input type="checkbox" value="Zarządzanie czasem" onchange="areaPeopleRender()"> Zarządzanie czasem</label>
+              <label><input type="checkbox" value="Feedback w zespole" onchange="areaPeopleRender()"> Feedback w zespole</label>
+            </div>
+          </div>
+
+          <select class="ui-select" id="areaPeopleFilterRisk" onchange="areaPeopleRender()">
+            <option value="">Ryzyko odejścia: Wszystkie</option>
+            <option value="high">Wysokie</option>
+            <option value="medium">Średnie</option>
+            <option value="low">Niskie</option>
+          </select>
+
+          <select class="ui-select" id="areaPeopleFilterPlan" onchange="areaPeopleRender()">
+            <option value="">Status planu: Wszystkie</option>
+            <option value="approved">Zatwierdzony</option>
+            <option value="waiting">Czeka</option>
+            <option value="none">Brak planu</option>
+            <option value="overdue">Zaległy</option>
+          </select>
+
+          <span class="ui-count" id="areaPeopleCount"></span>
+        </div>
+
+        <table class="ui-table">
+          <thead>
           <tr>
             <th>Pracownik</th>
             <th>Dział / Lokalizacja</th>
@@ -7930,109 +7817,163 @@ function confirmAssign() {
             <th>Sukcesja</th>
             <th>Status planu</th>
           </tr>
-        </thead>
-        <tbody id="areaPeopleBody"></tbody>
-      </table>
+          </thead>
+          <tbody id="areaPeopleBody"></tbody>
+        </table>
+      </div>
 
       <script>
-      const AREA_PEOPLE = [
-        {id:1,  initials:'PM', name:'Piotr Malinowski',    role:'Spec. ds. Planowania',        dept:'Operacje / Warszawa',  pmc:1.5, sop:2.1, plan:20, risk:'high',   succ:'none',  planStatus:'overdue'},
-        {id:2,  initials:'JW', name:'Jan Wiśniewski',      role:'Z-ca Kierownika Sklepu',        dept:'Sprzedaż / Kraków',    pmc:3.5, sop:3.8, plan:45, risk:'low',    succ:'ready', planStatus:'waiting'},
-        {id:3,  initials:'KM', name:'Katarzyna Mazur',     role:'Koord. Obsługi Klienta',        dept:'Obsługa / Warszawa',   pmc:4.2, sop:4.1, plan:80, risk:'low',    succ:'ready', planStatus:'approved'},
-        {id:4,  initials:'AW', name:'Anna Wróbel',         role:'St. Menedżer Sprzedaży',        dept:'Sprzedaż / Wrocław',   pmc:2.8, sop:3.6, plan:30, risk:'medium', succ:'dev',   planStatus:'waiting'},
-        {id:5,  initials:'MK', name:'Marcin Kowal',        role:'Manager Działu Nieruchomości',  dept:'Nieruchomości / Łódź', pmc:3.1, sop:2.9, plan:55, risk:'medium', succ:'dev',   planStatus:'approved'},
-        {id:6,  initials:'ZN', name:'Zofia Nowak',         role:'Spec. ds. Opakowań',            dept:'Logistyka / Gdańsk',   pmc:3.8, sop:2.5, plan:65, risk:'low',    succ:'none',  planStatus:'approved'},
-        {id:7,  initials:'TP', name:'Tomasz Poprzeczka',   role:'Dyrektor Operacyjny',           dept:'Zarząd / Warszawa',    pmc:2.2, sop:1.8, plan:15, risk:'high',   succ:'none',  planStatus:'none'},
-        {id:8,  initials:'EL', name:'Ewa Lisowska',        role:'Spec. ds. Magazynowych',        dept:'Logistyka / Poznań',   pmc:3.4, sop:3.2, plan:40, risk:'low',    succ:'dev',   planStatus:'waiting'},
-        {id:9,  initials:'BK', name:'Bartosz Kubiak',      role:'St. Mon. ds. Aplikacji HR',     dept:'IT / Warszawa',        pmc:3.6, sop:3.0, plan:50, risk:'low',    succ:'dev',   planStatus:'approved'},
-        {id:10, initials:'MR', name:'Maja Rutkowska',      role:'Koord. Sekcji Opakowań',        dept:'Logistyka / Kraków',   pmc:4.0, sop:4.3, plan:70, risk:'low',    succ:'ready', planStatus:'approved'},
-        {id:11, initials:'KW', name:'Kamil Wiśniak',       role:'Spec. ds. Rozw. Oprogr. IT',    dept:'IT / Wrocław',         pmc:2.5, sop:2.8, plan:25, risk:'high',   succ:'none',  planStatus:'none'},
-        {id:12, initials:'NK', name:'Natalia Kowalczyk',   role:'St. Menedżer Sprzedaży',        dept:'Sprzedaż / Gdańsk',    pmc:3.3, sop:3.1, plan:45, risk:'medium', succ:'dev',   planStatus:'overdue'},
-      ];
-
-      const PLAN_LABELS = { approved:'Zatwierdzony', waiting:'Czeka', overdue:'Zaległy', none:'Brak planu', draft:'Roboczy' };
-      const PLAN_CLS    = { approved:'approved', waiting:'waiting', overdue:'overdue', none:'none', draft:'draft' };
-
-      function areaPeopleRender() {
-        const search   = (document.getElementById('areaPeopleSearch')?.value || '').toLowerCase();
-        const fRisk    = document.getElementById('areaPeopleFilterRisk')?.value || '';
-        const fPlan    = document.getElementById('areaPeopleFilterPlan')?.value || '';
-
-        let data = AREA_PEOPLE.filter(e => {
-          if (search && !e.name.toLowerCase().includes(search) && !e.role.toLowerCase().includes(search) && !e.dept.toLowerCase().includes(search)) return false;
-          if (fRisk && e.risk !== fRisk) return false;
-          if (fPlan && e.planStatus !== fPlan) return false;
-          return true;
+        // Logika zamykania dropdownu po kliknięciu poza niego
+        function toggleTrainings() {
+          const drop = document.getElementById('trainingsDrop');
+          drop.style.display = drop.style.display === 'none' ? 'flex' : 'none';
+        }
+        document.addEventListener('click', function(e) {
+          const wrap = document.getElementById('filterTrainingsWrap');
+          if (wrap && !wrap.contains(e.target)) {
+            document.getElementById('trainingsDrop').style.display = 'none';
+          }
         });
 
-        const countEl = document.getElementById('areaPeopleCount');
-        if (countEl) countEl.textContent = `${data.length} z ${AREA_PEOPLE.length} pracowników`;
+        // Mock danych (zaktualizowany o konkretne aktywności "trainings")
+        const AREA_PEOPLE = [
+          {id:1,  initials:'PM', name:'Piotr Malinowski',    role:'Spec. ds. Planowania',        tenure: '2 lata 4 mc', contractEnding: false, longAbsence: true,  trainings: [], dept:'Operacje / Warszawa',  pmc:1.5, sop:2.1, plan:20, risk:'high',   succ:'none',  planStatus:'overdue'},
+          {id:2,  initials:'JW', name:'Jan Wiśniewski',      role:'Z-ca Kierownika Sklepu',      tenure: '8 mc',        contractEnding: true,  longAbsence: false, trainings: ['FRIS', 'Zarządzanie czasem'], dept:'Sprzedaż / Kraków',    pmc:3.5, sop:3.8, plan:45, risk:'low',    succ:'ready', planStatus:'waiting'},
+          {id:3,  initials:'KM', name:'Katarzyna Mazur',     role:'Koord. Obsługi Klienta',      tenure: '4 lata',      contractEnding: false, longAbsence: false, trainings: ['FRIS', 'CCL'], dept:'Obsługa / Warszawa',   pmc:4.2, sop:4.1, plan:80, risk:'low',    succ:'ready', planStatus:'approved'},
+          {id:4,  initials:'AW', name:'Anna Wróbel',         role:'St. Menedżer Sprzedaży',      tenure: '1 rok 2 mc',  contractEnding: false, longAbsence: false, trainings: [], dept:'Sprzedaż / Wrocław',   pmc:2.8, sop:3.6, plan:30, risk:'medium', succ:'dev',   planStatus:'waiting'},
+          {id:5,  initials:'MK', name:'Marcin Kowal',        role:'Manager Działu Nieruchomości',tenure: '3 lata',      contractEnding: false, longAbsence: false, trainings: ['CCL', 'Feedback w zespole'],  dept:'Nieruchomości / Łódź', pmc:3.1, sop:2.9, plan:55, risk:'medium', succ:'dev',   planStatus:'approved'},
+          {id:6,  initials:'ZN', name:'Zofia Nowak',         role:'Spec. ds. Opakowań',          tenure: '5 mc',        contractEnding: true,  longAbsence: false, trainings: [], dept:'Logistyka / Gdańsk',   pmc:3.8, sop:2.5, plan:65, risk:'low',    succ:'none',  planStatus:'approved'},
+          {id:7,  initials:'TP', name:'Tomasz Poprzeczka',   role:'Dyrektor Operacyjny',         tenure: '6 lat',       contractEnding: false, longAbsence: false, trainings: ['FRIS'],  dept:'Zarząd / Warszawa',    pmc:2.2, sop:1.8, plan:15, risk:'high',   succ:'none',  planStatus:'none'},
+          {id:8,  initials:'EL', name:'Ewa Lisowska',        role:'Spec. ds. Magazynowych',      tenure: '1 rok 11 mc', contractEnding: false, longAbsence: false, trainings: [], dept:'Logistyka / Poznań',   pmc:3.4, sop:3.2, plan:40, risk:'low',    succ:'dev',   planStatus:'waiting'},
+          {id:9,  initials:'BK', name:'Bartosz Kubiak',      role:'St. Mon. ds. Aplikacji HR',   tenure: '2 lata 1 mc', contractEnding: false, longAbsence: false, trainings: ['FRIS', 'CCL', 'Feedback w zespole'],  dept:'IT / Warszawa',        pmc:3.6, sop:3.0, plan:50, risk:'low',    succ:'dev',   planStatus:'approved'},
+          {id:10, initials:'MR', name:'Maja Rutkowska',      role:'Koord. Sekcji Opakowań',      tenure: '3 lata 5 mc', contractEnding: false, longAbsence: false, trainings: ['Zarządzanie czasem'],  dept:'Logistyka / Kraków',   pmc:4.0, sop:4.3, plan:70, risk:'low',    succ:'ready', planStatus:'approved'},
+          {id:11, initials:'KW', name:'Kamil Wiśniak',       role:'Spec. ds. Rozw. Oprogr. IT',  tenure: '9 mc',        contractEnding: true,  longAbsence: true,  trainings: [], dept:'IT / Wrocław',         pmc:2.5, sop:2.8, plan:25, risk:'high',   succ:'none',  planStatus:'none'},
+          {id:12, initials:'NK', name:'Natalia Kowalczyk',   role:'St. Menedżer Sprzedaży',      tenure: '1 rok',       contractEnding: false, longAbsence: false, trainings: ['Feedback w zespole'],  dept:'Sprzedaż / Gdańsk',    pmc:3.3, sop:3.1, plan:45, risk:'medium', succ:'dev',   planStatus:'overdue'},
+        ];
 
-        const tbody = document.getElementById('areaPeopleBody');
-        if (!tbody) return;
+        const PLAN_LABELS = { approved:'Zatwierdzony', waiting:'Czeka', overdue:'Zaległy', none:'Brak planu', draft:'Roboczy' };
+        const PLAN_CLS    = { approved:'approved', waiting:'waiting', overdue:'overdue', none:'none', draft:'draft' };
 
-        if (!data.length) {
-          tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:48px;color:var(--text-muted);">Brak wyników</td></tr>`;
-          return;
-        }
+        function areaPeopleRender() {
+          const search   = (document.getElementById('areaPeopleSearch')?.value || '').toLowerCase();
+          const fRisk    = document.getElementById('areaPeopleFilterRisk')?.value || '';
+          const fPlan    = document.getElementById('areaPeopleFilterPlan')?.value || '';
 
-        const riskLabel = { high:'Wysokie', medium:'Średnie', low:'Niskie' };
-        const succLabel = { ready:'Gotowy/a', dev:'W rozwoju', none:'Brak' };
+          // Pobranie zaznaczonych aktywności z dropdownu
+          const checkedTrainings = Array.from(document.querySelectorAll('#trainingsDrop input:checked')).map(i => i.value);
 
-        tbody.innerHTML = data.map(e => {
-          const pmcColor = e.pmc >= 3.5 ? 'var(--success)' : e.pmc >= 2.5 ? 'var(--accent)' : 'var(--danger)';
-          const sopColor = e.sop >= 3.5 ? 'var(--success)' : e.sop >= 2.5 ? 'var(--accent)' : 'var(--danger)';
-          
-          // Logika doboru obwódki na podstawie statusów
-          let avatarClass = 'avatar-standard';
-          if (e.risk === 'high') {
-            avatarClass = 'avatar-high';
-          } else if (e.risk === 'medium') {
-            avatarClass = 'avatar-medium';
-          } else if (e.succ === 'ready') {
-            avatarClass = 'avatar-ready';
+          // Aktualizacja etykiety przycisku multi-select
+          const tLabel = document.getElementById('trainingsLabel');
+          if (checkedTrainings.length === 0) tLabel.textContent = 'Aktywności: Wszystkie';
+          else if (checkedTrainings.length === 1) tLabel.textContent = `Aktywności: 1 wybrane`;
+          else tLabel.textContent = `Aktywności: ${checkedTrainings.length} wybrane`;
+
+          // Logika filtrowania (Koniunkcja dla aktywności -> musi mieć WSZYSTKIE zaznaczone)
+          let data = AREA_PEOPLE.filter(e => {
+            if (search && !e.name.toLowerCase().includes(search) && !e.role.toLowerCase().includes(search) && !e.dept.toLowerCase().includes(search)) return false;
+            if (fRisk && e.risk !== fRisk) return false;
+            if (fPlan && e.planStatus !== fPlan) return false;
+
+            // Koniunkcja (AND): dla każdego zaznaczonego checkboxa sprawdzamy czy pracownik ma to szkolenie
+            if (checkedTrainings.length > 0) {
+              const hasAll = checkedTrainings.every(reqTraining => e.trainings.includes(reqTraining));
+              if (!hasAll) return false;
+            }
+
+            return true;
+          });
+
+          const countEl = document.getElementById('areaPeopleCount');
+          if (countEl) countEl.textContent = `${data.length} z ${AREA_PEOPLE.length} pracowników`;
+
+          const tbody = document.getElementById('areaPeopleBody');
+          if (!tbody) return;
+
+          if (!data.length) {
+            tbody.innerHTML = `<tr><td colspan="8" class="ui-empty">Brak wyników</td></tr>`;
+            return;
           }
 
-          return `
-          <tr onclick="switchView('profile')">
-            <td>
-              <div style="display:flex;align-items:center;gap:10px;">
-                <div class="avatar-border ${avatarClass}" style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">${e.initials}</div>
-                <div>
-                  <div style="font-weight:600;font-size:13px;">${e.name}</div>
-                  <div style="font-size:11px;color:var(--text-secondary);">${e.role}</div>
-                </div>
-              </div>
-            </td>
-            <td style="font-size:12px; color:var(--text-secondary);">${e.dept}</td>
-            <td>
-              <div style="display:flex;align-items:center;gap:6px;">
-                <div style="width:36px;height:4px;border-radius:2px;background:var(--border);overflow:hidden;">
-                  <div style="width:${(e.pmc/5)*100}%;height:100%;background:${pmcColor};border-radius:2px;"></div>
-                </div>
-                <span style="font-size:12px;font-weight:700;color:${pmcColor};">${e.pmc.toFixed(1)}</span>
-              </div>
-            </td>
-            <td style="font-size:12px;font-weight:700;color:${sopColor};">${e.sop.toFixed(1)}</td>
-            <td>
-              <div style="display:flex;align-items:center;gap:6px;">
-                <div style="width:40px;height:4px;border-radius:2px;background:var(--border);overflow:hidden;">
-                  <div style="width:${e.plan}%;height:100%;background:var(--ls-accent);border-radius:2px;"></div>
-                </div>
-                <span style="font-size:11px;color:var(--text-secondary);">${e.plan}%</span>
-              </div>
-            </td>
-            <td><span class="area-risk-chip ${e.risk}">${riskLabel[e.risk]}</span></td>
-            <td><span class="area-succ-chip ${e.succ}">${succLabel[e.succ]}</span></td>
-            <td><span class="tlist-badge ${PLAN_CLS[e.planStatus]||'draft'}">${PLAN_LABELS[e.planStatus]||e.planStatus}</span></td>
-          </tr>`;
-        }).join('');
-      }
+          const riskLabel = { high:'Wysokie', medium:'Średnie', low:'Niskie' };
+          const succLabel = { ready:'Gotowy/a', dev:'W rozwoju', none:'Brak' };
 
-      document.addEventListener('DOMContentLoaded', areaPeopleRender);
+          tbody.innerHTML = data.map(e => {
+            const pmcHtml = e.pmc !== null ? `<span class="ui-score-val">${e.pmc.toFixed(1)}</span><span class="ui-score-max">/5.0</span>` : `<span class="ui-score-max">—</span>`;
+            const sopHtml = e.sop !== null ? `<span class="ui-score-val">${e.sop.toFixed(1)}</span><span class="ui-score-max">/5.0</span>` : `<span class="ui-score-max">—</span>`;
+
+            const needsAttention = e.risk === 'high' || e.planStatus === 'overdue' || e.planStatus === 'none';
+            const avatarClass = needsAttention ? 'danger' : 'muted';
+            const planColor = e.plan > 0 ? 'var(--accent)' : 'var(--border-strong)';
+
+            // Generowanie ikon powiadomień
+            let statusIconsHtml = '';
+            if (e.longAbsence) {
+              statusIconsHtml += `<span class="material-symbols-outlined ui-icon-status absence" title="Długa absencja">hourglass_bottom</span>`;
+            }
+            if (e.contractEnding) {
+              statusIconsHtml += `<span class="material-symbols-outlined ui-icon-status contract" title="Koniec umowy (poniżej 35 dni)">history_edu</span>`;
+            }
+
+            // Kompaktowy tooltip - budowanie wierszy na podstawie posiadanych szkoleń (tylko ukończone)
+            if (e.trainings && e.trainings.length > 0) {
+              const trainingsListRows = e.trainings.map(tName => `
+            <tr>
+              <td style="padding: 6px 0; color: #fff; font-size: 12px; vertical-align: middle; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="material-symbols-outlined" style="font-size: 14px; color: var(--accent);">check_circle</span>
+                  ${tName}
+                </div>
+              </td>
+            </tr>
+          `).join('');
+
+              statusIconsHtml += `
+            <div class="ui-hover-wrapper" onclick="event.stopPropagation();">
+              <span class="material-symbols-outlined ui-icon-status training">school</span>
+              <div class="ui-dark-tooltip">
+                <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #fff;">Ukończone aktywności</div>
+                <table style="width: 100%; border-collapse: collapse;">
+                  ${trainingsListRows}
+                </table>
+              </div>
+            </div>`;
+            }
+
+            const iconsWrapper = statusIconsHtml ? `<div class="ui-user-icons">${statusIconsHtml}</div>` : '';
+
+            return `
+  <tr onclick="switchView('profile')">
+    <td>
+      <div class="ui-cell-user">
+        <div class="ui-avatar ${avatarClass}">${e.initials}</div>
+        <div>
+          <div class="ui-user-name-wrap">
+            <span class="ui-user-name">${e.name}</span>
+            ${iconsWrapper}
+          </div>
+          <div class="ui-user-meta">${e.role} &bull; ${e.tenure}</div>
+        </div>
+      </div>
+    </td>
+    <td><span class="ui-user-meta">${e.dept}</span></td>
+    <td>${pmcHtml}</td>
+    <td>${sopHtml}</td>
+    <td>
+      <div class="ui-progress-wrap">
+        <div class="ui-progress-track"><div class="ui-progress-fill" style="width:${e.plan}%; background:${planColor};"></div></div>
+        <span class="ui-progress-text">${e.plan}%</span>
+      </div>
+    </td>
+    <td><span class="ui-badge risk-${e.risk}">${riskLabel[e.risk]}</span></td>
+    <td><span class="ui-badge succ-${e.succ}">${succLabel[e.succ]}</span></td>
+    <td><span class="ui-badge ${PLAN_CLS[e.planStatus]||'draft'}">${PLAN_LABELS[e.planStatus]||e.planStatus}</span></td>
+  </tr>`;
+          }).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', areaPeopleRender);
       </script>
     </div>
-
     <!-- ═══════════════════════════════════════════════
          ZAKŁADKA 3: RYZYKO I SUKCESJA (10C)
     ═══════════════════════════════════════════════ -->
