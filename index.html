@@ -3437,6 +3437,12 @@
             <div>
               <h1 data-label-p0="Mój rozwój" data-label-p1="Rozwój pracownika">Mój rozwój</h1>
             </div>
+              <div>
+                  <button class="btn-ghost" style="border-color:var(--border); color:var(--text-secondary); display:flex; align-items:center; gap:8px; padding: 8px 16px; border-radius: 20px;" onclick="document.getElementById('history-modal').style.display='flex'">
+                      <span class="material-symbols-outlined" style="font-size:18px;">history</span>
+                      Historia planów
+                  </button>
+              </div>
           </div>
           <div class="split-layout-bar" style="margin-bottom: 0;">
           <button class="split-layout-btn active dev-nav-tab" onclick="switchDevTab('dev-plan', this)">
@@ -3455,7 +3461,19 @@
 
       <!-- Plan -->
       <div id="dev-plan" class="dev-view" style="display:block;">
-
+          <!-- NOWY ELEMENT: Banner trybu historycznego -->
+          <div id="historical-view-banner" style="display:none; background:var(--bg-card-2); border:1px dashed var(--text-muted); border-radius:12px; padding:12px 20px; margin-bottom:24px; align-items:center; justify-content:space-between;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                  <span class="material-symbols-outlined" style="color:var(--text-muted);">inventory_2</span>
+                  <div>
+                      <div style="font-size:14px; font-weight:600; color:var(--ls-text);">Tryb podglądu: Plan historyczny</div>
+                      <div style="font-size:12px; color:var(--ls-text-secondary);" id="historical-dates">Kierunek: Młodszy Specjalista (01.2024 - 12.2024)</div>
+                  </div>
+              </div>
+              <button class="btn-primary" style="background:var(--ls-text); color:var(--bg-page); padding:8px 16px; font-size:12px; border-radius:24px; font-weight:600;" onclick="exitHistoricalMode()">
+                  Wróć do aktualnego planu
+              </button>
+          </div>
 
         <div class="p1-only" style="display:none; flex-direction:column; gap:16px; margin-bottom:24px;">
           
@@ -4745,6 +4763,98 @@ function confirmAssign() {
   }, 2000);
 }
 </script>
+        <!-- NOWY ELEMENT: Modal historii -->
+        <div id="history-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center; backdrop-filter:blur(4px);">
+
+            <div style="background:var(--bg-page, #1A1D24); width:100%; max-width:600px; border-radius:20px; border:1px solid var(--border); box-shadow:0 10px 40px rgba(0,0,0,0.3); display:flex; flex-direction:column; max-height:80vh;">
+
+                <!-- Modal Header -->
+                <div style="padding:24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                    <h2 style="margin:0; font-size:18px; color:var(--ls-text);">Historyczne plany rozwojowe</h2>
+                    <button class="btn-ghost" style="border:none; padding:4px;" onclick="document.getElementById('history-modal').style.display='none'">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+
+                <!-- Modal Body (Lista) -->
+                <div style="padding:24px; overflow-y:auto; display:flex; flex-direction:column; gap:16px;">
+
+                    <!-- Kafel 1 (Zakończony sukcesem) -->
+                    <div class="act-card" style="border:1px solid var(--border); padding:16px;" onclick="loadHistoricalPlan('Młodszy Specjalista HR', '01.01.2024 - 31.12.2024')">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+                            <div>
+                                <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Zrealizowany</div>
+                                <div class="act-card-name" style="margin:4px 0;">Awans na Młodszego Specjalistę HR</div>
+                            </div>
+                            <span class="act-badge-done">Zrealizowany</span>
+                        </div>
+                        <div style="font-size:12px; color:var(--text-secondary); display:flex; gap:16px;">
+                            <span><span class="material-symbols-outlined" style="font-size:14px; vertical-align:middle;">calendar_today</span> 01.01.2024 — 31.12.2024</span>
+                            <span><span class="material-symbols-outlined" style="font-size:14px; vertical-align:middle;">check_circle</span> 5/5 kroków</span>
+                        </div>
+                    </div>
+
+                    <!-- Kafel 2 (Anulowany/Przerwany) -->
+                    <div class="act-card" style="border:1px solid var(--border); padding:16px;" onclick="loadHistoricalPlan('Kierownik Zmiany', '01.06.2023 - 15.09.2023')">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+                            <div>
+                                <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Przerwany</div>
+                                <div class="act-card-name" style="margin:4px 0;">Awans na Kierownika Zmiany</div>
+                            </div>
+                            <span class="act-badge-plan" style="color:var(--ls-text-muted);">Przerwany</span>
+                        </div>
+                        <div style="font-size:12px; color:var(--text-secondary); display:flex; gap:16px;">
+                            <span><span class="material-symbols-outlined" style="font-size:14px; vertical-align:middle;">calendar_today</span> 01.06.2023 — 15.09.2023</span>
+                            <span><span class="material-symbols-outlined" style="font-size:14px; vertical-align:middle;">remove_done</span> 2/4 kroki</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <script>
+            // Logika przechodzenia w Tryb Historyczny
+            function loadHistoricalPlan(title, dates) {
+                // 1. Zamknij modal
+                document.getElementById('history-modal').style.display = 'none';
+
+                // 2. Pokaż banner trybu historycznego
+                document.getElementById('historical-view-banner').style.display = 'flex';
+                document.getElementById('historical-dates').innerText = `Kierunek: ${title} (${dates})`;
+
+                // 3. Ukryj elementy edycyjne (symulacja "Read-Only")
+                // W produkcji tutaj podmieniłabyś dane w komponencie (Vue/React/Angular) na dane z historycznego JSONa.
+                // Na mockupie chowamy interakcje:
+                document.querySelector('.p0-only button').style.display = 'none'; // Ukryj "Dodaj nowy krok"
+                document.getElementById('goalViewMode').querySelector('button').style.display = 'none'; // Ukryj edycję głównego celu
+
+                // Opcjonalnie: Zmiana layoutu na "Tylko plan", bo AI nie dotyczy starych planów
+                const planOnlyBtn = document.querySelector('button[onclick="setSplitLayout(\'plan\',this)"]');
+                if(planOnlyBtn) planOnlyBtn.click();
+
+                // Zablokuj panel zmiany widoku na czas historii
+                document.querySelectorAll('.split-layout-bar button').forEach(btn => btn.style.pointerEvents = 'none');
+            }
+
+            // Logika powrotu do Aktualnego Planu
+            function exitHistoricalMode() {
+                // 1. Ukryj banner
+                document.getElementById('historical-view-banner').style.display = 'none';
+
+                // 2. Przywróć elementy edycyjne
+                document.querySelector('.p0-only button').style.display = 'inline-flex';
+                document.getElementById('goalViewMode').querySelector('button').style.display = 'inline-flex';
+
+                // Odblokuj panel zmiany widoku
+                document.querySelectorAll('.split-layout-bar button').forEach(btn => btn.style.pointerEvents = 'auto');
+
+                // Wróć do widoku domyślnego Plan + Czat
+                const defaultViewBtn = document.querySelector('button[onclick="setSplitLayout(\'both\',this)"]');
+                if(defaultViewBtn) defaultViewBtn.click();
+
+                // Tutaj framework JS ponownie załadowałby dane dla aktywnego planu (teraz na makiecie nic nie zmieniamy)
+            }
+        </script>
     </div><!-- /#view-profile-plan -->
 
     <div id="view-profile-training" class="profile-view" style="display:none !important;"></div>
