@@ -7715,10 +7715,25 @@ function confirmAssign() {
         .ui-icon-status.contract { color: #eb8d3d; }
 
         .ui-hover-wrapper { position: relative; display: inline-flex; align-items: center; }
-        .ui-icon-status.training { color: var(--text-muted); transition: transform 0.2s, color 0.2s; }
+        .ui-icon-status.training, .ui-icon-status.panel { color: var(--text-muted); transition: transform 0.2s, color 0.2s; }
         .ui-hover-wrapper:hover .ui-icon-status.training { transform: scale(1.15); color: var(--text); }
+        .ui-hover-wrapper:hover .ui-icon-status.panel { transform: scale(1.15); color: var(--accent); }
 
-        /* Kompaktowy Dark Tooltip dla ukończonych szkoleń */
+        /* Pulsująca kropka notyfikacji */
+        .ui-icon-status.panel.pending { color: var(--accent); }
+        .ui-notification-dot {
+          position: absolute; top: -3px; right: -3px; width: 8px; height: 8px;
+          background: var(--danger, #e74c3c); border-radius: 50%;
+          border: 2px solid var(--ls-card, #2a2d31);
+          animation: ui-pulse 2s infinite; pointer-events: none;
+        }
+        @keyframes ui-pulse {
+          0% { box-shadow: 0 0 0 0 rgba(231,76,60, 0.7); }
+          70% { box-shadow: 0 0 0 4px rgba(231,76,60, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(231,76,60, 0); }
+        }
+
+        /* Kompaktowe Dark Tooltipy */
         .ui-dark-tooltip {
           visibility: hidden; opacity: 0; position: absolute;
           bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%) translateY(4px);
@@ -7726,6 +7741,8 @@ function confirmAssign() {
           padding: 14px 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 999;
           transition: all 0.2s ease; cursor: default; text-align: left; min-width: 180px; white-space: nowrap;
         }
+        .ui-dark-tooltip.wide { min-width: 260px; white-space: normal; }
+
         .ui-hover-wrapper:hover .ui-dark-tooltip {
           visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0);
         }
@@ -7822,8 +7839,34 @@ function confirmAssign() {
         </table>
       </div>
 
+      <div id="panelFormModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(2px);">
+        <div style="background: var(--ls-card, #22252a); width: 420px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.4); padding: 24px; font-family: 'General Sans', sans-serif;">
+          <div style="font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px;">Wprowadź feedback z panelu</div>
+          <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
+            Pracownik: <span id="modalEmpName" style="color: var(--text); font-weight: 600;"></span>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <label style="display:block; font-size:11px; color:var(--text-muted); margin-bottom:6px;">Data panelu</label>
+            <input type="date" id="modalPanelDate" class="ui-input" style="width:100%; box-sizing:border-box;">
+          </div>
+          <div style="margin-bottom: 16px;">
+            <label style="display:block; font-size:11px; color:var(--text-muted); margin-bottom:6px;">Rozważane stanowisko</label>
+            <input type="text" id="modalPanelRole" class="ui-input" style="width:100%; box-sizing:border-box;" placeholder="np. Lider Zespołu">
+          </div>
+          <div style="margin-bottom: 24px;">
+            <label style="display:block; font-size:11px; color:var(--text-muted); margin-bottom:6px;">Feedback / Rekomendacje</label>
+            <textarea id="modalPanelFeedback" class="ui-input" style="width:100%; height: 80px; resize:none; box-sizing:border-box; font-family:inherit;" placeholder="Wpisz wnioski z panelu..."></textarea>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:12px;">
+            <button onclick="closePanelModal()" style="background:transparent; border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:8px; cursor:pointer; font-size:12px; font-weight:600; transition: background 0.2s;">Anuluj</button>
+            <button onclick="savePanelData()" style="background:var(--accent); border:none; color:#fff; padding:8px 16px; border-radius:8px; cursor:pointer; font-size:12px; font-weight:600; transition: opacity 0.2s;">Zapisz wnioski</button>
+          </div>
+        </div>
+      </div>
+
       <script>
-        // Logika zamykania dropdownu po kliknięciu poza niego
         function toggleTrainings() {
           const drop = document.getElementById('trainingsDrop');
           drop.style.display = drop.style.display === 'none' ? 'flex' : 'none';
@@ -7831,24 +7874,82 @@ function confirmAssign() {
         document.addEventListener('click', function(e) {
           const wrap = document.getElementById('filterTrainingsWrap');
           if (wrap && !wrap.contains(e.target)) {
-            document.getElementById('trainingsDrop').style.display = 'none';
+            const drop = document.getElementById('trainingsDrop');
+            if(drop) drop.style.display = 'none';
           }
         });
 
-        // Mock danych (zaktualizowany o konkretne aktywności "trainings")
+        // Zmienna trzymająca ID pracownika, dla którego aktualnie wprowadzamy feedback
+        let currentPanelEmpId = null;
+
+        // Funkcje Modala
+        function openPanelModal(empId, empName) {
+          currentPanelEmpId = empId;
+          document.getElementById('modalEmpName').textContent = empName;
+
+          // Ustaw dzisiejszą datę jako domyślną
+          document.getElementById('modalPanelDate').valueAsDate = new Date();
+          document.getElementById('modalPanelRole').value = '';
+          document.getElementById('modalPanelFeedback').value = '';
+
+          document.getElementById('panelFormModal').style.display = 'flex';
+        }
+
+        function closePanelModal() {
+          document.getElementById('panelFormModal').style.display = 'none';
+          currentPanelEmpId = null;
+        }
+
+        function savePanelData() {
+          if (!currentPanelEmpId) return;
+
+          const dateVal = document.getElementById('modalPanelDate').value;
+          const roleVal = document.getElementById('modalPanelRole').value;
+          const feedVal = document.getElementById('modalPanelFeedback').value;
+
+          if (!roleVal || !feedVal) {
+            alert("Proszę uzupełnić stanowisko oraz feedback.");
+            return;
+          }
+
+          // Formatowanie daty na widok DD.MM.YYYY
+          const d = new Date(dateVal);
+          const formattedDate = `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth()+1).padStart(2, '0')}.${d.getFullYear()}`;
+
+          // Znajdź pracownika i zaktualizuj jego dane
+          const emp = AREA_PEOPLE.find(p => p.id === currentPanelEmpId);
+          if (emp) {
+            if (!emp.panels) emp.panels = [];
+            // Dodajemy wpis na początek listy
+            emp.panels.unshift({ date: formattedDate, role: roleVal, feedback: feedVal });
+            emp.pendingPanel = false; // Zdejmujemy flagę "wymaga uzupełnienia"
+          }
+
+          closePanelModal();
+          areaPeopleRender(); // Przeładowanie tabeli aby ikonka zmieniła stan
+        }
+
+        // Mock danych - Ewa Lisowska i Anna Wróbel mają flagę `pendingPanel: true`
         const AREA_PEOPLE = [
-          {id:1,  initials:'PM', name:'Piotr Malinowski',    role:'Spec. ds. Planowania',        tenure: '2 lata 4 mc', contractEnding: false, longAbsence: true,  trainings: [], dept:'Operacje / Warszawa',  pmc:1.5, sop:2.1, plan:20, risk:'high',   succ:'none',  planStatus:'overdue'},
-          {id:2,  initials:'JW', name:'Jan Wiśniewski',      role:'Z-ca Kierownika Sklepu',      tenure: '8 mc',        contractEnding: true,  longAbsence: false, trainings: ['FRIS', 'Zarządzanie czasem'], dept:'Sprzedaż / Kraków',    pmc:3.5, sop:3.8, plan:45, risk:'low',    succ:'ready', planStatus:'waiting'},
-          {id:3,  initials:'KM', name:'Katarzyna Mazur',     role:'Koord. Obsługi Klienta',      tenure: '4 lata',      contractEnding: false, longAbsence: false, trainings: ['FRIS', 'CCL'], dept:'Obsługa / Warszawa',   pmc:4.2, sop:4.1, plan:80, risk:'low',    succ:'ready', planStatus:'approved'},
-          {id:4,  initials:'AW', name:'Anna Wróbel',         role:'St. Menedżer Sprzedaży',      tenure: '1 rok 2 mc',  contractEnding: false, longAbsence: false, trainings: [], dept:'Sprzedaż / Wrocław',   pmc:2.8, sop:3.6, plan:30, risk:'medium', succ:'dev',   planStatus:'waiting'},
-          {id:5,  initials:'MK', name:'Marcin Kowal',        role:'Manager Działu Nieruchomości',tenure: '3 lata',      contractEnding: false, longAbsence: false, trainings: ['CCL', 'Feedback w zespole'],  dept:'Nieruchomości / Łódź', pmc:3.1, sop:2.9, plan:55, risk:'medium', succ:'dev',   planStatus:'approved'},
-          {id:6,  initials:'ZN', name:'Zofia Nowak',         role:'Spec. ds. Opakowań',          tenure: '5 mc',        contractEnding: true,  longAbsence: false, trainings: [], dept:'Logistyka / Gdańsk',   pmc:3.8, sop:2.5, plan:65, risk:'low',    succ:'none',  planStatus:'approved'},
-          {id:7,  initials:'TP', name:'Tomasz Poprzeczka',   role:'Dyrektor Operacyjny',         tenure: '6 lat',       contractEnding: false, longAbsence: false, trainings: ['FRIS'],  dept:'Zarząd / Warszawa',    pmc:2.2, sop:1.8, plan:15, risk:'high',   succ:'none',  planStatus:'none'},
-          {id:8,  initials:'EL', name:'Ewa Lisowska',        role:'Spec. ds. Magazynowych',      tenure: '1 rok 11 mc', contractEnding: false, longAbsence: false, trainings: [], dept:'Logistyka / Poznań',   pmc:3.4, sop:3.2, plan:40, risk:'low',    succ:'dev',   planStatus:'waiting'},
-          {id:9,  initials:'BK', name:'Bartosz Kubiak',      role:'St. Mon. ds. Aplikacji HR',   tenure: '2 lata 1 mc', contractEnding: false, longAbsence: false, trainings: ['FRIS', 'CCL', 'Feedback w zespole'],  dept:'IT / Warszawa',        pmc:3.6, sop:3.0, plan:50, risk:'low',    succ:'dev',   planStatus:'approved'},
-          {id:10, initials:'MR', name:'Maja Rutkowska',      role:'Koord. Sekcji Opakowań',      tenure: '3 lata 5 mc', contractEnding: false, longAbsence: false, trainings: ['Zarządzanie czasem'],  dept:'Logistyka / Kraków',   pmc:4.0, sop:4.3, plan:70, risk:'low',    succ:'ready', planStatus:'approved'},
-          {id:11, initials:'KW', name:'Kamil Wiśniak',       role:'Spec. ds. Rozw. Oprogr. IT',  tenure: '9 mc',        contractEnding: true,  longAbsence: true,  trainings: [], dept:'IT / Wrocław',         pmc:2.5, sop:2.8, plan:25, risk:'high',   succ:'none',  planStatus:'none'},
-          {id:12, initials:'NK', name:'Natalia Kowalczyk',   role:'St. Menedżer Sprzedaży',      tenure: '1 rok',       contractEnding: false, longAbsence: false, trainings: ['Feedback w zespole'],  dept:'Sprzedaż / Gdańsk',    pmc:3.3, sop:3.1, plan:45, risk:'medium', succ:'dev',   planStatus:'overdue'},
+          {id:1,  initials:'PM', name:'Piotr Malinowski',    role:'Spec. ds. Planowania',        tenure: '2 lata 4 mc', contractEnding: false, longAbsence: true,  trainings: [], panels: [], pendingPanel: false, dept:'Operacje / Warszawa',  pmc:1.5, sop:2.1, plan:20, risk:'high',   succ:'none',  planStatus:'overdue'},
+          {id:2,  initials:'JW', name:'Jan Wiśniewski',      role:'Z-ca Kierownika Sklepu',      tenure: '8 mc',        contractEnding: true,  longAbsence: false, trainings: ['FRIS', 'Zarządzanie czasem'], panels: [], pendingPanel: false, dept:'Sprzedaż / Kraków',    pmc:3.5, sop:3.8, plan:45, risk:'low',    succ:'ready', planStatus:'waiting'},
+          {id:3,  initials:'KM', name:'Katarzyna Mazur',     role:'Koord. Obsługi Klienta',      tenure: '4 lata',      contractEnding: false, longAbsence: false, trainings: ['FRIS', 'CCL'],
+            panels: [
+              { date: '16.08.2023', role: 'Lider Zespołu', feedback: 'Wysoki potencjał liderski, świetnie diagnozuje problemy zespołu. Rekomendacja do awansu w Q1.' }
+            ], pendingPanel: false, dept:'Obsługa / Warszawa', pmc:4.2, sop:4.1, plan:80, risk:'low', succ:'ready', planStatus:'approved'},
+          {id:4,  initials:'AW', name:'Anna Wróbel',         role:'St. Menedżer Sprzedaży',      tenure: '1 rok 2 mc',  contractEnding: false, longAbsence: false, trainings: [], panels: [], pendingPanel: true, dept:'Sprzedaż / Wrocław',   pmc:2.8, sop:3.6, plan:30, risk:'medium', succ:'dev',   planStatus:'waiting'},
+          {id:5,  initials:'MK', name:'Marcin Kowal',        role:'Manager Działu Nieruchomości',tenure: '3 lata',      contractEnding: false, longAbsence: false, trainings: ['CCL', 'Feedback w zespole'], panels: [], pendingPanel: false, dept:'Nieruchomości / Łódź', pmc:3.1, sop:2.9, plan:55, risk:'medium', succ:'dev',   planStatus:'approved'},
+          {id:6,  initials:'ZN', name:'Zofia Nowak',         role:'Spec. ds. Opakowań',          tenure: '5 mc',        contractEnding: true,  longAbsence: false, trainings: [], panels: [], pendingPanel: false, dept:'Logistyka / Gdańsk',   pmc:3.8, sop:2.5, plan:65, risk:'low',    succ:'none',  planStatus:'approved'},
+          {id:7,  initials:'TP', name:'Tomasz Poprzeczka',   role:'Dyrektor Operacyjny',         tenure: '6 lat',       contractEnding: false, longAbsence: false, trainings: ['FRIS'], panels: [], pendingPanel: false, dept:'Zarząd / Warszawa',    pmc:2.2, sop:1.8, plan:15, risk:'high',   succ:'none',  planStatus:'none'},
+          {id:8,  initials:'EL', name:'Ewa Lisowska',        role:'Spec. ds. Magazynowych',      tenure: '1 rok 11 mc', contractEnding: false, longAbsence: false, trainings: [], panels: [], pendingPanel: true, dept:'Logistyka / Poznań',   pmc:3.4, sop:3.2, plan:40, risk:'low',    succ:'dev',   planStatus:'waiting'},
+          {id:9,  initials:'BK', name:'Bartosz Kubiak',      role:'St. Mon. ds. Aplikacji HR',   tenure: '2 lata 1 mc', contractEnding: false, longAbsence: false, trainings: ['FRIS', 'CCL', 'Feedback w zespole'], panels: [], pendingPanel: false, dept:'IT / Warszawa',        pmc:3.6, sop:3.0, plan:50, risk:'low',    succ:'dev',   planStatus:'approved'},
+          {id:10, initials:'MR', name:'Maja Rutkowska',      role:'Koord. Sekcji Opakowań',      tenure: '3 lata 5 mc', contractEnding: false, longAbsence: false, trainings: ['Zarządzanie czasem'],
+            panels: [
+              { date: '12.05.2023', role: 'Kierownik Magazynu', feedback: 'Znakomite wyniki operacyjne. Brakuje pewności siebie w podejmowaniu twardych decyzji.' },
+              { date: '10.11.2022', role: 'Kierownik Zmiany', feedback: 'Osoba mocno wyróżniająca się. Warto włączyć w program mentoringowy.' }
+            ], pendingPanel: false, dept:'Logistyka / Kraków', pmc:4.0, sop:4.3, plan:70, risk:'low', succ:'ready', planStatus:'approved'},
+          {id:11, initials:'KW', name:'Kamil Wiśniak',       role:'Spec. ds. Rozw. Oprogr. IT',  tenure: '9 mc',        contractEnding: true,  longAbsence: true,  trainings: [], panels: [], pendingPanel: false, dept:'IT / Wrocław',         pmc:2.5, sop:2.8, plan:25, risk:'high',   succ:'none',  planStatus:'none'},
+          {id:12, initials:'NK', name:'Natalia Kowalczyk',   role:'St. Menedżer Sprzedaży',      tenure: '1 rok',       contractEnding: false, longAbsence: false, trainings: ['Feedback w zespole'], panels: [], pendingPanel: false, dept:'Sprzedaż / Gdańsk',    pmc:3.3, sop:3.1, plan:45, risk:'medium', succ:'dev',   planStatus:'overdue'},
         ];
 
         const PLAN_LABELS = { approved:'Zatwierdzony', waiting:'Czeka', overdue:'Zaległy', none:'Brak planu', draft:'Roboczy' };
@@ -7859,22 +7960,18 @@ function confirmAssign() {
           const fRisk    = document.getElementById('areaPeopleFilterRisk')?.value || '';
           const fPlan    = document.getElementById('areaPeopleFilterPlan')?.value || '';
 
-          // Pobranie zaznaczonych aktywności z dropdownu
           const checkedTrainings = Array.from(document.querySelectorAll('#trainingsDrop input:checked')).map(i => i.value);
 
-          // Aktualizacja etykiety przycisku multi-select
           const tLabel = document.getElementById('trainingsLabel');
           if (checkedTrainings.length === 0) tLabel.textContent = 'Aktywności: Wszystkie';
           else if (checkedTrainings.length === 1) tLabel.textContent = `Aktywności: 1 wybrane`;
           else tLabel.textContent = `Aktywności: ${checkedTrainings.length} wybrane`;
 
-          // Logika filtrowania (Koniunkcja dla aktywności -> musi mieć WSZYSTKIE zaznaczone)
           let data = AREA_PEOPLE.filter(e => {
             if (search && !e.name.toLowerCase().includes(search) && !e.role.toLowerCase().includes(search) && !e.dept.toLowerCase().includes(search)) return false;
             if (fRisk && e.risk !== fRisk) return false;
             if (fPlan && e.planStatus !== fPlan) return false;
 
-            // Koniunkcja (AND): dla każdego zaznaczonego checkboxa sprawdzamy czy pracownik ma to szkolenie
             if (checkedTrainings.length > 0) {
               const hasAll = checkedTrainings.every(reqTraining => e.trainings.includes(reqTraining));
               if (!hasAll) return false;
@@ -7905,8 +8002,9 @@ function confirmAssign() {
             const avatarClass = needsAttention ? 'danger' : 'muted';
             const planColor = e.plan > 0 ? 'var(--accent)' : 'var(--border-strong)';
 
-            // Generowanie ikon powiadomień
+            // Generowanie ikon powiadomień i mikro-ui
             let statusIconsHtml = '';
+
             if (e.longAbsence) {
               statusIconsHtml += `<span class="material-symbols-outlined ui-icon-status absence" title="Długa absencja">hourglass_bottom</span>`;
             }
@@ -7914,7 +8012,47 @@ function confirmAssign() {
               statusIconsHtml += `<span class="material-symbols-outlined ui-icon-status contract" title="Koniec umowy (poniżej 35 dni)">history_edu</span>`;
             }
 
-            // Kompaktowy tooltip - budowanie wierszy na podstawie posiadanych szkoleń (tylko ukończone)
+            // --- LOGIKA PANELI DYSKUSYJNYCH ---
+            if (e.pendingPanel) {
+              // STAN 1: Wymaga uzupełnienia (pulsująca ikona, akcja na click)
+              statusIconsHtml += `
+            <div class="ui-hover-wrapper" onclick="event.stopPropagation(); openPanelModal(${e.id}, '${e.name}')" style="cursor:pointer;">
+              <span class="material-symbols-outlined ui-icon-status panel pending">forum</span>
+              <div class="ui-notification-dot"></div>
+              <div class="ui-dark-tooltip" style="min-width: 150px; text-align: center;">
+                <div style="font-size: 11px; color: #fff;">
+                  <span style="color: var(--accent); font-weight: 600; display:inline-block; margin-top:4px;">Kliknij, aby uzupełnić</span>
+                </div>
+              </div>
+            </div>`;
+            } else if (e.panels && e.panels.length > 0) {
+              // STAN 2: Już uzupełnione (normalna ikona, historia na hover)
+              const panelsRows = e.panels.map(p => `
+            <tr>
+              <td style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <div style="color: #fff; font-size: 12px; font-weight: 600; margin-bottom: 4px;">
+                  ${p.date} <span style="color: #888; font-weight: 400;">| ${p.role}</span>
+                </div>
+                <div style="color: #bbb; font-size: 11px; line-height: 1.4; white-space: normal;">
+                  ${p.feedback}
+                </div>
+              </td>
+            </tr>
+          `).join('');
+
+              statusIconsHtml += `
+            <div class="ui-hover-wrapper" onclick="event.stopPropagation();">
+              <span class="material-symbols-outlined ui-icon-status panel">forum</span>
+              <div class="ui-dark-tooltip wide">
+                <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px; color: #fff;">Decyzje panelowe</div>
+                <table style="width: 100%; border-collapse: collapse;">
+                  ${panelsRows}
+                </table>
+              </div>
+            </div>`;
+            }
+
+            // Tooltip: Ukończone Aktywności (Biret)
             if (e.trainings && e.trainings.length > 0) {
               const trainingsListRows = e.trainings.map(tName => `
             <tr>
